@@ -1,0 +1,13 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "title";
+}
+
+@if (ViewBag.Product != null)
+{
+    <h1>@ViewBag.Product.Name</h1>
+    <p>@ViewBag.Product.Price kr</p>
+    <p>@ViewBag.Product.Description</p>
+    <img src="@ViewBag.Product.Image"/>
+}

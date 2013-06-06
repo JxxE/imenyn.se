@@ -1,0 +1,29 @@
+﻿@using Rantup.Web.ViewModels
+
+@{
+    var viewModel = PageData[0] as ProductListViewModel;
+}
+@if (viewModel != null)
+{
+
+    foreach (var foodType in viewModel.FoodTypes)
+    {
+    <div class="margin-bottom" style="overflow: hidden">
+        <h1>@foodType.Name</h1>
+        @foreach (var category in foodType.Categories)
+        {
+            <div class="marginL20 margin-bottom">
+                <h3 style="border-bottom: 1px solid rgb(219, 219, 219);">@category.Name</h3>
+
+                @foreach (var product in category.Products)
+                {
+                    <div style="width:100%;overflow: hidden;">
+                        <div style="width:100%;"><h4 class="inline no-margin">@product.Name</h4><i class="inline marginL10">@string.Format("{0}kr",product.Price)</i></div>
+                        <p class="span8">@product.Description</p></div>
+
+                }
+            </div>
+        }
+    </div>
+    }
+}

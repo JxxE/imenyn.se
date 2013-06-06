@@ -1,0 +1,21 @@
+﻿@model Rantup.Web.Areas.Admin.ViewModels.AllEnterprisesViewModel
+
+@{
+    ViewBag.Title = "Nya";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Nya restauranger</h2>
+
+@if (!Model.Enterprises.Any())
+{
+    <i>Inga nyinkomna menyer</i> 
+}
+else
+{
+    foreach (var enterprise in Model.Enterprises)
+    {
+        <a href="NewMenu?enterpriseId=@enterprise.Id">@enterprise.Name</a>
+    }
+}
+

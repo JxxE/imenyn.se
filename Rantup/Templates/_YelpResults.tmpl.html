@@ -1,0 +1,80 @@
+﻿{{for Businesses}}
+<div class="well">
+    <h3>{{:name}}</h3>
+    <p>{{:display_phone}}</p>
+    <p>{{:location.display_address[0]}}, {{:location.display_address[1]}}
+        <img src="http://www.camelonta.se/MyVisitors/flags/{{:location.country_code}}.gif" alt="" />
+    </p>
+    {{if image_url != null}}
+    <img src="{{:image_url}}" alt="" class="margin-bottom" />
+    {{/if}}
+    
+    <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#{{:id}}">Välj</button>
+
+    <form id="{{:id}}" method="POST" action="/Manage/CreateEnterprise" class="collapse form-inline">
+        <input type="hidden" name="name" value="{{:name}}" />
+        <input type="hidden" name="phone" value="{{:display_phone}}" />
+        <input type="hidden" name="address" value="{{:location.address[0]}}" />
+        <input type="hidden" name="postalCode" value="{{:location.postal_code}}" />
+        <input type="hidden" name="city" value="{{:location.city}}" />
+        <input type="hidden" name="countryCode" value="{{:location.country_code}}" />
+        <input type="hidden" name="state_code" value="{{:location.state_code}}" />
+        <input type="hidden" name="lat" value="{{:location.coordinate.latitude}}" />
+        <input type="hidden" name="lng" value="{{:location.coordinate.longitude}}" />
+        <input type="hidden" name="yelpId" value="{{:id}}" />
+        
+        <h4>Välj kategorier</h4>
+        <div data-id="chosen-categories">
+            <select data-id="category">
+                <option></option>
+                {{for #parent.parent.data.Categories}}
+                <option value="{{:Value}}">{{:Text}}</option>
+                {{/for}}  
+            </select>
+        </div>
+        <div id="errors"></div>
+        <a href="javascript:void(0)" class="btn btn-success btn-large submit" data-form-id="{{:id}}">Spara</a>
+    </form>
+</div>
+{{/for}}
+
+{{if Businesses.length == 0}}
+<div class="span12 margin-bottom">
+<i>Inga träffar...</i>
+    </div>
+{{/if}}
+
+<script>
+    $("select[data-id='category']").on("change", function () {
+        var value = this.value;
+        if (value != "") {
+            var text = $("option:selected",this).html();
+            var divChosenCategories = $(this).closest("div[data-id='chosen-categories']");
+            var count = divChosenCategories.children('div').size();
+
+            if (count < 5) {
+                divChosenCategories.prepend("<div><p class='inline'>" + text + "</p><input type='hidden' name='category" + count + "' value='" + value + "' />" +
+                    "<i class='icon-remove'></i></div>");
+                if (count == 4) {
+                    $("select[data-id='category']").addClass("hide");
+                }
+            }
+        }
+    });
+    $("div[data-id='chosen-categories']").on("click", ".icon-remove", function () {
+        $(this).parent().remove();
+        $("select[data-id='category']").removeClass("hide");
+    });
+    
+    $(document).on('click', '.submit', function () {
+        var formId = $(this).attr("data-form-id");
+        var chosenCategoriesCount = $("#" + formId + ">div[data-id='chosen-categories']").children().size();
+
+        if (chosenCategoriesCount > 1 && chosenCategoriesCount <= 6)
+            $("#" + formId).submit();
+        else
+            $("#errors").append("<b class='red'>Välj minst 1 kategori!</b>");
+    });
+</script>
+
+<a href="/Manage/AddEnterprise" class="btn btn-info btn-large">Hittar du inte rätt?</a>

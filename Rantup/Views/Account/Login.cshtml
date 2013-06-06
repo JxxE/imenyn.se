@@ -1,0 +1,55 @@
+﻿@model Rantup.Web.Models.LogOnModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+@if (Request.IsAuthenticated)
+{
+    @HttpContext.Current.User.Identity.Name
+}
+
+
+@using (Html.BeginForm()) {
+    <div class="form-horizontal margin-top login-screen">
+        <fieldset>
+            <h4>Logga in</h4>
+            
+            @if (IsPost)
+            {
+                <div class="alert alert-error">
+                    @Html.ValidationSummary(false, "")
+                </div>
+            }
+
+            <div class="margin-top">
+                @Html.LabelFor(m => m.UserName)
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(m => m.UserName)
+                @Html.ValidationMessageFor(m => m.UserName)
+            </div>
+
+            <div class="margin-top">
+                @Html.LabelFor(m => m.Password)
+            </div>
+            <div class="">
+                @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </div>
+
+            <div class="checkbox margin-top">
+                @Html.CheckBoxFor(m => m.RememberMe)
+                @Html.LabelFor(m => m.RememberMe)
+            </div>
+
+            <p class="margin-top">
+                <input class="btn btn-primary" type="submit" value="Logga in" />
+            </p>
+            <p class="reset-password">
+               @* @Html.ActionLink("Återställ lösenord", "ResetPassword", "Account")*@
+            </p>
+        </fieldset>
+    </div>
+}
+    

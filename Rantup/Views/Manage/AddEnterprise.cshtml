@@ -1,0 +1,124 @@
+﻿<h3>Lägg till en restaurang manuellt</h3>
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<style>
+    .pac-container:after {
+        content: none !important;
+    }
+    /* Removes "Powered by Google" */
+</style>
+
+<form method="POST" action="/Manage/CreateEnterprise">
+    <div class="span12">
+        <label>Namn</label>
+        <input type="text" name="name" required/>
+
+        <label>Telefon</label>
+        <input type="text" name="phone" required/>
+
+        <label>Län</label>
+        <select name="state_code">
+            @foreach (var county in ViewBag.Counties)
+            {
+                <option value="@county.Value">@county.Text</option>
+            }
+        </select>
+
+
+        <label>Kategorier</label>
+        <div id="chosen-categories"></div>
+        <select id="category">
+            <option></option>
+            @foreach (var category in ViewBag.Categories)
+            {
+                <option value="@category.Value">@category.Text</option>    
+            }
+        </select>
+
+        <div class="row">
+            <div class="well span4">
+                <div class="margin-bottom"><b>Ju mer du kan fylla i desto bättre</b></div>
+                <label>Adress</label>
+                <input type="text" name="address" class="input-xlarge" />
+
+                <label>Postnummer</label>
+                <input type="text" name="postalCode" class="input-mini" />
+
+                <label>Ort</label>
+                <input id="location" type="text" name="city" placeholder="" />
+            </div>
+        </div>
+    </div>
+    <div class="span12">
+        <input type="submit" value="Spara" class="btn btn-success btn-large"/>
+    </div>
+</form>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+<script>
+    $("form").validate({
+        rules: {
+            postalCode: {
+                number: true
+            }
+        },
+        submitHandler: function (form) {
+            var chosenCategoriesCount = $("#chosen-categories").children('div').size();
+            if (chosenCategoriesCount == 0) {
+                $("<b class='red'>Välj minst 1 kategori!</b>").insertAfter("#chosen-categories");
+            }
+            else {
+                form.submit();
+            }
+        }
+    });
+
+    $("#category").change(function () {
+        var value = this.value;
+        if (value != "") {
+            var text = $('#category option:selected').html();
+            var divChosenCategories = $("#chosen-categories");
+            var count = divChosenCategories.children('div').size();
+
+            if (count < 5) {
+                divChosenCategories.append("<div><p class='inline'>" + text + "</p><input type='hidden' name='category" + count + "' value='" + value + "' />" +
+                    "<i class='icon-remove'></i></div>");
+                if (count == 4) {
+                    $("#category").addClass("hide");
+                }
+            }
+        }
+    });
+    $("#chosen-categories").on("click", ".icon-remove", function () {
+        $(this).parent().remove();
+        $("#category").removeClass("hide");
+    });
+
+    $(document).ready(function () {
+        $(window).keydown(function (event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                return false;
+            }
+        });
+    });
+
+
+
+    function initialize() {
+        var input = (document.getElementById('location'));
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.setComponentRestrictions({ "country": "se" });
+        autocomplete.setTypes(['geocode']);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+
+
+<noscript>
+    <style>
+        form {display: none;}
+    </style>
+    <h1>Aktivera JavaScript för att se sidan...</h1>
+</noscript>

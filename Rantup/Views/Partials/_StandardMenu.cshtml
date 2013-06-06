@@ -1,0 +1,80 @@
+﻿@using Rantup.Web.ViewModels
+<script src='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.js'></script>
+<link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.css' rel='stylesheet' />
+<!--[if lte IE 8]>
+    <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.ie.css' rel='stylesheet' >
+  <![endif]-->
+
+<style>
+    #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        height: 350px;
+    }
+
+    #map-container {
+        visibility: hidden;
+    }
+
+    .visible {
+        visibility: visible!important;
+    }
+</style>
+@{
+    var viewModel = PageData[0] as StandardViewModel;
+}
+@if (viewModel != null)
+{
+    <div class="margin-bottom">
+        <div class="row">
+            <div class="span12">
+                <h1 class="inline">@viewModel.Enterprise.Name</h1>
+                <p class="inline marginL10">(@viewModel.Enterprise.Address, @viewModel.Enterprise.City)</p>
+            </div>
+        </div>
+        <a class="btn btn-success" href="tel:@viewModel.Phone"><i class="icon-bullhorn icon-white"></i>@viewModel.Enterprise.Phone</a>
+        @if (viewModel.Enterprise.Categories != null)
+        {
+            <a href="javascript:void(0)" id="show-map" class="btn btn-info" data-toggle="button"><i class="icon-map-marker icon-white"></i>Visa på karta</a>
+        }
+        <div id="map-container" class="span12" style="position: relative">
+            <div id='map'></div>
+        </div>
+    </div>
+    <div class="well">
+        @RenderPage("_StandardMenuProducts.cshtml", viewModel.Products)
+    </div>
+
+        if (!viewModel.RecentlyModified)
+        {
+    @Html.ActionLink("Redigera menyn", "Products", "Manage", new { enterpriseId = viewModel.Enterprise.Id }, null)
+        }
+        else
+        {
+    <i>Denna meny har nyligen uppdateras och väntar på godkännande.</i>
+        }
+
+    <script>
+        var map = L.mapbox.map('map', 'jxxe.map-tdq4olrv')
+.setView([@viewModel.Enterprise.Coordinates.Lat,@viewModel.Enterprise.Coordinates.Lng], 7);
+        L.mapbox.markerLayer({
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [@viewModel.Enterprise.Coordinates.Lng,@viewModel.Enterprise.Coordinates.Lat]
+            },
+            properties: {
+                title: 'A Single Marker',
+                description: 'Just one of me',
+                'marker-color': '#f0a'
+            }
+        }).addTo(map);
+
+        $("#show-map").click(function () {
+            $("#map-container").toggleClass("visible");
+        });
+
+    </script>
+}

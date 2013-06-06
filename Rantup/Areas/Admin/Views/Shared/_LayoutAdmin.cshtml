@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>@ViewBag.Title - Rantup</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/Content/css")
+
+   <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+    <script src="~/js/Rantup.js"></script>
+</head>
+<body>
+    <!-- NAVBAR
+    ================================================== -->
+    <div class="navbar-wrapper">
+        <!-- Wrap the .navbar in .container to center it within the absolutely positioned parent. -->
+        <div class="container">
+
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner">
+                    <!-- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize. -->
+                    <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="brand" href="/">Rantup - Admin</a>
+                    <!-- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse. -->
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li>@Html.ActionLink("Dashboard", "Index", "ManageAdmin")</li>
+                            
+                            <li>@Html.ActionLink("Nyinkomna restauranger", "NewEnterprises", "ManageAdmin")</li>
+                            <li>@Html.ActionLink("Modifierade menyer", "ModifiedMenus", "ManageAdmin")</li>
+
+                            <li>@Html.ActionLink("Konton", "Index", "AccountManagement")</li>
+                        </ul>
+                    </div>
+                    <!--/.nav-collapse -->
+                </div>
+                <!-- /.navbar-inner -->
+            </div>
+            <!-- /.navbar -->
+
+        </div>
+        <!-- /.container -->
+    </div>
+    <!-- /Navigation -->
+
+
+
+    <section>
+        <div class="container">
+        @RenderBody()
+            </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="container">
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; 2013 Rantup &middot; <a href="#">Privacy</a> &middot; <a href="#">Användarvillkor</a></p>
+    </footer>
+
+    @Scripts.Render("~/Content/js")
+</body>
+</html>

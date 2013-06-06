@@ -1,0 +1,20 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "title";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Dashboard</h2>
+
+
+
+@using (Html.BeginForm("CreateAllIndexes", "ManageAdmin"))
+{
+    <button type="submit" class="btn btn-info">Indexera RavenDB</button>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="label label-success label-padding">@ViewBag.Message</div>
+}

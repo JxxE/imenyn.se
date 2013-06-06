@@ -1,0 +1,69 @@
+﻿@model Rantup.Web.ViewModels.MainSearchViewModel
+@{
+    ViewBag.Title = "Sveriges menyer samlade!";
+    ViewBag.IsFirstPage = true;
+}
+
+FU
+<div id="main-search-container">
+
+    <h2>Sök på restaurang eller ort</h2>
+    <div class="form-inline margin-bottom">
+        <input id="search-query" type="text" />
+        <a href="javascript:void(0)" id="search" class="btn btn-info btn-large">Sök</a>
+    </div>
+
+    <hr />
+    <h4>Eller...</h4>
+    <div class="well">
+        <div class="row">
+            <div id="category-search" class="btn-group margin-bottom" data-toggle="buttons-radio">
+                <a href="javascript:void(0)" class="btn btn-inverse active" data-values="All">Alla</a>
+                <a href="javascript:void(0)" class="btn btn-inverse" data-values="AsianFusion,Chinese,Indian,Indonesian,Japanese,Korean,Lebanese,Mongolian,Sushi,Taiwanese,Tahi,Turkish,Vietnamese">Asiatiskt</a>
+                <a href="javascript:void(0)" class="btn btn-inverse" data-values="Bar,Cafe,">Bar & café</a>
+                <a href="javascript:void(0)" class="btn btn-inverse" data-values="European,French,German,Irish,Scandinavian,Swedish,Italian">Europeiskt</a>
+                <a href="javascript:void(0)" class="btn btn-inverse" data-values="Pasta">Pasta</a>
+                <a href="javascript:void(0)" class="btn btn-inverse" data-values="Pizza,Kebab,FastFood">Pizza & kebab</a>
+                <a href="javascript:void(0)" class="btn btn-inverse" data-values="Salad,Sandwiches,Wraps">Sallad och smörgåsar</a>k
+            </div>
+        </div>
+        <div class="form-inline">
+            @Html.DropDownListFor(m => m.Counties, new SelectList(Model.Counties, "Value", "Text"))
+            <a href="javascript:void(0)" id="advanced-search" class="btn btn-success">OK</a>
+        </div>
+    </div>
+    <div id="loading" class="hide">Laddar...</div>
+
+    <div id="search-result">
+    </div>
+
+
+
+
+
+</div>
+
+
+<script>
+    $("#search").click(function () {
+        var query = document.getElementById("search-query").value;
+        Rantup.Ajax.SearchEnterprises(query, null, null);
+    });
+
+    $("#advanced-search").click(function () {
+        var selectedCountyCode = $("#Counties").val();
+        var selectedCategory = $("#category-search .active").attr("data-values");
+        Rantup.Ajax.SearchEnterprises("", selectedCountyCode, selectedCategory);
+    });
+
+
+
+    $('input').bind("enterKey", function () {
+        $("#search").click();
+    });
+    $('input').keyup(function (e) {
+        if (e.keyCode == 13) {
+            $(this).trigger("enterKey");
+        }
+    });
+</script>

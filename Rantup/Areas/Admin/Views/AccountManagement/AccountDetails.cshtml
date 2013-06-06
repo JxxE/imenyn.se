@@ -1,0 +1,25 @@
+﻿@model Rantup.Web.Areas.Admin.ViewModels.AccountViewModel
+
+@{
+    ViewBag.Title = "Kontodetaljer";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Kontodetaljer</h2>
+
+<h1>@Model.Name</h1>
+<div class="well">
+    <p>@Model.Email</p>
+    <p>@Model.Phone</p>
+    <p>Enabled: @Model.Enabled</p>
+    <p>Admin: @Model.IsAdmin</p>
+</div>
+
+@if(Model.Enabled)
+{
+   @Html.ActionLink("Inaktivera detta konto", "DisableAccount", "AccountManagement", new{id= Model.Id}, new{@class="btn btn-danger"}) 
+}
+else
+{
+    @Html.ActionLink("Aktivera detta konto", "EnableAccount", "AccountManagement", new{id= Model.Id}, new{@class="btn btn-success"})
+}

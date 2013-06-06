@@ -1,0 +1,24 @@
+﻿@if (Request.IsAuthenticated)
+{   
+    <ul class="nav pull-right">
+
+        <li id="account-chooser" class="dropdown pull-right">
+            
+        </li>
+        <li class="dropdown pull-right">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-user icon-white"></i>@* @ViewBag.CurrentUser.FullName*@ <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+@*                <li>@Html.ActionLink(GlobalResources.Profile, "Profile", "Account", new { area = "" }, null)</li>
+                <li class="divider"></li>*@
+                <li>@Html.ActionLink("Logga ut", "LogOff", "Administrate", new { area = "" }, null)</li>
+            </ul>
+        </li>
+    </ul>
+
+}
+else
+{
+    <ul class="nav pull-right">
+        <li>@Html.ActionLink("Logga in", "Login", "Administrate", new { area = "" }, null)</li>
+    </ul>
+}
