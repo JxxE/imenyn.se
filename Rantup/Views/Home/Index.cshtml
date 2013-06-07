@@ -13,8 +13,8 @@
     </div>
 
     <hr />
-    <h4>Eller...</h4>
-    <div class="well">
+    <h4 id="ad-search-button">Avancerad sök <i class="icon-search"></i></h4>
+    <div id="ad-search" class="well hide">
         <div class="row">
             <div id="category-search" class="btn-group margin-bottom" data-toggle="buttons-radio">
                 <a href="javascript:void(0)" class="btn btn-inverse active" data-values="All">Alla</a>
@@ -31,6 +31,7 @@
             <a href="javascript:void(0)" id="advanced-search" class="btn btn-success">OK</a>
         </div>
     </div>
+
     <div id="loading" class="hide">Laddar...</div>
 
     <div id="search-result">
@@ -55,7 +56,9 @@
         Rantup.Ajax.SearchEnterprises("", selectedCountyCode, selectedCategory);
     });
 
-
+    $("#ad-search-button").click(function() {
+        $("#ad-search").toggle();
+    });
 
     $('input').bind("enterKey", function () {
         $("#search").click();

@@ -161,59 +161,6 @@
         </tbody>
     </table>
 
-@*    <div data-bind="foreach:products" class="well">
-        <div style="background-color: red; margin-bottom: 15px;">
-            <div id="">
-
-                <p data-bind='text: Name'></p>
-
-                <p data-bind='text: Description'></p>
-
-                <p data-bind='text: Price'></p>
-
-                <p data-bind="text:Category"></p>
-
-                <p data-bind='text: ProductType'></p>
-
-
-                <p data-bind='text: Size'></p>
-
-                <p data-bind='text: Abv'></p>
-
-                <p data-bind='text: AdditionalComment'></p>
-
-                <a class="btn" data-bind="click: $parent.selectItem" href="#" title="edit"><i class="icon-edit"></i></a>
-                <a class="btn" data-bind="click: $root.removeProduct" href="#" title="remove"><i class="icon-remove"></i></a>
-            </div>
-        </div>
-    </div>
-
-    <div id="editTmplasdasd">
-        <div data-bind="with: $root.itemForEditing">
-
-            <input data-bind="value: Name" />
-
-            <input data-bind="value: Description" />
-
-            <input data-bind="value: Price" />
-
-            <input data-bind="value: Category" />
-
-            <p data-bind="text: ProductType"></p>
-
-            <input data-bind="visible: ProductType() == 'drink', value: Size"  />
-
-            <input data-bind="visible: ProductType() == 'drink', value: Abv" />
-
-            <input data-bind="value: AdditionalComment" />
-
-            <a class="btn btn-success" data-bind="click: $root.acceptItem" href="#" title="save"><i class="icon-ok"></i></a>
-            <a class="btn" data-bind="click: $root.revertItem" href="#" title="cancel"><i class="icon-trash"></i></a>
-        </div>
-    </div>*@
-
-
-
 
     <button data-bind="click: save, enable: products().length > 0" class="btn btn-info">Spara menyn</button>
 </div>
