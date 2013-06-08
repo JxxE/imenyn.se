@@ -72,6 +72,24 @@ namespace Rantup.Data.Concrete
             }
         }
 
+        public IEnumerable<Enterprise> CheckIfEnterpriseExists(string key, string postalCode)
+        {
+            using (var session = _documentStore.OpenSession())
+            {
+                var query = session.Advanced.LuceneQuery<Enterprise, Enterprises>();
+            
+                query = query.OpenSubclause();
+
+                var searchQuery = RavenQuery.Escape(key, true, false);
+
+                query = query.WhereStartsWith(x => x.PostalCode, postalCode).AndAlso();
+                query = query.WhereStartsWith(x => x.Key, searchQuery);
+                
+                query = query.CloseSubclause();
+                return query;
+            }
+        }
+
         public void UpdateMenu(Menu menu)
         {
             using (var session = _documentStore.OpenSession())

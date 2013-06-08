@@ -34,9 +34,10 @@ namespace Rantup.Data.Infrastructure.Index
                                             };
 
             Reduce = results => from result in results
-                                group result by result.Name into g
+                                group result by result.Id into g
                                 select new
                                            {
+                                               
                                                g.First().Name,
                                                g.First().StateCode,
                                                g.First().Key,

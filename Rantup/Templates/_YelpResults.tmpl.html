@@ -10,7 +10,21 @@
     {{/if}}
     
     <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#{{:id}}">Välj</button>
+    {{if MayAlreadyExistInDb}}
+    <div class="alert alert-block">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <h4>OBS!</h4>
+        <p>Det finns en eller flera restauranger med liknande namn i samma område. Kontrollera att din restaurang inte redan finns.</p>
+        {{for MenyUrls}}
+        {{if #data == ""}}
+        <a href="#" class="btn btn-info disabled">Denna meny är under utredning och kan inte förhandsvisas</a>
+        {{else}}
+        <a href="Cabaret/{{:#data}}" class="btn btn-info">Se menyn</a>
+        {{/if}}
+        {{/for}}
+    </div>
 
+    {{/if}}
     <form id="{{:id}}" method="POST" action="/Manage/CreateEnterprise" class="collapse form-inline">
         <input type="hidden" name="name" value="{{:name}}" />
         <input type="hidden" name="phone" value="{{:display_phone}}" />

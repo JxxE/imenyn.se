@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Rantup.Data.Abstract;
-using Rantup.Data.Concrete;
 using Rantup.Data.Helpers;
 using Rantup.Data.Models;
 using Rantup.Web.Helpers;
-using GeneralHelper = Rantup.Web.Helpers.GeneralHelper;
 
 namespace Rantup.Web.Controllers
 {
@@ -105,7 +102,7 @@ namespace Rantup.Web.Controllers
             Repository.CreateProducts(updatedProducts);
         }
 
-        public RedirectToRouteResult CreateEnterprise(FormCollection form)
+        public ActionResult CreateEnterprise(FormCollection form)
         {
             var name = form["name"];
             var phone = form["phone"];
@@ -128,17 +125,9 @@ namespace Rantup.Web.Controllers
                 }
             }
 
-            //Sökfunktionen. sök om denna redan finns och lägg till en varning som syns för mig
-
-            var key = GeneralHelper.GenerateEnterpriseKey(name);
-
-            //var e = Repository.GetEnterpriseByUrlKey(key);
-            //var c = 1;
-            //if(e != null)
-            //{
-            //    key = GeneralHelper.GenerateEnterpriseKey(name + c);
-            //    c++;
-            //}
+            var possibleKey = EnterpriseHelper.GenerateEnterpriseKey(name);
+            var enterpriseExist = Repository.GetEnterpriseByUrlKey(possibleKey) != null;
+            var key = enterpriseExist ? string.Format("{0}-{1}", possibleKey, GeneralHelper.RandomString(4)) : possibleKey;
 
             var id = EnterpriseHelper.GetId(key);
 
@@ -163,6 +152,7 @@ namespace Rantup.Web.Controllers
             };
 
             Repository.CreateEnterprise(enterprise);
+            
             return RedirectToAction("Products", "Manage", new { enterpriseId = id });
         }
 

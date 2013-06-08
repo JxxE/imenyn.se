@@ -26,6 +26,35 @@ namespace Rantup.Web.Controllers
 
             var categories = GeneralHelper.GetCategories();
 
+            foreach (var business in search.Result.businesses)
+            {
+                var key = EnterpriseHelper.GenerateEnterpriseKey(business.name);
+
+                var enterprisesInDb = Repository.CheckIfEnterpriseExists(key, business.location.postal_code);
+                if (enterprisesInDb == null) continue;
+
+                var enterprises = enterprisesInDb as Enterprise[] ?? enterprisesInDb.ToArray();
+
+                var mayExistInDb = enterprises.Any();
+                if (!mayExistInDb) continue;
+
+                business.MayAlreadyExistInDb = true;
+                var urlsForMenus = new List<string>();
+                foreach (var enterprise in enterprises)
+                {
+                    if (enterprise.IsTemp)
+                        urlsForMenus.Add("");
+                    else
+                    {
+                        var kind = enterprise.IsPremium ? "Premium" : "Standard";
+                        var url = string.Format("{0}/{1}", kind, enterprise.Id);
+                        urlsForMenus.Add(url);
+                    }
+                }
+                business.MenyUrls = urlsForMenus;
+            }
+
+
             var viewModel = new SearchYelpViewModel
                                 {
                                     Businesses = search.Result.businesses,

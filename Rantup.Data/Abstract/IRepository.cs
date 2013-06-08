@@ -42,6 +42,7 @@ namespace Rantup.Data.Abstract
 
         //New
         IEnumerable<Enterprise> SearchEnterprises(string searchTerm, string location, string categorySearch);
+        IEnumerable<Enterprise> CheckIfEnterpriseExists(string key, string postalCode);
 
         void UpdateMenu(Menu menu);
 

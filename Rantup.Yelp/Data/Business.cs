@@ -106,5 +106,8 @@ namespace Rantup.Yelp.Data
         /// List of up to 3 review snippets for the business
         /// </summary>
         public List<Review> reviews { get; set; }
+
+        public bool MayAlreadyExistInDb { get; set; }
+        public List<string> MenyUrls { get; set; }
 	}
 }

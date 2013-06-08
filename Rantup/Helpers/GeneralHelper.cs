@@ -10,15 +10,16 @@ namespace Rantup.Web.Helpers
 {
     public class GeneralHelper
     {
-        public static string GenerateEnterpriseKey(string enterpriseName)
+        static readonly Random _random = new Random();
+
+        public static string RandomString(int length)
         {
-            //TODO: ladda in alla KEYS o kolla så inte den nya får samma namn.
-            var sb = new StringBuilder();
-            foreach (var c in enterpriseName.Where(c => (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')))
-            {
-                sb.Append(c);
-            }
-            return sb.ToString().ToLower();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var result = new string(
+                Enumerable.Repeat(chars, length)
+                          .Select(s => s[_random.Next(s.Length)])
+                          .ToArray());
+            return result;
         }
 
         public static List<ValueAndText> GetCountyNameAndCodes()
