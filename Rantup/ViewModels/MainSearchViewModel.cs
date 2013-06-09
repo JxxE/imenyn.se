@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Rantup.Web.Models;
+using Rantup.Data.Models;
 
 namespace Rantup.Web.ViewModels
 {

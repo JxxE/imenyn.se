@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using Rantup.Data.Models;
 using Raven.Abstractions.Indexing;
 using Raven.Client.Indexes;
@@ -57,10 +54,11 @@ namespace Rantup.Data.Infrastructure.Index
                                            };
 
 
-            Indexes.Add(x=>x.Name, FieldIndexing.Analyzed);
-            Indexes.Add(x => x.StateCode, FieldIndexing.Analyzed);
-            Indexes.Add(x => x.Key, FieldIndexing.Analyzed);
+            Indexes.Add(x => x.Name, FieldIndexing.Analyzed);
+            Indexes.Add(x => x.StateCode, FieldIndexing.Default);
+            Indexes.Add(x => x.Key, FieldIndexing.Default);
             Indexes.Add(x => x.City, FieldIndexing.Analyzed);
+            Indexes.Add(x=>x.PostalCode, FieldIndexing.Analyzed);
             Indexes.Add(x=>x.Categories,FieldIndexing.Default);
         }
     }

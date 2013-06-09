@@ -35,6 +35,7 @@ namespace Rantup.Web.Helpers
                 var ft = new FoodType 
                 {
                     Name = ProductHelper.FormatProductType(foodType.Key),
+                    Key = foodType.Key,
                     Categories = new List<Category>()
                 };
 
@@ -58,6 +59,15 @@ namespace Rantup.Web.Helpers
                 viewModel.FoodTypes.Add(ft);
 
             }
+
+            //Sort productTypes
+            viewModel.FoodTypes = viewModel.FoodTypes.OrderBy(type =>
+                                        type.Key == "main-dish"
+                                            ? 1
+                                            : type.Key == "drink" ? 2 :
+                                            type.Key == "extra" ? 3 : 4
+                ).ToList();
+
             return viewModel;
         }
 

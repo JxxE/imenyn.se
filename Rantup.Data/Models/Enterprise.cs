@@ -12,7 +12,7 @@ namespace Rantup.Data.Models
         public string Phone { get; set; }
 
         public string Address { get; set; }
-        public string PostalCode { get; set; }
+        public int PostalCode { get; set; }
         public string City { get; set; }
         public string CountryCode { get; set; }
         public string StateCode { get; set; }

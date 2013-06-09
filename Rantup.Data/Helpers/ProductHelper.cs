@@ -46,16 +46,16 @@ namespace Rantup.Data.Helpers
                 switch (type)
                 {
                     case ProductType.Drink:
-                        formatted = "Dryck";
+                        formatted = "Drycker";
                         break;
                     case ProductType.Appetizer:
-                        formatted = "Förrätt";
+                        formatted = "Förrätter";
                         break;
                     case ProductType.MainDish:
-                        formatted = "Varmrätt";
+                        formatted = "Varmrätter";
                         break;
                     case ProductType.Dessert:
-                        formatted = "Efterrätt";
+                        formatted = "Efterrätter";
                         break;
                     default:
                         formatted = "";
@@ -78,6 +78,9 @@ namespace Rantup.Data.Helpers
                         break;
                     case "desert":
                         formatted = "Efterrätt";
+                        break;
+                    case "extra":
+                        formatted = "Tillbehör";
                         break;
                     default:
                         formatted = "";

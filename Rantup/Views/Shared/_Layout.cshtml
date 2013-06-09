@@ -6,81 +6,45 @@
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width" />
-    @Styles.Render("~/Content/css")
 
+    @Combiner.Css("/Content", "bootstrap.css,base.css,theme.css,layout.css,module.css,state.css,media-queries.css")
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-
-    <script src="~/js/Rantup.js"></script>
-    <script src="~/js/Rantup.Utilities.js"></script>
+    @Combiner.Js("/Js", "Rantup.js")
 </head>
 <body>
-    <div class="navbar-wrapper">
-        <!-- Wrap the .navbar in .container to center it within the absolutely positioned parent. -->
-        <div class="container">
-            <div class="navbar navbar-inverse">
-                <div class="navbar-inner">
-                    <!-- Responsive Navbar Part 1: Button for triggering responsive navbar (not covered in tutorial). Include responsive CSS to utilize. -->
-                    <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="brand" href="/">Imenyn.se</a>
-                    <!-- Responsive Navbar Part 2: Place all navbar contents you want collapsed withing .navbar-collapse.collapse. -->
-                    <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            <li>@Html.ActionLink("Hem", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Skapa en meny", "Index", "Manage")</li>
-                            <!-- Read about Bootstrap dropdowns at http://twitter.github.com/bootstrap/javascript.html#dropdowns -->
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Action</a></li>
-                                    <li><a href="#">Another action</a></li>
-                                    <li><a href="#">Something else here</a></li>
-                                    <li class="divider"></li>
-                                    <li class="nav-header">Nav header</li>
-                                    <li><a href="#">Separated link</a></li>
-                                    <li><a href="#">One more separated link</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+   
 
-@*    @if (ViewBag.HasCarousel != null && ViewBag.HasCarousel)
-    {
-        @RenderPage("../Partials/_Carousel.cshtml")
-    }
-    @if (ViewBag.IsFirstPage != null && ViewBag.IsFirstPage)
-    {
-        <div class="carousel">
-            <div class="item">
-                <img src="~/Content/img/slide-01.jpg" alt="">
-                <div class="container">
-                    @RenderPage("../Partials/_MainSearch.cshtml")
-                </div>
+        <div class="navbar">
+            <div class="onepcssgrid-1200">
+              <a href="/"><img src="/Content/img/logo.png" alt="logo"/></a>
+                <button type="button" class="btn btn-navbar">
+                    <span data-icon="&#xe00e;"></span>
+                </button>
+                <ul>
+                    <li>
+                        <a href="/"><span data-icon="&#xe011;"></span></a>
+                    </li>
+                    <li>
+                        <a href="/Manage">Skapa en meny<span data-icon="&#xe010;" class="marginL10"></span></a>
+                    </li>
+                </ul>
             </div>
         </div>
-    }*@
 
     <section>
-        <div class="container">
-            @RenderBody()
+        <div class="onepcssgrid-1200">
+            <div id="l-content-wrapper">
+            @RenderBody()</div>
         </div>
     </section>
 
-
-    <!-- FOOTER -->
-    <footer class="container">
-        <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>&copy; 2013 Rantup &middot; <a href="#">Privacy</a> &middot; <a href="#">Användarvillkor</a></p>
-        @Html.ActionLink("Logga in", "Login", "Account")
+    <footer class="onepcssgrid-1200">
+        <p>&copy; 2013 iMenyn.se
+        @Html.ActionLink("Logga in", "Login", "Account")</p>
     </footer>
 
-    @Scripts.Render("~/Content/js")
+    
+    @Combiner.Js("/Scripts", "jsrender.js")
 </body>
 </html>

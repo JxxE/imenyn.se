@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using Rantup.Data.Models;
 
 namespace Rantup.Web.ViewModels
@@ -14,6 +11,7 @@ namespace Rantup.Web.ViewModels
     public class FoodType
     {
         public string Name { get; set; }
+        public string Key { get; set; }
         public ProductType ProductType { get; set; }
         public List<Category> Categories { get; set; }
     }

@@ -107,7 +107,11 @@ namespace Rantup.Web.Controllers
             var name = form["name"];
             var phone = form["phone"];
             var address = form["address"];
-            var postalCode = form["postalCode"];
+
+            int postalCode;
+            var postalCodeString = form["postalCode"].Replace(" ",string.Empty);
+            int.TryParse(postalCodeString, out postalCode);
+
             var city = form["city"].Contains(",") ? form["city"].Split(',').First() : form["city"];
             var countryCode = form["countryCode"] ?? "SE";
             var state_code = form["state_code"];

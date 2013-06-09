@@ -6,55 +6,48 @@
   <![endif]-->
 
 <style>
-    #map {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 100%;
-        height: 350px;
-    }
 
-    #map-container {
-        visibility: hidden;
-    }
-
-    .visible {
-        visibility: visible!important;
-    }
 </style>
 @{
     var viewModel = PageData[0] as StandardViewModel;
 }
 @if (viewModel != null)
 {
-    <div class="margin-bottom">
-        <div class="row">
-            <div class="span12">
-                <h1 class="inline">@viewModel.Enterprise.Name</h1>
-                <p class="inline marginL10">(@viewModel.Enterprise.Address, @viewModel.Enterprise.City)</p>
+    <div class="marginB20">
+        <div class="onerow">
+            <div class="col12">
+                <h1>@viewModel.Enterprise.Name <small>@viewModel.Enterprise.Address, @viewModel.Enterprise.PostalCode @viewModel.Enterprise.City</small></h1>
             </div>
         </div>
-        <a class="btn btn-success" href="tel:@viewModel.Phone"><i class="icon-bullhorn icon-white"></i>@viewModel.Enterprise.Phone</a>
+        <a class="btn btn-success" href="tel:@viewModel.Phone"><span data-icon="&#xe000;" class="marginR5"></span>@viewModel.Enterprise.Phone</a>
         @if (viewModel.Enterprise.Categories != null)
         {
-            <a href="javascript:void(0)" id="show-map" class="btn btn-info" data-toggle="button"><i class="icon-map-marker icon-white"></i>Visa på karta</a>
+            <a href="javascript:void(0)" id="show-map" class="btn btn-info"><span data-icon="&#xe003;" class="marginR5"></span>Visa på karta</a>
         }
-        <div id="map-container" class="span12" style="position: relative">
+        <div id="map-container" class="col12">
             <div id='map'></div>
         </div>
     </div>
-    <div class="well">
+    <div id="menu" class="well">
         @RenderPage("_StandardMenuProducts.cshtml", viewModel.Products)
     </div>
-
         if (!viewModel.RecentlyModified)
         {
-    @Html.ActionLink("Redigera menyn", "Products", "Manage", new { enterpriseId = viewModel.Enterprise.Id }, null)
+            <a class="btn btn-inverse pull-right" href="javascript:void(0)" data-toggle="collapse" data-target="#edit-help"><span data-icon="&#xe004;" class="marginR5"></span>Redigera menyn</a>
+            <div id="edit-help" class="well hide">
+                <h3>Tänk på att</h3>
+                <ul>
+                    <li>Dina ändringar kommer först att godkännas av en administratör innan de publiceras.</li>
+                </ul>
+                <a class="btn btn-success" href="/Manage/Products?enterpriseId=@viewModel.Enterprise.Id">OK, gå vidare!<span class="marginL10" data-icon="&#xe00d;"></span></a>
+            </div>
         }
         else
         {
-    <i>Denna meny har nyligen uppdateras och väntar på godkännande.</i>
+            <i>Denna meny har nyligen uppdateras och väntar på godkännande.</i>
         }
+        
+        
 
     <script>
         var map = L.mapbox.map('map', 'jxxe.map-tdq4olrv')
@@ -66,8 +59,7 @@
                 coordinates: [@viewModel.Enterprise.Coordinates.Lng,@viewModel.Enterprise.Coordinates.Lat]
             },
             properties: {
-                title: 'A Single Marker',
-                description: 'Just one of me',
+                title: '@viewModel.Enterprise.Name',
                 'marker-color': '#f0a'
             }
         }).addTo(map);

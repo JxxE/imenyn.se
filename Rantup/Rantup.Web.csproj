@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EcmaScript.NET">
+      <HintPath>..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll</HintPath>
+    </Reference>
     <Reference Include="Esent.Interop">
       <HintPath>..\packages\RavenDB.Database.2.0.2230\lib\net40\Esent.Interop.dll</HintPath>
     </Reference>
@@ -50,6 +53,9 @@
     </Reference>
     <Reference Include="ICSharpCode.NRefactory.CSharp">
       <HintPath>..\packages\RavenDB.Database.2.0.2230\lib\net40\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="Jint.Raven">
       <HintPath>..\packages\RavenDB.Database.2.0.2230\lib\net40\Jint.Raven.dll</HintPath>
@@ -203,6 +209,9 @@
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Yahoo.Yui.Compressor">
+      <HintPath>..\packages\YUICompressor.NET.2.2.0.0\lib\NET20\Yahoo.Yui.Compressor.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AuthConfig.cs" />
@@ -226,14 +235,17 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\CombinerHandler.ashx.cs">
+      <DependentUpon>CombinerHandler.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Handlers\CombinerRouteHandler.cs" />
     <Compile Include="Helpers\AccountHelper.cs" />
-    <Compile Include="Helpers\GeneralHelper.cs" />
+    <Compile Include="Helpers\CombinerHelper.cs" />
     <Compile Include="Helpers\ViewModelHelper.cs" />
     <Compile Include="Infrastructure\Authentication.cs" />
     <Compile Include="Infrastructure\NinjectControllerFactory.cs" />
     <Compile Include="Infrastructure\OnlyAccountAdminAttribute.cs" />
     <Compile Include="Models\AccountModels.cs" />
-    <Compile Include="Models\ValueAndText.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\EnterprisesViewModel.cs" />
     <Compile Include="ViewModels\MainSearchViewModel.cs" />
@@ -243,71 +255,28 @@
     <Compile Include="YelpConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-editable.css" />
+    <Content Include="Content\base.css" />
+    <Content Include="Content\bootstrap.css" />
     <Content Include="Content\external\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="Content\external\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="Content\external\bootstrap\css\bootstrap.css" />
     <Content Include="Content\external\bootstrap\css\bootstrap.min.css" />
     <Content Include="Content\external\bootstrap\img\glyphicons-halflings-white.png" />
     <Content Include="Content\external\bootstrap\img\glyphicons-halflings.png" />
-    <Content Include="Content\external\bootstrap\js\bootstrap.js" />
+    <Content Include="Content\img\ajax-load.gif" />
+    <Content Include="Content\img\bg.jpg" />
+    <Content Include="Content\img\logo.png" />
+    <Content Include="Content\media-queries.css" />
+    <Content Include="Content\theme.css" />
+    <Content Include="Scripts\bootstrap.js" />
     <Content Include="Content\external\bootstrap\js\bootstrap.min.js" />
+    <Content Include="Content\fonts\iMenyn.dev.svg" />
+    <Content Include="Content\fonts\iMenyn.svg" />
     <Content Include="Content\img\slide-01.jpg" />
     <Content Include="Content\img\white-bg.png" />
-    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\themes\base\jquery-ui.css" />
-    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
-    <Content Include="Content\themes\base\jquery.ui.all.css" />
-    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
-    <Content Include="Content\themes\base\jquery.ui.base.css" />
-    <Content Include="Content\themes\base\jquery.ui.button.css" />
-    <Content Include="Content\themes\base\jquery.ui.core.css" />
-    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
-    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
-    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
-    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
-    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
-    <Content Include="Content\themes\base\jquery.ui.slider.css" />
-    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
-    <Content Include="Content\themes\base\jquery.ui.theme.css" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\themes\base\minified\jquery-ui.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.button.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\layout.css" />
+    <Content Include="Content\module.css" />
+    <Content Include="Content\state.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Areas\Admin\Views\Web.config" />
@@ -319,22 +288,16 @@
     <Content Include="Areas\Admin\Views\AccountManagement\AccountDetails.cshtml" />
     <Content Include="Areas\Admin\Views\ManageAdmin\ModifiedMenus.cshtml" />
     <Content Include="Areas\Admin\Views\ManageAdmin\ModifiedMenu.cshtml" />
-    <None Include="Scripts\jquery-1.7.1.intellisense.js" />
-    <Content Include="Images\white_wall_hash.png" />
-    <Content Include="img\loading.gif" />
-    <Content Include="img\glyphicons-halflings-white.png" />
-    <Content Include="img\glyphicons-halflings.png" />
-    <Content Include="img\bg.png" />
+    <Content Include="Content\fonts\iMenyn.eot" />
+    <Content Include="Content\fonts\iMenyn.ttf" />
+    <Content Include="Content\fonts\iMenyn.woff" />
+    <Content Include="App_Code\Combiner.cshtml" />
+    <Content Include="Handlers\CombinerHandler.ashx" />
     <Content Include="js\Rantup.Utilities.js" />
     <Content Include="js\Rantup.js" />
     <Content Include="js\rantup.Admin.js" />
-    <Content Include="Scripts\bootstrap-editable.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-1.7.1.js" />
-    <Content Include="Scripts\jquery-1.7.1.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -343,9 +306,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\jsrender.js" />
-    <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
-    <Content Include="Scripts\knockout-mapping.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Templates\_ListEnterprises.tmpl.html" />
     <Content Include="Templates\_YelpResults.tmpl.html" />
@@ -358,19 +319,6 @@
     </Content>
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Images\accent.png" />
-    <Content Include="Images\bullet.png" />
-    <Content Include="Images\heroAccent.png" />
-    <Content Include="Images\orderedList0.png" />
-    <Content Include="Images\orderedList1.png" />
-    <Content Include="Images\orderedList2.png" />
-    <Content Include="Images\orderedList3.png" />
-    <Content Include="Images\orderedList4.png" />
-    <Content Include="Images\orderedList5.png" />
-    <Content Include="Images\orderedList6.png" />
-    <Content Include="Images\orderedList7.png" />
-    <Content Include="Images\orderedList8.png" />
-    <Content Include="Images\orderedList9.png" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -380,7 +328,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Cabaret\Product.cshtml" />
-    <Content Include="Views\Home\Search.cshtml" />
     <Content Include="Views\Cabaret\Index.cshtml" />
     <Content Include="Views\Cabaret\Premium.cshtml" />
     <Content Include="Views\Cabaret\Standard.cshtml" />
@@ -392,8 +339,6 @@
     <Content Include="Views\Manage\Products.cshtml" />
     <Content Include="Views\Partials\_StandardMenuProducts.cshtml" />
     <Content Include="Views\Cabaret\NoMenu.cshtml" />
-    <Content Include="Views\Manage\ProductsWorkingButNoptGroupiong.cshtml" />
-    <Content Include="Views\Partials\_MainSearch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Rantup.Data.Abstract;
+using Rantup.Data.Helpers;
 using Rantup.Data.Infrastructure.Index;
 using Rantup.Data.Models;
 using Raven.Abstractions.Commands;
@@ -72,19 +73,19 @@ namespace Rantup.Data.Concrete
             }
         }
 
-        public IEnumerable<Enterprise> CheckIfEnterpriseExists(string key, string postalCode)
+        public IEnumerable<Enterprise> CheckIfEnterpriseExists(string key, int postalCode)
         {
             using (var session = _documentStore.OpenSession())
             {
                 var query = session.Advanced.LuceneQuery<Enterprise, Enterprises>();
-            
+
                 query = query.OpenSubclause();
 
                 var searchQuery = RavenQuery.Escape(key, true, false);
 
-                query = query.WhereStartsWith(x => x.PostalCode, postalCode).AndAlso();
+                query = query.WhereEquals(x => x.PostalCode, postalCode).AndAlso();
                 query = query.WhereStartsWith(x => x.Key, searchQuery);
-                
+
                 query = query.CloseSubclause();
                 return query;
             }
@@ -309,7 +310,7 @@ namespace Rantup.Data.Concrete
 
                     //Search made from textbox
                     if (isTbSearch)
-                        searchTerms = tbSearch.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        searchTerms = tbSearch.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
                     //Category search from button-group
                     if (isCategorySearch)
@@ -324,12 +325,36 @@ namespace Rantup.Data.Concrete
                         for (var i = 0; i < searchTerms.Length; i++)
                         {
                             var searchQuery = RavenQuery.Escape(searchTerms[i], true, false);
+
+                            if (i > 0)
+                                query = query.OrElse();
+
                             query = query.WhereEquals(x => x.IsTemp, false).AndAlso();
 
                             if (isTbSearch)
                             {
+                                query = query.OpenSubclause();
                                 query = query.WhereStartsWith(x => x.Name, searchQuery).OrElse();
+                                query = query.Search(x => x.Name, searchQuery).OrElse();
+
+                                var stateCode = GeneralHelper.GetCountyNameAndCodes().FirstOrDefault(c => c.Text.ToLower().Contains(searchQuery));
+                                if (stateCode != null)
+                                {
+                                    query = query.WhereEquals(x => x.StateCode, stateCode.Value).OrElse();
+                                }
+
+                                #region PostalCode search
+                                int postalCode;
+                                int.TryParse(tbSearch, out postalCode);
+                                if (postalCode > 0)
+                                {
+                                    query = query.WhereBetweenOrEqual(x => x.PostalCode, postalCode - 500, postalCode + 500).OrElse();
+                                }
+                                #endregion
+
                                 query = query.WhereStartsWith(x => x.City, searchQuery);
+                                query = query.CloseSubclause();
+
                             }
                             if (isCategorySearch)
                             {
@@ -343,9 +368,11 @@ namespace Rantup.Data.Concrete
 
                             }
                         }
-
                         query = query.CloseSubclause();
-                        return query;
+
+                        query = query.OrderBy(x => x.Name);
+
+                        return query.Take(30);
                     }
                 }
 

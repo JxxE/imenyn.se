@@ -30,7 +30,11 @@ namespace Rantup.Web.Controllers
             {
                 var key = EnterpriseHelper.GenerateEnterpriseKey(business.name);
 
-                var enterprisesInDb = Repository.CheckIfEnterpriseExists(key, business.location.postal_code);
+                var postalCode = 0;
+                if(business.location.postal_code != null)
+                    int.TryParse(business.location.postal_code.Replace(" ",string.Empty), out postalCode);
+
+                var enterprisesInDb = Repository.CheckIfEnterpriseExists(key, postalCode);
                 if (enterprisesInDb == null) continue;
 
                 var enterprises = enterprisesInDb as Enterprise[] ?? enterprisesInDb.ToArray();
@@ -67,11 +71,27 @@ namespace Rantup.Web.Controllers
         public JsonResult SearchEnterprises(string searchTerm, string location, string categorySearch)
         {
             var enterprises = Repository.SearchEnterprises(searchTerm, location, categorySearch);
-            var viewModel = new EnterprisesViewModel
-                                {
-                                    Enterprises = enterprises
-                                };
-            return Json(viewModel);
+
+            var enterprisesViewModel = new EnterprisesViewModel
+                                           {
+                                               Enterprises = new List<EnterpriseViewModel>()
+                                           };
+
+            foreach (var enterpriseViewModel in enterprises.Select(enterprise => new EnterpriseViewModel
+                                                                                     {
+                                                                                         Id = enterprise.Id,
+                                                                                         Name = enterprise.Name,
+                                                                                         Address = enterprise.Address,
+                                                                                         PostalCode = enterprise.PostalCode,
+                                                                                         City = enterprise.City,
+                                                                                         Categories = (from category in enterprise.Categories select GeneralHelper.GetCategories().FirstOrDefault(c => c.Value == category) into categoryToAdd where categoryToAdd != null select categoryToAdd.Text).ToList()
+                                                                                     }))
+            {
+                enterprisesViewModel.Enterprises.Add(enterpriseViewModel);
+            }
+
+
+            return Json(enterprisesViewModel);
         }
     }
 }

@@ -1,3 +1,21 @@
 ﻿{{for Enterprises}}
-<a href="/cabaret?c={{:Id}}">{{:Name}}</a>
+{{if #data != null}}
+
+    <a href="/cabaret?c={{:Id}}" class="row-result">
+        <div class="content"><b class="head">{{:Name}}</b>
+            <p>{{:Address}} {{:PostalCode}} {{:City}}</p>
+
+                {{for Categories}}
+                <div class="tag">{{:#data}}</div>
+                {{/for}}
+
+        </div>
+        <span data-icon="&#xe00d;"></span>
+    </a>
+
+{{/if}}
 {{/for}}
+
+{{if Enterprises.length == 0}}
+<i>Inga träffar...</i>
+{{/if}}

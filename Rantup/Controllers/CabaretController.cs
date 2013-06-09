@@ -57,14 +57,15 @@ namespace Rantup.Web.Controllers
             return View(model);
         }
 
+        //TODO: Vad gör denna?
         public ActionResult NoMenu(string id)
         {
-            var enterprise = Repository.GetEnterpriseById(id);
-            var viewModel = new EnterprisesViewModel
-                                {
-                                    Enterprises = new List<Enterprise>() {enterprise}
-                                };
-            return View(viewModel);
+            //var enterprise = Repository.GetEnterpriseById(id);
+            //var viewModel = new EnterprisesViewModel
+            //                    {
+            //                        Enterprises = new List<Enterprise>() {enterprise}
+            //                    };
+            return View();
         }
 
         public ActionResult Product(string id)
