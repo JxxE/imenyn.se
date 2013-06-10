@@ -99,12 +99,7 @@ h1 small {
                 padding: 12px 15px 12px;
                 background-color: rgb(92, 92, 92);
             }
-
-                .navbar ul li a.active, .navbar ul li a:hover {
-                    color: #FFF;
-                }
-
-                .navbar ul li a.active {
+                .navbar ul li a.active,.navbar ul li a.active, .navbar ul li a:hover {
                     background-color: rgb(111, 0, 84);
                 }
 
@@ -218,7 +213,7 @@ h1 small {
 }
 
     #menu .category-header {
-        margin: 0 0 7px 0;
+        margin: 4px 0 7px 0;
         border-bottom: 1px solid rgb(224, 224, 224);
         padding-bottom: 4px;
     }

@@ -15,12 +15,8 @@ using Rantup.Web.ViewModels;
 
 namespace Rantup.Web.Areas.Admin.Controllers
 {
-    [OnlyAdmin]
-    public class ManageAdminController : BaseController
+    public class ManageAdminController : AdminBaseController
     {
-        //
-        // GET: /Admin/Admin/
-
         public ManageAdminController(IRepository repository, IAuthentication authentication = null)
             : base(repository, authentication)
         {
@@ -28,7 +24,24 @@ namespace Rantup.Web.Areas.Admin.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var viewModel = new DashboardViewModel
+                                {
+                                    NewEnterprises = new List<Enterprise>(),
+                                    EnterprisesWithModifiedMenus = new List<Enterprise>()
+                                };
+
+            if(CurrentAccount.IsAdmin)
+            {
+                var newEnterprises = Repository.GetNewEnterprises().Take(5);
+                var modifiedMenus = Repository.GetAllModifiedMenus();
+
+                var enterprisesWithModifiedMenus = Repository.GetEnterprisesWithModifiedMenus();
+
+                viewModel.NewEnterprises = newEnterprises.ToList();
+                viewModel.EnterprisesWithModifiedMenus = enterprisesWithModifiedMenus.ToList();
+            }
+
+            return View(viewModel);
         }
 
 
@@ -171,13 +184,17 @@ namespace Rantup.Web.Areas.Admin.Controllers
             return RedirectToAction("NewEnterprises");
         }
 
+        public ActionResult Settings()
+        {
+            return View();
+        }
 
         [HttpPost]
         public ActionResult CreateAllIndexes()
         {
             RavenContext.Instance.CreateAllIndexes();
-            ViewBag.Message = "Successfully created all RavenDB indexes";
-            return View("Index");
+            ViewBag.Message = "Återskapade index";
+            return View("Settings");
         }
     }
 }

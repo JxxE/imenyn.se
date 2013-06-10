@@ -236,6 +236,23 @@ namespace Rantup.Data.Concrete
             }
         }
 
+        public IEnumerable<Enterprise> GetNewEnterprises()
+        {
+            using(var session = _documentStore.OpenSession())
+            {
+                return session.Advanced.LuceneQuery<Enterprise, Enterprises>().WhereEquals(e => e.IsTemp, true);
+            }
+        }
+
+        public IEnumerable<Enterprise> GetEnterprisesWithModifiedMenus()
+        {
+            using (var session = _documentStore.OpenSession())
+            {
+                var enterpriseIds = GetAllModifiedMenus().Select(m => m.EnterpriseId);
+                return session.Load<Enterprise>(enterpriseIds);
+            }
+        }
+
         public IEnumerable<ModifiedMenu> GetAllModifiedMenus()
         {
             using (var session = _documentStore.OpenSession())

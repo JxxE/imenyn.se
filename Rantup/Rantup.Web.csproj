@@ -221,10 +221,12 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AccountManagementController.cs" />
+    <Compile Include="Areas\Admin\Controllers\AdminBaseController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageAdminController.cs" />
     <Compile Include="Areas\Admin\ViewModels\AccountViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AllEnterprisesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\CompareModifiedMenuViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\DashboardViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CabaretController.cs" />
@@ -243,6 +245,7 @@
     <Compile Include="Helpers\CombinerHelper.cs" />
     <Compile Include="Helpers\ViewModelHelper.cs" />
     <Compile Include="Infrastructure\Authentication.cs" />
+    <Compile Include="Infrastructure\OnlyEnabledAttribute.cs" />
     <Compile Include="Infrastructure\NinjectControllerFactory.cs" />
     <Compile Include="Infrastructure\OnlyAccountAdminAttribute.cs" />
     <Compile Include="Models\AccountModels.cs" />
@@ -255,6 +258,7 @@
     <Compile Include="YelpConfig.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\admin-layout.css" />
     <Content Include="Content\base.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\external\bootstrap\css\bootstrap-responsive.css" />
@@ -297,6 +301,7 @@
     <Content Include="js\Rantup.js" />
     <Content Include="js\rantup.Admin.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Areas\Admin\Views\ManageAdmin\Settings.cshtml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />

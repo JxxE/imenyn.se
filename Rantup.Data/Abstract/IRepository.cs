@@ -27,6 +27,8 @@ namespace Rantup.Data.Abstract
 
         Enterprise GetEnterpriseById(string enterpriseId);
         IEnumerable<Enterprise> GetAllEnterprises();
+        IEnumerable<Enterprise> GetNewEnterprises();
+        IEnumerable<Enterprise> GetEnterprisesWithModifiedMenus();
         Enterprise GetEnterpriseByUrlKey(string urlKey);
 
         IEnumerable<ModifiedMenu> GetAllModifiedMenus();

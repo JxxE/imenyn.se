@@ -1,0 +1,69 @@
+﻿body {
+    background: rgb(238, 238, 238);
+}
+
+h1 small {
+    margin-left: 10px;
+    font-size: 12px; 
+}
+
+.well h4,.well h5{
+    margin: 6px 0;
+}
+
+#container-wrapper {
+    background-color: rgb(253, 253, 253);
+    margin-top: 13px;
+    padding: 19px;
+    overflow: hidden;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color: #1b1b1b;
+    background-image: -moz-linear-gradient(top, #222222, #111111);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#222222), to(#111111));
+    background-image: -webkit-linear-gradient(top, #222222, #111111);
+    background-image: -o-linear-gradient(top, #222222, #111111);
+    background-image: linear-gradient(to bottom, #222222, #111111);
+    background-repeat: repeat-x;
+    border-color: #252525;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff222222', endColorstr='#ff111111', GradientType=0);
+}
+
+    .navbar ul {
+        float: right;
+    }
+
+        .navbar ul li {
+            display: inline;
+        }
+
+            .navbar ul li a {
+                color: #FFF;
+                text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+                padding: 12px 15px 12px;
+                background-color: rgb(92, 92, 92);
+            }
+
+                .navbar ul li a.active, .navbar ul li a.active, .navbar ul li a:hover {
+                    background-color: rgb(53, 53, 53);
+                }
+
+                .message {
+                    padding: 11px;
+                    color: white;
+                }
+                .message.message-success {
+                    background-color: rgb(0, 201, 0);
+                }
+
+               /*ul#sidebar-menu{ list-style-type: none;padding: 0;margin: 0;}
+ul#sidebar-menu li a {
+background-color: rgb(151, 74, 158);
+padding: 9px 7px;
+margin-bottom: 5px;
+display: block;
+color: white;
+}
+ul#sidebar-menu li a:hover{ background-color: rgb(184, 0, 230);}*/

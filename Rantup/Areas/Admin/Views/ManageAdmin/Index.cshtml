@@ -1,20 +1,59 @@
-﻿@model dynamic
+﻿@model Rantup.Web.Areas.Admin.ViewModels.DashboardViewModel
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Välkommen!";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <h2>Dashboard</h2>
 
-
-
-@using (Html.BeginForm("CreateAllIndexes", "ManageAdmin"))
+@if (ViewBag.CurrentAccount.IsAdmin)
 {
-    <button type="submit" class="btn btn-info">Indexera RavenDB</button>
+    <div class="col3">
+        <h2>Nyheter</h2>
+        <div class="well">
+            <h4>Nya menyer</h4>
+            <hr />
+            @if (Model.NewEnterprises.Count == 0)
+            {
+                <i>Inga...</i>
+            }
+            else
+            {
+                foreach (var newEnterprise in Model.NewEnterprises)
+                {
+                <a href="/Admin/ManageAdmin/NewMenu?enterpriseId=@newEnterprise.Id">
+                    <h5>@newEnterprise.Name</h5>
+                    <p>@newEnterprise.PostalCode @newEnterprise.City</p>
+                    <hr />
+                </a>
+                }
+                @Html.ActionLink("Visa alla (" + Model.NewEnterprises.Count + ")", "NewEnterprises", "ManageAdmin")
+            }
+
+
+        </div>
+
+        <div class="well">
+            <h4>Modifierade menyer</h4>
+            @if (Model.EnterprisesWithModifiedMenus.Count == 0)
+            {
+                <i>Inga...</i>
+            }
+            else
+            {
+                foreach (var newEnterprise in Model.EnterprisesWithModifiedMenus)
+                {
+                <a href="/Admin/ManageAdmin/ModifiedMenu?enterpriseKey=@newEnterprise.Key">
+                    <h5>@newEnterprise.Name</h5>
+                    <p>@newEnterprise.PostalCode @newEnterprise.City</p>
+                    <hr />
+                </a>
+                }
+                @Html.ActionLink("Visa alla (" + Model.NewEnterprises.Count + ")", "ModifiedMenus", "ManageAdmin")
+            }
+
+        </div>
+    </div>
 }
 
-@if (!string.IsNullOrEmpty(ViewBag.Message))
-{
-    <div class="label label-success label-padding">@ViewBag.Message</div>
-}

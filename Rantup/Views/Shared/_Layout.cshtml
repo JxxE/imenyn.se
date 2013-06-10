@@ -12,39 +12,40 @@
     @Combiner.Js("/Js", "Rantup.js")
 </head>
 <body>
-    
-   
-
-        <div class="navbar">
-            <div class="onepcssgrid-1200">
-              <a href="/"><img src="/Content/img/logo.png" alt="logo"/></a>
-                <button type="button" class="btn btn-navbar">
-                    <span data-icon="&#xe00e;"></span>
-                </button>
-                <ul>
-                    <li>
-                        <a href="/"><span data-icon="&#xe011;"></span></a>
-                    </li>
-                    <li>
-                        <a href="/Manage">Skapa en meny<span data-icon="&#xe010;" class="marginL10"></span></a>
-                    </li>
-                </ul>
-            </div>
+    <div class="navbar">
+        <div class="onepcssgrid-1200">
+            <a href="/">
+                <img src="/Content/img/logo.png" alt="logo" /></a>
+            <button type="button" class="btn btn-navbar">
+                <span data-icon="&#xe00e;"></span>
+            </button>
+            <ul>
+                <li>
+                    <a href="/"><span data-icon="&#xe011;"></span></a>
+                </li>
+                <li>
+                    <a href="/Manage">Skapa en meny<span data-icon="&#xe010;" class="marginL10"></span></a>
+                </li>
+            </ul>
         </div>
+    </div>
 
     <section>
         <div class="onepcssgrid-1200">
             <div id="l-content-wrapper">
-            @RenderBody()</div>
+                @RenderBody()
+            </div>
         </div>
     </section>
 
     <footer class="onepcssgrid-1200">
-        <p>&copy; 2013 iMenyn.se
-        @Html.ActionLink("Logga in", "Login", "Account")</p>
+        <p>
+            &copy; 2013 iMenyn.se
+        @Html.ActionLink("Logga in", "Login", "Account")
+        </p>
     </footer>
 
-    
+
     @Combiner.Js("/Scripts", "jsrender.js")
 </body>
 </html>

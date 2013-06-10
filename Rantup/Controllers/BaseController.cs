@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
+﻿using System.Web.Mvc;
 using Rantup.Data.Abstract;
 using Rantup.Data.Infrastructure;
-using Rantup.Data.Models;
-using Rantup.Web.Helpers;
 
 namespace Rantup.Web.Controllers
 {
@@ -16,12 +9,12 @@ namespace Rantup.Web.Controllers
         protected IRepository Repository;
         protected IAuthentication Authentication;
 
-        protected Account CurrentAccount
-        {
-            get { return _currentAccount ?? (_currentAccount = AccountHelper.GetCurrentAccount()); }
-        }
+        //protected Account CurrentAccount
+        //{
+        //    get { return _currentAccount ?? (_currentAccount = AccountHelper.GetCurrentAccount()); }
+        //}
 
-        private Account _currentAccount;
+        //private Account _currentAccount;
 
         public BaseController(IRepository repository, IAuthentication authentication = null)
         {
@@ -31,30 +24,30 @@ namespace Rantup.Web.Controllers
             Authentication = authentication ?? DependencyManager.Authentication;
         }
 
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                //Account currentUser = Repository.GetUser(HttpContext.User.Identity.Name);
+        //protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        //{
+        //    if (User.Identity.IsAuthenticated)
+        //    {
+        //        //Account currentUser = Repository.GetUser(HttpContext.User.Identity.Name);
 
-                //if (currentUser == null || !currentUser.Enabled)
-                //{
-                //    // If currentUser hasn't at least one valid account we sign out the user and then redirect to login page.
-                //    // This can happend when a user is signed in but the user is deleted by the account admin.
-                //    Authentication.SignOut();
-                //    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary { { "controller", "Account" }, { "action", "LogOn" } });
-                //}
-                //else
-                //{
-                //    ViewBag.CurrentUser = currentUser;
+        //        //if (currentUser == null || !currentUser.Enabled)
+        //        //{
+        //        //    // If currentUser hasn't at least one valid account we sign out the user and then redirect to login page.
+        //        //    // This can happend when a user is signed in but the user is deleted by the account admin.
+        //        //    Authentication.SignOut();
+        //        //    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary { { "controller", "Account" }, { "action", "LogOn" } });
+        //        //}
+        //        //else
+        //        //{
+        //        //    ViewBag.CurrentUser = currentUser;
 
-                //    var currentAccount = GetCurrentAccount();
+        //        //    var currentAccount = GetCurrentAccount();
 
-                //    ViewBag.CurrentAccount = currentAccount;
-                //}
-            }
-            base.OnActionExecuting(filterContext);
-        }
+        //        //    ViewBag.CurrentAccount = currentAccount;
+        //        //}
+        //    }
+        //    base.OnActionExecuting(filterContext);
+        //}
 
     }
 }

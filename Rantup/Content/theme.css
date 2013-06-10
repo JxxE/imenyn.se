@@ -124,6 +124,11 @@ a.btn-selected {
     background-color: orange;
 }
 
+.btn-danger {
+    color: #FFF;
+    background-color: rgb(231, 0, 0);
+}
+
 .btn-inverse {
     color: #FFF;
     background: rgb(41, 41, 41);
@@ -155,6 +160,10 @@ a.btn-selected {
 
 .btn-warning:hover {
     background-color: rgb(255, 186, 60);
+}
+
+.btn-danger:hover {
+    background-color: rgb(255, 52, 44);
 }
 
 .btn-inverse:hover {

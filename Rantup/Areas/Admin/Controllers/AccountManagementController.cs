@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Rantup.Data.Abstract;
-using Rantup.Data.Concrete;
 using Rantup.Data.Models;
 using Rantup.Web.Areas.Admin.ViewModels;
-using Rantup.Web.Controllers;
 using Rantup.Web.Infrastructure;
 
 namespace Rantup.Web.Areas.Admin.Controllers
 {
     [OnlyAdmin]
-    public class AccountManagementController : BaseController
+    public class AccountManagementController : AdminBaseController
     {
         //
         // GET: /Admin/Account/

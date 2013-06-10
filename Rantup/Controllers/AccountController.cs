@@ -35,7 +35,7 @@ namespace Rantup.Web.Controllers
             }
             else if (!user.Enabled)
             {
-                ModelState.AddModelError("NotEnabled", "Inte aktiverat!");
+                ModelState.AddModelError("NotEnabled", "Kontot är inte aktiverat!");
             }
 
             if (ModelState.IsValid && user != null)

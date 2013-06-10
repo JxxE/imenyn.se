@@ -6,7 +6,7 @@ using Rantup.Data.Infrastructure;
 namespace Rantup.Web.Infrastructure
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class OnlyAdminAttribute : AuthorizeAttribute
+    public class OnlyEnabledAttribute : AuthorizeAttribute
     {
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
@@ -26,13 +26,13 @@ namespace Rantup.Web.Infrastructure
         private bool SecurityCheckShouldBeExecuted(AuthorizationContext filterContext)
         {
             // If current action or controller is marked as OnlyAdmin, security check should be executed
-            return filterContext.ActionDescriptor.IsDefined(typeof(OnlyAdminAttribute), true) ||
-                   filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(OnlyAdminAttribute), true);
+            return filterContext.ActionDescriptor.IsDefined(typeof(OnlyEnabledAttribute), true) ||
+                   filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(OnlyEnabledAttribute), true);
         }
 
         private bool UserCanAccessAdminArea(string userId)
         {
-            return DependencyManager.Repository.GetAccount(userId).IsAdmin;
+            return DependencyManager.Repository.GetAccount(userId).Enabled;
         }
     }
 }
