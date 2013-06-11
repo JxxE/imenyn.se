@@ -8,64 +8,48 @@ using Rantup.Data.Concrete;
 using Rantup.Data.Helpers;
 using Rantup.Data.Models;
 using Rantup.Web.Areas.Admin.ViewModels;
-using Rantup.Web.Controllers;
 using Rantup.Web.Helpers;
-using Rantup.Web.Infrastructure;
 using Rantup.Web.ViewModels;
 
 namespace Rantup.Web.Areas.Admin.Controllers
 {
-    public class ManageAdminController : AdminBaseController
+    public class AdminController : AdminBaseController
     {
-        public ManageAdminController(IRepository repository, IAuthentication authentication = null)
-            : base(repository, authentication)
+        public AdminController(IRepository repository, IAuthentication authentication = null) : base(repository, authentication)
         {
         }
 
         public ActionResult Index()
         {
             var viewModel = new DashboardViewModel
-                                {
-                                    NewEnterprises = new List<Enterprise>(),
-                                    EnterprisesWithModifiedMenus = new List<Enterprise>()
-                                };
+            {
+                NewEnterprises = new List<Enterprise>(),
+                EnterprisesWithModifiedMenus = new List<Enterprise>()
+            };
 
-            if(CurrentAccount.IsAdmin)
+            if (CurrentAccount.IsAdmin)
             {
                 var newEnterprises = Repository.GetNewEnterprises().Take(5);
-                var modifiedMenus = Repository.GetAllModifiedMenus();
+                //var modifiedMenus = Repository.GetAllModifiedMenus();
 
                 var enterprisesWithModifiedMenus = Repository.GetEnterprisesWithModifiedMenus();
 
                 viewModel.NewEnterprises = newEnterprises.ToList();
                 viewModel.EnterprisesWithModifiedMenus = enterprisesWithModifiedMenus.ToList();
             }
-
             return View(viewModel);
         }
 
-
-
-        //Show all new contributions
-        public ActionResult NewEnterprises()
+        public ActionResult Accounts()
         {
-            var model = new AllEnterprisesViewModel
-                                {
-                                    Enterprises = Repository.GetAllEnterprises().Where(e => e.IsTemp)
-                                };
-            return View(model);
+            var accounts = Repository.GetAccounts().Where(a => a.IsAdmin != true);
+            ViewBag.Accounts = accounts;
+            return View();
         }
 
-        //Display the new temp-menu
-        public ActionResult NewMenu(string enterpriseId)
+        public ActionResult Settings()
         {
-            var enterprise = Repository.GetEnterpriseById(enterpriseId);
-            var menu = Repository.GetMenuById(enterprise.Menu);
-            var products = Repository.GetProducts(menu.Products.ToList());
-
-            var model = ViewModelHelper.CreateStandardViewModel(enterprise, products);
-
-            return View(model);
+            return View();
         }
 
         #region Modified menus
@@ -106,20 +90,55 @@ namespace Rantup.Web.Areas.Admin.Controllers
 
                     var liveMenuProducts = Repository.GetProducts(liveMenu.Products.ToList()).ToList();
                     var liveMenuProductsViewModel = ViewModelHelper.GetProductListViewModel(liveMenuProducts);
-                    
+
 
                     var viewModel = new CompareModifiedMenuViewModel
-                                        {
-                                            Enterprise = enterprise,
-                                            ModifiedMenuProducts = modifiedProductsViewModel,
-                                            LiveMenuProducts = liveMenuProductsViewModel,
-                                            ModifiedMenuId = modifiedMenuId
-                                        };
+                    {
+                        Enterprise = enterprise,
+                        ModifiedMenuProducts = modifiedProductsViewModel,
+                        LiveMenuProducts = liveMenuProductsViewModel,
+                        ModifiedMenuId = modifiedMenuId
+                    };
                     return View(viewModel);
                 }
             }
             return View();
         }
+        #endregion
+
+        [HttpPost]
+        public ActionResult CreateAllIndexes()
+        {
+            RavenContext.Instance.CreateAllIndexes();
+            ViewBag.Message = "Återskapade index";
+            return View("Settings");
+        }
+
+
+
+                //Show all new contributions
+        public ActionResult NewEnterprises()
+        {
+            var model = new AllEnterprisesViewModel
+                                {
+                                    Enterprises = Repository.GetAllEnterprises().Where(e => e.IsTemp)
+                                };
+            return View(model);
+        }
+
+        //Display the new temp-menu
+        public ActionResult NewMenu(string enterpriseId)
+        {
+            var enterprise = Repository.GetEnterpriseById(enterpriseId);
+            var menu = Repository.GetMenuById(enterprise.Menu);
+            var products = Repository.GetProducts(menu.Products.ToList());
+
+            var model = ViewModelHelper.CreateStandardViewModel(enterprise, products);
+
+            return View(model);
+        }
+
+
         public RedirectToRouteResult ApproveModifiedMenu(string enterpriseKey)
         {
             var modifiedMenuId = ModifiedMenuHelper.GetId(enterpriseKey);
@@ -149,7 +168,7 @@ namespace Rantup.Web.Areas.Admin.Controllers
             Repository.DeleteModifiedMenuById(modifiedMenuId);
             Repository.DeleteProductsByIds(oldProductIds);
 
-            return RedirectToAction("ModifiedMenu", "ManageAdmin", new { enterpriseKey });
+            return RedirectToAction("ModifiedMenu", "Admin", new { enterpriseKey });
 
         }
         public RedirectToRouteResult DisapproveModifiedMenu(string modifiedMenuId)
@@ -157,7 +176,7 @@ namespace Rantup.Web.Areas.Admin.Controllers
             Repository.DeleteModifiedMenuById(modifiedMenuId);
             return RedirectToAction("ModifiedMenus");
         }
-        #endregion
+
 
         //Convert the temp to a real one.
         public RedirectToRouteResult ApproveMenu(string enterpriseId)
@@ -184,17 +203,6 @@ namespace Rantup.Web.Areas.Admin.Controllers
             return RedirectToAction("NewEnterprises");
         }
 
-        public ActionResult Settings()
-        {
-            return View();
-        }
 
-        [HttpPost]
-        public ActionResult CreateAllIndexes()
-        {
-            RavenContext.Instance.CreateAllIndexes();
-            ViewBag.Message = "Återskapade index";
-            return View("Settings");
-        }
     }
 }

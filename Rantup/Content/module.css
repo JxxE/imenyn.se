@@ -240,6 +240,45 @@ h1 small {
         max-width: 70%;
     }
 
+
+.price-plans {
+    margin: auto;
+    float: none;
+    text-align: center;
+}
+.price-plan {
+    border: 1px solid rgb(213, 213, 213);
+    padding: 25px 10px;
+}
+.price-plan h1,.price-plan h4 {
+    margin: 0 0 11px 0;
+}
+.price-plan-content {
+    text-align: left;
+    padding: 0 31px;
+}
+.price-plan-content p {
+    display: inline-block;
+    margin: 0;
+    max-width: 94%;
+}
+.price-plan-content .onerow {
+    margin: 27px 0;
+}
+.price-plan-content [data-icon] {
+    margin-right: 5px;
+    float: left;
+}
+
+
+
+
+
+
+
+
+
+
 /* ======= Overrides ============*/
 .alert-block > p {
     margin-bottom: 20px;

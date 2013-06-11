@@ -220,13 +220,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
-    <Compile Include="Areas\Admin\Controllers\AccountManagementController.cs" />
     <Compile Include="Areas\Admin\Controllers\AdminBaseController.cs" />
-    <Compile Include="Areas\Admin\Controllers\ManageAdminController.cs" />
+    <Compile Include="Areas\Admin\Controllers\AdminController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\AccountViewData.cs" />
     <Compile Include="Areas\Admin\ViewModels\AccountViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\AllEnterprisesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\CompareModifiedMenuViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\DashboardViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\UserInputViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CabaretController.cs" />
@@ -284,14 +285,6 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Areas\Admin\Views\Web.config" />
-    <Content Include="Areas\Admin\Views\ManageAdmin\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageAdmin\NewEnterprises.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageAdmin\NewMenu.cshtml" />
-    <Content Include="Areas\Admin\Views\AccountManagement\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\AccountManagement\AddAccountView.cshtml" />
-    <Content Include="Areas\Admin\Views\AccountManagement\AccountDetails.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageAdmin\ModifiedMenus.cshtml" />
-    <Content Include="Areas\Admin\Views\ManageAdmin\ModifiedMenu.cshtml" />
     <Content Include="Content\fonts\iMenyn.eot" />
     <Content Include="Content\fonts\iMenyn.ttf" />
     <Content Include="Content\fonts\iMenyn.woff" />
@@ -301,7 +294,13 @@
     <Content Include="js\Rantup.js" />
     <Content Include="js\rantup.Admin.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Areas\Admin\Views\ManageAdmin\Settings.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\Accounts.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\Settings.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\ModifiedMenu.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\ModifiedMenus.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\NewMenu.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\NewEnterprises.cshtml" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -344,6 +343,7 @@
     <Content Include="Views\Manage\Products.cshtml" />
     <Content Include="Views\Partials\_StandardMenuProducts.cshtml" />
     <Content Include="Views\Cabaret\NoMenu.cshtml" />
+    <Content Include="Views\Home\Info.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

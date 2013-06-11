@@ -10,7 +10,7 @@ namespace Rantup.Data.Abstract
 {
     public interface IRepository
     {
-        void AddAccount(Account account);
+        bool AddAccount(Account account);
         IEnumerable<Account> GetAccounts();
         Account GetUserByEmail(string userName);
         Account GetAccount(string accountId);

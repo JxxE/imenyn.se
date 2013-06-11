@@ -22,12 +22,19 @@ namespace Rantup.Data.Concrete
             _documentStore = ravenDbContext.DocumentStore;
         }
 
-        public void AddAccount(Account account)
+        public bool AddAccount(Account account)
         {
             using (var session = _documentStore.OpenSession())
             {
-                session.Store(account);
-                session.SaveChanges();
+                var userCreated = false;
+                var existingUser = session.Load<Account>("Accounts-" + account.Email);
+                if (existingUser == null)
+                {
+                    session.Store(account);
+                    session.SaveChanges();
+                    userCreated = true;
+                }
+                return userCreated;
             }
         }
 
@@ -238,7 +245,7 @@ namespace Rantup.Data.Concrete
 
         public IEnumerable<Enterprise> GetNewEnterprises()
         {
-            using(var session = _documentStore.OpenSession())
+            using (var session = _documentStore.OpenSession())
             {
                 return session.Advanced.LuceneQuery<Enterprise, Enterprises>().WhereEquals(e => e.IsTemp, true);
             }

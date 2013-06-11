@@ -2,6 +2,10 @@
     background: rgb(238, 238, 238);
 }
 
+.hide {
+    display: none;
+}
+.marginB20{ margin-bottom: 20px;}
 h1 small {
     margin-left: 10px;
     font-size: 12px; 
@@ -56,6 +60,9 @@ h1 small {
                 }
                 .message.message-success {
                     background-color: rgb(0, 201, 0);
+                }
+                                .message.message-alert {
+                    background-color: rgb(211, 20, 20);
                 }
 
                /*ul#sidebar-menu{ list-style-type: none;padding: 0;margin: 0;}

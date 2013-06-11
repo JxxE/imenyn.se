@@ -18,13 +18,18 @@
         <div class="onepcssgrid-1200">
             <a class="brand" href="/">iMenyn.se - Admin</a>
             <ul class="nav">
-                <li>@Html.ActionLink("Start", "Index", "ManageAdmin")</li>
-
+                <li>@Html.ActionLink("Start", "Index", "Admin")</li>
+                
                 @if (ViewBag.CurrentAccount.IsAdmin)
                 {
-                    <li>@Html.ActionLink("Konton", "Index", "AccountManagement")</li>    
-                    <li>@Html.ActionLink("Inställningar", "Settings", "ManageAdmin")</li>         
+                    <li>@Html.ActionLink("Konton", "Accounts", "Admin")</li>    
+                    <li>@Html.ActionLink("Inställningar", "Settings", "Admin")</li>         
                 }
+                else
+                {
+                    <li>@Html.ActionLink("Hantera", "Index", "Admin")</li>
+                }
+                <li>@Html.ActionLink("Logga ut", "LogOff", "../Account")</li>
             </ul>
         </div>
     </div>
@@ -39,7 +44,7 @@
 
     <div class="onepcssgrid-1200">
         <footer class="container">
-            <p>&copy; 2013 Rantup &middot;</p>
+            <p>&copy; 2013 Rantup</p>
         </footer>
     </div>
 </body>

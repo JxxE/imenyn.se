@@ -9,5 +9,5 @@
 
 @foreach(var enterprise in Model.Enterprises)
 {
-    @Html.ActionLink(enterprise.Name, "ModifiedMenu", "ManageAdmin", new {enterpriseKey = enterprise.Key},null)
+    @Html.ActionLink(enterprise.Name, "ModifiedMenu", "Admin", new {enterpriseKey = enterprise.Key},null)
 }

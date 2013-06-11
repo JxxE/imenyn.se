@@ -45,7 +45,7 @@ namespace Rantup.Web.Controllers
             return View(viewModel);
         }
 
-        public ActionResult Search()
+        public ActionResult Info()
         {
             return View();
         }
