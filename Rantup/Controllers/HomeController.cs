@@ -49,5 +49,35 @@ namespace Rantup.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Browse()
+        {
+            var enterprises = Repository.GetAllEnterprises();
+
+            var enterpriseStateCodes = enterprises.Select(enterprise => enterprise.StateCode).Distinct().ToList();
+
+            var counties = GeneralHelper.GetCountyNameAndCodes();
+
+            var stateCodesAndNames = new List<ValueAndText>();
+            
+            foreach (var enterpriseStateCode in enterpriseStateCodes)
+            {
+                var stateCodeAndName = new ValueAndText
+                    {
+                        Value = enterpriseStateCode,
+                        Text = counties.First(c=>c.Value == enterpriseStateCode).Text
+                    };
+                stateCodesAndNames.Add(stateCodeAndName);
+            }
+
+            var viewModel = new BrowseViewModel
+            {
+                EnterpriseStateCodes = new List<ValueAndText>()
+            };
+
+            viewModel.EnterpriseStateCodes = stateCodesAndNames.OrderBy(s=>s.Text).ToList();
+
+            return View(viewModel);
+        }
     }
 }

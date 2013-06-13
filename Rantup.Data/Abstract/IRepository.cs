@@ -30,6 +30,7 @@ namespace Rantup.Data.Abstract
         IEnumerable<Enterprise> GetNewEnterprises();
         IEnumerable<Enterprise> GetEnterprisesWithModifiedMenus();
         Enterprise GetEnterpriseByUrlKey(string urlKey);
+        IEnumerable<Enterprise> GetEnterprisesByStateCode(string stateCode);
 
         IEnumerable<ModifiedMenu> GetAllModifiedMenus();
         ModifiedMenu GetModifiedMenuByEnterpriseId(string enterpriseId);

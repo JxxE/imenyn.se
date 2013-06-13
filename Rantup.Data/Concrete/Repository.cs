@@ -403,5 +403,14 @@ namespace Rantup.Data.Concrete
                 return null;
             }
         }
+
+
+        public IEnumerable<Enterprise> GetEnterprisesByStateCode(string stateCode)
+        {
+            using (var session = _documentStore.OpenSession())
+            {
+                return session.Advanced.LuceneQuery<Enterprise>().WhereEquals(e => e.StateCode, stateCode);
+            }
+        }
     }
 }

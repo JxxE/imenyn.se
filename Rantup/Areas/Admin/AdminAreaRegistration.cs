@@ -16,8 +16,8 @@ namespace Rantup.Web.Areas.Admin
         {
             context.MapRoute(
                 "Admin_default",
-                "Admin/{controller}/{action}/{id}",
-                new { controller= "ManageAdmin", action = "Index", id = UrlParameter.Optional }
+                "Admin/{action}/{id}",
+                new { controller= "Admin", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

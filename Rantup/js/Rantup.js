@@ -80,8 +80,34 @@ Rantup.Ajax = function () {
         });
     };
 
+    var renderDistricts = function(el, stateCode) {
+        $.when($.get("/Templates/_Districts.tmpl.html")).done(function(districts) {
+            $.templates({
+                districts: districts
+            });
+            loadDistricts(el, stateCode);
+        });
+    };
+
+    var loadDistricts = function(el, stateCode) {
+        $.ajax({
+            dataType: "json",
+            data: { stateCode: stateCode },
+            url: "/Json/GetEnterprisesByStateCode",
+            type: "POST",
+            success: function (data) {
+                console.log(data)
+                $(el).html($.render.districts(data));
+            },
+            error: function () {
+                console.error("Could not load districts...");
+            }
+        });
+    };
+
     return {
         SearchYelp: searchYelp,
-        SearchEnterprises: searchEnterprises
+        SearchEnterprises: searchEnterprises,
+        RenderDistricts: renderDistricts
     };
 }();

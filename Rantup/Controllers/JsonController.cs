@@ -93,5 +93,20 @@ namespace Rantup.Web.Controllers
 
             return Json(enterprisesViewModel);
         }
+
+        public JsonResult GetEnterprisesByStateCode(string stateCode)
+        {
+            var enterprises = Repository.GetEnterprisesByStateCode(stateCode);
+
+            var districts = enterprises.Select(enterprise => enterprise.City).Distinct().OrderBy(d=>d).ToList();
+
+            var viewModel = new BrowseViewModel
+                {
+                    Districts = districts,
+                    StateCode = stateCode
+                };
+
+            return Json(viewModel);
+        }
     }
 }

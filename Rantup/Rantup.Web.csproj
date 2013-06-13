@@ -251,6 +251,7 @@
     <Compile Include="Infrastructure\OnlyAccountAdminAttribute.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\BrowseViewModel.cs" />
     <Compile Include="ViewModels\EnterprisesViewModel.cs" />
     <Compile Include="ViewModels\MainSearchViewModel.cs" />
     <Compile Include="ViewModels\ProductListViewModel.cs" />
@@ -312,6 +313,7 @@
     <Content Include="Scripts\jsrender.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Templates\_Districts.tmpl.html" />
     <Content Include="Templates\_ListEnterprises.tmpl.html" />
     <Content Include="Templates\_YelpResults.tmpl.html" />
     <Content Include="Web.config" />
@@ -344,6 +346,7 @@
     <Content Include="Views\Partials\_StandardMenuProducts.cshtml" />
     <Content Include="Views\Cabaret\NoMenu.cshtml" />
     <Content Include="Views\Home\Info.cshtml" />
+    <Content Include="Views\Home\Browse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,10 @@
+﻿{{for Districts}}
+    <a href="javascript:void(0)" data-load="enterprises" data-target="{{:#data}}">{{:#data}}</a>
+{{/for}}
+
+
+<script>
+    $("[data-load='enterprises']").click(function() {
+        console.log("asd");
+    });
+</script>
