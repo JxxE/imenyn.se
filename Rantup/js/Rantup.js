@@ -15,7 +15,7 @@ $(function () {
         var target = $(this).attr("data-target");
         $(target).toggle();
     });
-    $(document).on("click", "[data-toggle='buttons-radio'] .btn", function() {
+    $(document).on("click", "[data-toggle='buttons-radio'] .btn", function () {
         var parent = $(this).parent();
         parent.children(".btn").removeClass("active");
         $(this).addClass("active");
@@ -29,7 +29,7 @@ $(function () {
 var Rantup = Rantup || {};
 
 Rantup.Ajax = function () {
-    
+
     var searchYelp = function (searchTerm, location) {
         $.when(
             $.get("/Templates/_YelpResults.tmpl.html")
@@ -54,7 +54,7 @@ Rantup.Ajax = function () {
             }
         });
     };
-    
+
     var searchEnterprises = function (searchTerm, location, categorySearch) {
         $.when(
             $.get("/Templates/_ListEnterprises.tmpl.html")
@@ -80,23 +80,23 @@ Rantup.Ajax = function () {
         });
     };
 
-    var renderDistricts = function(el, stateCode) {
-        $.when($.get("/Templates/_Districts.tmpl.html")).done(function(districts) {
+    var browseEnterprises = function (el, stateCode, city) {
+        var templateName = city == "" ? "BrowsedCities" : "BrowsedEnterprises";
+        $.when($.get("/Templates/_" + templateName + ".tmpl.html")).done(function (districts) {
             $.templates({
                 districts: districts
             });
-            loadDistricts(el, stateCode);
+            loadBrowsedEnterprises(el, stateCode, city);
         });
     };
 
-    var loadDistricts = function(el, stateCode) {
+    var loadBrowsedEnterprises = function (el, stateCode, city) {
         $.ajax({
             dataType: "json",
-            data: { stateCode: stateCode },
-            url: "/Json/GetEnterprisesByStateCode",
+            data: { stateCode: stateCode, city: city },
+            url: "/Json/BrowseEnterprises",
             type: "POST",
             success: function (data) {
-                console.log(data)
                 $(el).html($.render.districts(data));
             },
             error: function () {
@@ -108,6 +108,6 @@ Rantup.Ajax = function () {
     return {
         SearchYelp: searchYelp,
         SearchEnterprises: searchEnterprises,
-        RenderDistricts: renderDistricts
+        BrowseEnterprises: browseEnterprises
     };
 }();

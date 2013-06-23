@@ -274,8 +274,15 @@ h1 small {
 
 
 
-
-
+.browse-enterprises h3{
+    margin: 0 0 8px 0;
+}
+.browse-enterprises h5 {
+    margin:13PX 0 5px 15px;
+}
+.browse-enterprises a.enterprise {
+    margin: 0 0 0 25px;
+}
 
 
 

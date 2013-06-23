@@ -94,19 +94,45 @@ namespace Rantup.Web.Controllers
             return Json(enterprisesViewModel);
         }
 
-        public JsonResult GetEnterprisesByStateCode(string stateCode)
+
+
+        public JsonResult BrowseEnterprises(string stateCode, string city)
         {
-            var enterprises = Repository.GetEnterprisesByStateCode(stateCode);
+            BrowseViewModel viewModel;
 
-            var districts = enterprises.Select(enterprise => enterprise.City).Distinct().OrderBy(d=>d).ToList();
-
-            var viewModel = new BrowseViewModel
-                {
-                    Districts = districts,
-                    StateCode = stateCode
-                };
+            if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(stateCode))
+                viewModel = GetEnterprisesByCity(city, stateCode);
+            else
+                viewModel = GetEnterprisesByStateCode(stateCode);
 
             return Json(viewModel);
+        }
+
+        private BrowseViewModel GetEnterprisesByStateCode(string stateCode)
+        {
+            var enterprises = Repository.GetEnterprisesByLocation(stateCode, null);
+
+            var districts = enterprises.Select(enterprise => enterprise.City).Distinct().OrderBy(d => d).ToList();
+
+            var viewModel = new BrowseViewModel
+            {
+                Districts = districts,
+                StateCode = stateCode
+            };
+
+            return viewModel;
+        }
+
+        private BrowseViewModel GetEnterprisesByCity(string city, string stateCode)
+        {
+            var enterprises = Repository.GetEnterprisesByLocation(stateCode, city);
+
+            var viewModel = new BrowseViewModel
+            {
+                Enterprises = enterprises
+            };
+
+            return viewModel;
         }
     }
 }

@@ -8,5 +8,6 @@ namespace Rantup.Web.ViewModels
         public List<ValueAndText> EnterpriseStateCodes { get; set; }
         public List<string> Districts { get; set; }
         public string StateCode { get; set; }
+        public IEnumerable<Enterprise> Enterprises { get; set; }
     }
 }

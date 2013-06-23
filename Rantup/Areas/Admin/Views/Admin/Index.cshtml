@@ -22,7 +22,7 @@
             {
                 foreach (var newEnterprise in Model.NewEnterprises)
                 {
-                <a href="/Admin/Admin/NewMenu?enterpriseId=@newEnterprise.Id">
+                <a href="/Admin/NewMenu?enterpriseId=@newEnterprise.Id">
                     <h5>@newEnterprise.Name</h5>
                     <p>@newEnterprise.PostalCode @newEnterprise.City</p>
                     <hr />
@@ -44,7 +44,7 @@
             {
                 foreach (var newEnterprise in Model.EnterprisesWithModifiedMenus)
                 {
-                <a href="/Admin/Admin/ModifiedMenu?enterpriseKey=@newEnterprise.Key">
+                <a href="/Admin/ModifiedMenu?enterpriseKey=@newEnterprise.Key">
                     <h5>@newEnterprise.Name</h5>
                     <p>@newEnterprise.PostalCode @newEnterprise.City</p>
                     <hr />

@@ -15,7 +15,8 @@ namespace Rantup.Web.Areas.Admin.Controllers
 {
     public class AdminController : AdminBaseController
     {
-        public AdminController(IRepository repository, IAuthentication authentication = null) : base(repository, authentication)
+        public AdminController(IRepository repository, IAuthentication authentication = null)
+            : base(repository, authentication)
         {
         }
 
@@ -116,7 +117,7 @@ namespace Rantup.Web.Areas.Admin.Controllers
 
 
 
-                //Show all new contributions
+        //Show all new contributions
         public ActionResult NewEnterprises()
         {
             var model = new AllEnterprisesViewModel
@@ -130,12 +131,16 @@ namespace Rantup.Web.Areas.Admin.Controllers
         public ActionResult NewMenu(string enterpriseId)
         {
             var enterprise = Repository.GetEnterpriseById(enterpriseId);
-            var menu = Repository.GetMenuById(enterprise.Menu);
-            var products = Repository.GetProducts(menu.Products.ToList());
+            if (enterprise.Menu != null)
+            {
+                var menu = Repository.GetMenuById(enterprise.Menu);
+                var products = Repository.GetProducts(menu.Products.ToList());
 
-            var model = ViewModelHelper.CreateStandardViewModel(enterprise, products);
+                var model = ViewModelHelper.CreateStandardViewModel(enterprise, products);
 
-            return View(model);
+                return View(model);
+            }
+            return RedirectToAction("Index");
         }
 
 

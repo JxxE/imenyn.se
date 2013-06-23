@@ -405,11 +405,26 @@ namespace Rantup.Data.Concrete
         }
 
 
-        public IEnumerable<Enterprise> GetEnterprisesByStateCode(string stateCode)
+        public IEnumerable<Enterprise> GetEnterprisesByLocation(string stateCode, string city)
         {
             using (var session = _documentStore.OpenSession())
             {
-                return session.Advanced.LuceneQuery<Enterprise>().WhereEquals(e => e.StateCode, stateCode);
+                var query = session.Advanced.LuceneQuery<Enterprise, Enterprises>();
+
+                query = query.WhereEquals(x => x.IsTemp, false).AndAlso();
+
+                if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(stateCode))
+                {
+                    query = query.WhereEquals(x => x.StateCode, stateCode).AndAlso();
+                    query = query.WhereEquals(x => x.City, city);
+                }
+                else
+                {
+                    query = query.WhereEquals(x => x.StateCode, stateCode);
+                }
+
+
+                return query.OrderBy(x=>x.Name);
             }
         }
     }

@@ -4,17 +4,20 @@
     ViewBag.Title = "Bläddra bland menyer";
 }
 
-
-@foreach (var m in Model.EnterpriseStateCodes)
-{
-    <a href="javascript:void(0)" data-load="district" data-target="@m.Value">@m.Text</a>
-    <div id="@m.Value"></div>
-}
+<div class="browse-enterprises">
+    @foreach (var m in Model.EnterpriseStateCodes)
+    {
+        <a href="javascript:void(0)" data-load="district" data-target="@m.Value">
+            <h3>@m.Text</h3>
+        </a>
+        <div id="@m.Value"></div>
+    }
+</div>
 
 <script>
     $("[data-load='district']").click(function () {
         var stateCode = $(this).attr("data-target");
         var el = "#" + stateCode;
-        Rantup.Ajax.RenderDistricts(el, stateCode);
+        Rantup.Ajax.BrowseEnterprises(el, stateCode, "");
     });
 </script>
