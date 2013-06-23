@@ -23,6 +23,10 @@ $(function () {
     $(document).on("click", "[data-toggle-active='button']", function () {
         $(this).toggleClass("active");
     });
+
+    $("#btn-nav").click(function() {
+        $(".navbar ul").toggle('fast');
+    });
 });
 
 
@@ -55,20 +59,20 @@ Rantup.Ajax = function () {
         });
     };
 
-    var searchEnterprises = function (searchTerm, location, categorySearch) {
+    var searchEnterprisesByName = function (searchTerm) {
         $.when(
             $.get("/Templates/_ListEnterprises.tmpl.html")
         ).done(function (searchResults) {
             $.templates({
                 searchResults: searchResults
             });
-            loadEnterprises(searchTerm, location, categorySearch);
+            loadEnterprisesByName(searchTerm);
         });
     };
-    var loadEnterprises = function (searchTerm, location, categorySearch) {
+    var loadEnterprisesByName = function (searchTerm) {
         $.ajax({
             dataType: "json",
-            data: { searchTerm: searchTerm, location: location, categorySearch: categorySearch },
+            data: { searchTerm: searchTerm },
             url: '/Json/SearchEnterprises/',
             type: "POST",
             success: function (data) {
@@ -107,7 +111,7 @@ Rantup.Ajax = function () {
 
     return {
         SearchYelp: searchYelp,
-        SearchEnterprises: searchEnterprises,
+        SearchEnterprisesByName: searchEnterprisesByName,
         BrowseEnterprises: browseEnterprises
     };
 }();

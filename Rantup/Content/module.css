@@ -87,6 +87,7 @@ h1 small {
 }
     .navbar ul {
         float: right;
+        margin-top: 30px;
     }
 
         .navbar ul li {
@@ -103,9 +104,15 @@ h1 small {
                     background-color: rgb(111, 0, 84);
                 }
 
-.btn-navbar {
+#btn-nav {
     float: right;
     display: none;
+    background-color: #6F0054;
+    color: white;
+    font-size: 20px;
+    height: 41px;
+    margin: 25px 10px 0 0;
+    width: 81px;
 }
 
 .tag {
@@ -117,14 +124,21 @@ h1 small {
 }
 
 #main-search-container {
-    max-width: 60%;
+    max-width: 48%;
     margin: auto;
 }
 
-    #main-search-container #search-query {
-        height: 32px;
-        width: 50%;
-        font-size: 28px;
+    #search-query {
+ font-size: 28px;
+    height: 32px;
+    margin: 0;
+    padding: 1%;
+    width: 80%;
+    }
+    #search-button {
+        margin: 0;
+    padding: 2%;
+    width: 10%
     }
 
 

@@ -9,31 +9,12 @@
 <div id="main-search-container">
     <h1>Hitta meny</h1>
     <div class="form-inline marginB20">
-        <input id="search-query" type="text" /> <a href="javascript:void(0)" id="search" class="btn btn-info btn-xlarge"><span data-icon="&#xe001;" class="marginR5"></span>Sök</a>
-
-        <a href="javascript:void(0)" data-toggle="collapse" data-target="#light-search" class="btn" data-toggle-active="button"><span data-icon="&#xe00f;" class="marginR5"></span>Bläddra</a>
+        <input id="search-query" type="text" /> <a href="javascript:void(0)" id="search-button" class="btn btn-info btn-xlarge"><span data-icon="&#xe001;" class="marginR5"></span>Sök</a>
         <div  class="loading-by-element"><div id="loading"></div>
         </div>
         <span class="help-block"><b>Sök på:</b> Restaurang, postnummer, ort</span>
     </div>
     
-    <div id="light-search" class="well hide">
-        <div class="onerow">
-            <div id="category-search" class="btn-group marginB20" data-toggle="buttons-radio">
-                <a href="javascript:void(0)" class="btn btn-inverse active" data-values="All">Alla</a>
-                <a href="javascript:void(0)" class="btn btn-inverse" data-values="AsianFusion,Chinese,Indian,Indonesian,Japanese,Korean,Lebanese,Mongolian,Sushi,Taiwanese,Tahi,Turkish,Vietnamese">Asiatiskt</a>
-                <a href="javascript:void(0)" class="btn btn-inverse" data-values="European,French,German,Irish,Scandinavian,Swedish,Italian">Europeiskt</a>
-                <a href="javascript:void(0)" class="btn btn-inverse" data-values="Pasta">Pasta</a>
-                <a href="javascript:void(0)" class="btn btn-inverse" data-values="Pizza,Kebab,FastFood">Pizza & kebab</a>
-                <a href="javascript:void(0)" class="btn btn-inverse" data-values="Salad,Sandwiches,Wraps">Sallad och smörgåsar</a>
-            </div>
-        </div>
-        <div class="form-inline">
-            @Html.DropDownListFor(m => m.Counties, new SelectList(Model.Counties, "Value", "Text"))
-            <a href="javascript:void(0)" id="light-search-button" class="btn btn-success">OK</a>
-        </div>
-    </div>
-
     <div id="search-result">
     </div>
     
@@ -41,19 +22,13 @@
 
 
 <script>
-    $("#search").click(function () {
+    $("#search-button").click(function () {
         var query = document.getElementById("search-query").value;
-        Rantup.Ajax.SearchEnterprises(query, null, null);
-    });
-
-    $("#light-search-button").click(function () {
-        var selectedCountyCode = $("#Counties").val();
-        var selectedCategory = $("#category-search .active").attr("data-values");
-        Rantup.Ajax.SearchEnterprises("", selectedCountyCode, selectedCategory);
+        Rantup.Ajax.SearchEnterprisesByName(query);
     });
 
     $('input').bind("enterKey", function () {
-        $("#search").click();
+        $("#search-button").click();
     });
     $('input').keyup(function (e) {
         if (e.keyCode == 13) {

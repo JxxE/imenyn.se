@@ -68,9 +68,9 @@ namespace Rantup.Web.Controllers
             return Json(viewModel);
         }
 
-        public JsonResult SearchEnterprises(string searchTerm, string location, string categorySearch)
+        public JsonResult SearchEnterprises(string searchTerm)
         {
-            var enterprises = Repository.SearchEnterprises(searchTerm, location, categorySearch);
+            var enterprises = Repository.SearchEnterprises(searchTerm, "", "");
 
             var enterprisesViewModel = new EnterprisesViewModel
                                            {
