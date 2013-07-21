@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>iMenyn.se - @ViewBag.Title</title>
+    <link href="~/favicon.png" rel="shortcut icon" type="image/x-icon" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Menyer till Sveriges restauranger samlade på en plats. ">
+    <meta name="keywords" content="meny,menyer,restaurang,pub,pizzeria,krog,mat,dryck">
+    <meta name="author" content="iMenyn.se">
+
+    @Combiner.Css("/Content", "bootstrap.css,base.css,theme.css,layout.css,module.css,state.css,media-queries.css")
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    @Combiner.Js("/Js", "iMenyn.js")
+</head>
+<body>
+    <div class="navbar">
+        <div class="onepcssgrid-1200">
+            <a href="/">
+                <img src="/Content/img/logo.png" id="logo" alt="logo" /></a>
+            <button id="btn-nav" type="button" class="btn">
+                <span data-icon="&#xe00e;"></span>
+            </button>
+            <ul>
+                <li>
+                    <a href="/"><span data-icon="&#xe011;"></span></a>
+                </li>
+                <li><a href="/Home/Browse">Bläddra<span data-icon="&#xe00f;" class="marginL10"></span></a></li>
+                <li>
+                    <a href="/Manage">Skapa en meny<span data-icon="&#xe010;" class="marginL10"></span></a>
+                </li>
+                <li>
+                    <a href="/Home/Info">Krögare?<span data-icon="&#xe007;" class="marginL10"></span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <section>
+        <div class="onepcssgrid-1200">
+            <div id="l-content-wrapper">
+                @RenderBody()
+            </div>
+        </div>
+    </section>
+
+    <footer class="onepcssgrid-1200">
+    </footer>
+
+
+    @Combiner.Js("/Scripts", "jsrender.js")
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-42548294-1', 'imenyn.se');
+        ga('send', 'pageview');
+
+    </script>
+</body>
+</html>

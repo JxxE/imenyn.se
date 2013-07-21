@@ -1,0 +1,23 @@
+﻿@using iMenyn.Web.Helpers
+
+/* Combines and compresses CSS-files */
+@helper Css(string path, string files, int version = 1, bool enabled = true, string media = "all")
+{
+    const string type = "text/css";
+
+    foreach (var url in CombinerHelper.GetFilenames(path, files, type, version, enabled))
+    {
+        <link href="@url" rel="stylesheet" type="@type" media="@media" />
+    }
+}
+
+/* Combines and compresses JS-files */
+@helper Js(string path, string files, int version = 1, bool enabled = true)
+{
+    const string type = "text/javascript";
+
+    foreach (var url in CombinerHelper.GetFilenames(path, files, type, version, enabled))
+    {
+        <script src="@url" type="@type"></script>
+    }
+}

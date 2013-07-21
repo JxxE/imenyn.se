@@ -1,0 +1,86 @@
+﻿@model iMenyn.Web.Areas.Admin.ViewModels.AccountViewData
+
+@{
+    ViewBag.Title = "title";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+
+<h2>Konton</h2>
+
+
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="message message-alert">
+        @Html.ValidationSummary(false, "")
+    </div>
+}
+else
+{
+    if (IsPost)
+    {
+    <div class="message message-success">
+        OK
+    </div>
+    }
+}
+<div class="onerow marginB20">
+<a href="javascript:void(0)" class="btn btn-success" data-toggle="collapse" data-target="#accounts-form">Skapa konto</a>
+
+<div id="accounts-form" class="hide">
+    @using (Html.BeginForm("AddAccount", "AccountManagement", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        <div class="control-group">
+            @Html.LabelFor(a => a.UserInput.Name, "Namn", new { @class = "control-label" })
+            <div class="controls">
+                @Html.TextBoxFor(a => a.UserInput.Name, new { @class = "input-xlarge", @value = Model != null ? Model.UserInput.Name : "" })
+                @Html.ValidationMessageFor(a => a.UserInput.Name)
+            </div>
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(a => a.UserInput.Email, "Epost", new { @class = "control-label" })
+            <div class="controls">
+                @Html.TextBoxFor(a => a.UserInput.Email, new { @class = "input-xlarge", @value = Model != null ? Model.UserInput.Email : "" })
+                @Html.ValidationMessageFor(a => a.UserInput.Email)
+            </div>
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(a => a.UserInput.Email, "Telefon", new { @class = "control-label" })
+            <div class="controls">
+                @Html.TextBoxFor(a => a.UserInput.Phone, new { @class = "input-xlarge", @value = Model != null ? Model.UserInput.Phone : "" })
+                @Html.ValidationMessageFor(a => a.UserInput.Phone)
+            </div>
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(a => a.UserInput.Password, "Lösenord", new { @class = "control-label" })
+            <div class="controls">
+                @Html.PasswordFor(a => a.UserInput.Password, new { @class = "input-xlarge", @value = Model != null ? Model.UserInput.Password : "" })
+                @Html.ValidationMessageFor(a => a.UserInput.Password)
+            </div>
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(a => a.UserInput.ConfirmPassword, "Upprepa lösenord", new { @class = "control-label" })
+            <div class="controls">
+                @Html.PasswordFor(a => a.UserInput.ConfirmPassword, new { @class = "input-xlarge", @value = Model != null ? Model.UserInput.ConfirmPassword : "" })
+                @Html.ValidationMessageFor(a => a.UserInput.ConfirmPassword)
+            </div>
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(a => a.UserInput.IsAdmin, "Admin", new { @class = "control-label" })
+            <div class="controls">
+                @Html.CheckBoxFor(a => a.UserInput.IsAdmin, new { @class = "input-xlarge" })
+            </div>
+        </div>
+        <div class="control-group">
+            <button type="submit" class="btn btn-success">Spara</button>
+        </div>
+    }   
+</div>
+    
+    </div>
+@foreach(var account in ViewBag.Accounts)
+{
+    <p>@account.Name</p>
+}

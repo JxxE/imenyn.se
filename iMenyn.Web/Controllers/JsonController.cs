@@ -1,0 +1,170 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json.Linq;
+using iMenyn.Data.Abstract;
+using iMenyn.Data.Helpers;
+using iMenyn.Data.Models;
+using iMenyn.Web.Extensionmethods;
+using iMenyn.Web.Helpers;
+using iMenyn.Web.ViewModels;
+
+namespace iMenyn.Web.Controllers
+{
+    public class JsonController : BaseController
+    {
+        public JsonController(IRepository repository, IAuthentication authentication = null)
+            : base(repository, authentication)
+        {
+        }
+
+        public JsonResult SearchYelp(string searchTerm, string location)
+        {
+            var yelp = new Yelp.Yelp(YelpConfig.Options);
+            var search = yelp.Search(searchTerm, location);
+
+            var categories = GeneralHelper.GetCategories();
+
+            foreach (var business in search.Result.businesses)
+            {
+                var key = EnterpriseHelper.GenerateEnterpriseKey(business.name);
+
+                var postalCode = 0;
+                if (business.location.postal_code != null)
+                    int.TryParse(business.location.postal_code.Replace(" ", string.Empty), out postalCode);
+
+                var enterprisesInDb = Repository.CheckIfEnterpriseExists(key, postalCode);
+                if (enterprisesInDb == null) continue;
+
+                var enterprises = enterprisesInDb as Enterprise[] ?? enterprisesInDb.ToArray();
+
+                var mayExistInDb = enterprises.Any();
+                if (!mayExistInDb) continue;
+
+                business.MayAlreadyExistInDb = true;
+                var urlsForMenus = new List<string>();
+                foreach (var enterprise in enterprises)
+                {
+                    if (enterprise.IsTemp)
+                        urlsForMenus.Add("");
+                    else
+                    {
+                        var kind = enterprise.IsPremium ? "Premium" : "Standard";
+                        var url = string.Format("{0}/{1}", kind, enterprise.Id);
+                        urlsForMenus.Add(url);
+                    }
+                }
+                business.MenyUrls = urlsForMenus;
+            }
+
+
+            var viewModel = new SearchYelpViewModel
+                                {
+                                    Businesses = search.Result.businesses,
+                                    Categories = categories
+                                };
+
+            return Json(viewModel);
+        }
+
+        public JsonResult SearchEnterprises(string searchTerm)
+        {
+            var enterprises = Repository.SearchEnterprises(searchTerm, "", "");
+
+            var enterprisesViewModel = new EnterprisesViewModel
+                                           {
+                                               Enterprises = new List<EnterpriseViewModel>()
+                                           };
+
+            foreach (var enterpriseViewModel in enterprises.Select(enterprise => new EnterpriseViewModel
+                                                                                     {
+                                                                                         Id = enterprise.Id,
+                                                                                         Name = enterprise.Name,
+                                                                                         Address = enterprise.Address,
+                                                                                         PostalCode = enterprise.PostalCode,
+                                                                                         City = enterprise.City,
+                                                                                         Categories = (from category in enterprise.Categories select GeneralHelper.GetCategories().FirstOrDefault(c => c.Value == category) into categoryToAdd where categoryToAdd != null select categoryToAdd.Text).ToList()
+                                                                                     }))
+            {
+                enterprisesViewModel.Enterprises.Add(enterpriseViewModel);
+            }
+
+
+            return Json(enterprisesViewModel);
+        }
+
+
+
+        public JsonResult BrowseEnterprises(string stateCode, string city)
+        {
+            BrowseViewModel viewModel;
+
+            if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(stateCode))
+                viewModel = GetEnterprisesByCity(city, stateCode);
+            else
+                viewModel = GetEnterprisesByStateCode(stateCode);
+
+            return Json(viewModel);
+        }
+
+        private BrowseViewModel GetEnterprisesByStateCode(string stateCode)
+        {
+            var enterprises = Repository.GetEnterprisesByLocation(stateCode, null);
+
+            var districts = enterprises.Select(enterprise => enterprise.City).Distinct().OrderBy(d => d).ToList();
+
+            var viewModel = new BrowseViewModel
+            {
+                Districts = districts,
+                StateCode = stateCode
+            };
+
+            return viewModel;
+        }
+
+        private BrowseViewModel GetEnterprisesByCity(string city, string stateCode)
+        {
+            var enterprises = Repository.GetEnterprisesByLocation(stateCode, city);
+
+            var viewModel = new BrowseViewModel
+            {
+                Enterprises = enterprises
+            };
+
+            return viewModel;
+        }
+
+        public JsonResult GetCoordinatesByAddress(string address)
+        {
+            var lowerAddress = address.ToLower();
+            var formattedAddress = lowerAddress.Replace(", sverige", string.Empty);
+            var url = "http://maps.googleapis.com/maps/api/geocode/json?address=" + formattedAddress + "&sensor=false&region=se";
+            var json = new WebClient().DownloadString(url);
+
+            var jo = JObject.Parse(json);
+
+            var results = jo["results"][0];
+
+            var status = jo["status"];
+
+            if (status.ToString() == "OK")
+            {
+                var lat = results["geometry"]["location"]["lat"].ToString();
+                var lng = results["geometry"]["location"]["lng"].ToString();
+
+                var coordinates = new Coordinates
+                    {
+                        Lat = lat,
+                        Lng = lng
+                    };
+                return Json(coordinates);
+            }
+
+            return null;
+        }
+    }
+}

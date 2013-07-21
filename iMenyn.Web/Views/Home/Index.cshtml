@@ -1,0 +1,40 @@
+﻿@model iMenyn.Web.ViewModels.MainSearchViewModel
+@{
+    ViewBag.Title = "Sveriges menyer samlade!";
+}
+
+
+
+<div id="main-search-container">
+    <h1>Hitta meny</h1>
+    <div class="form-inline marginB20">
+        <input id="search-query" type="text" />
+        <a href="javascript:void(0)" id="search-button" class="btn btn-info btn-xlarge">
+            <div id="search-button-content"><span data-icon="&#xe001;" class="marginR5"></span>Sök</div>
+            <div id="loading">
+            </div>
+        </a>
+        <span class="help-block"><b>Sök på:</b> Restaurang, postnummer, ort</span>
+    </div>
+
+    <div id="search-result">
+    </div>
+
+</div>
+
+
+<script>
+    $("#search-button").click(function () {
+        var query = document.getElementById("search-query").value;
+        iMenyn.Ajax.SearchEnterprisesByName(query);
+    });
+
+    $('input').bind("enterKey", function () {
+        $("#search-button").click();
+    });
+    $('input').keyup(function (e) {
+        if (e.keyCode == 13) {
+            $(this).trigger("enterKey");
+        }
+    });
+</script>

@@ -1,0 +1,37 @@
+﻿@model iMenyn.Web.Areas.Admin.ViewModels.CompareModifiedMenuViewModel
+
+@{
+    ViewBag.Title = "En modifierad meny";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>@Model.Enterprise.Name<small>@Model.Enterprise.Address @Model.Enterprise.PostalCode @Model.Enterprise.City</small></h1>
+
+
+
+<div class="onerow">
+    @if (Model.ModifiedMenuProducts.FoodTypes != null)
+    {
+        <div class="col6 pull-left">
+            <h1>Ny</h1>
+            <div class="well">
+                @RenderPage("~/Views/Partials/_StandardMenuProducts.cshtml", Model.ModifiedMenuProducts)
+            </div>
+        </div>
+    }
+
+    <div class="col6 last pull-left">
+        <h1>Aktuell</h1>
+        <div class="well">
+            @RenderPage("~/Views/Partials/_StandardMenuProducts.cshtml", Model.LiveMenuProducts)
+        </div>
+    </div>
+</div>
+
+@if (Model.ModifiedMenuProducts.FoodTypes != null)
+{
+<div class="onerow">
+    @Html.ActionLink("Godkänn", "ApproveModifiedMenu", "ManageAdmin", new { enterpriseKey = Model.Enterprise.Key }, new { @class = "btn btn-success" })
+    @Html.ActionLink("Ta bort", "DisapproveModifiedMenu", "ManageAdmin", new { modifiedMenuId = Model.ModifiedMenuId }, new { @class = "btn btn-danger", onclick = "return confirm('Vill du verkligen ta bort denna modifiering?');" })
+</div>
+}

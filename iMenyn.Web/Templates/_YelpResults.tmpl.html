@@ -1,0 +1,99 @@
+﻿{{if Businesses.length > 3}}
+<a href="/Manage/AddEnterprise" class="btn btn-warning btn-xlarge marginB20">Hittar du inte rätt?</a>
+{{/if}}
+{{for Businesses}}
+<div class="well onerow">
+    <h1>{{:name}}</h1>
+    {{if image_url != null}}
+        <div class="col2">
+            <img src="{{:image_url}}" alt="" />
+        </div>
+    {{/if}}
+        <address>
+            {{:location.display_address[0]}}<br />
+            {{:location.display_address[1]}}<img src="http://www.camelonta.se/MyVisitors/flags/{{:location.country_code}}.gif" alt="" class="marginL5" /><br />
+            {{:display_phone}}
+        </address>
+
+    {{if MayAlreadyExistInDb}}
+    <div class="alert alert-block inline">
+        <h4>OBS!</h4>
+        <p class="marginB20">Det finns en eller flera restauranger med liknande namn i samma område. Kontrollera att din restaurang inte redan finns.</p>
+        {{for MenyUrls}}
+        {{if #data == ""}}
+        <a href="#" class="btn btn-info disabled">Denna meny är under utredning och kan inte förhandsvisas</a>
+        {{else}}
+        <a href="Cabaret/{{:#data}}" class="btn btn-warning">Se menyn</a>
+        {{/if}}
+        {{/for}}
+    </div>
+
+    {{/if}}
+    <a href="javascript:void(0)" class="btn btn-success" data-toggle="collapse" data-target="#{{:id}}">Välj<span data-icon="&#xe005;" class="marginL5"></span></a>
+    <form id="{{:id}}" method="POST" action="/Manage/CreateEnterprise" class="hide form-inline">
+        <input type="hidden" name="name" value="{{:name}}" />
+        <input type="hidden" name="phone" value="{{:display_phone}}" />
+        <input type="hidden" name="address" value="{{:location.address[0]}}" />
+        <input type="hidden" name="postalCode" value="{{:location.postal_code}}" />
+        <input type="hidden" name="city" value="{{:location.city}}" />
+        <input type="hidden" name="countryCode" value="{{:location.country_code}}" />
+        <input type="hidden" name="state_code" value="{{:location.state_code}}" />
+        <input type="hidden" name="lat" value="{{:location.coordinate.latitude}}" />
+        <input type="hidden" name="lng" value="{{:location.coordinate.longitude}}" />
+        <input type="hidden" name="yelpId" value="{{:id}}" />
+
+        <h4>Välj kategorier</h4>
+        <div data-id="chosen-categories" class="marginB20">
+            <select data-id="category">
+                <option></option>
+                {{for #parent.parent.data.Categories}}
+                <option value="{{:Value}}">{{:Text}}</option>
+                {{/for}}  
+            </select>
+        </div>
+        <div id="errors"></div>
+        <a href="javascript:void(0)" class="btn btn-success btn-large" data-action="submit" data-form-id="{{:id}}">Spara</a>
+    </form>
+</div>
+{{/for}}
+{{if Businesses == null}}
+<div class="col12 marginB20">
+    <i>Inga träffar...</i>
+</div>
+{{/if}}
+
+<script>
+    $("select[data-id='category']").on("change", function () {
+        var value = this.value;
+        if (value != "") {
+            var text = $("option:selected", this).html();
+            var divChosenCategories = $(this).closest("div[data-id='chosen-categories']");
+            var count = divChosenCategories.children('div').size();
+
+            if (count < 5) {
+                divChosenCategories.append("<div class='tag'>" + text + "<input type='hidden' name='category" + count + "' value='" + value + "' />" +
+                    "<a href='javascript:void(0)' data-action='remove' class='marginL5 white' data-icon='&#xe006;'></a></div>");
+                if (count == 4) {
+                    $("select[data-id='category']").addClass("hide");
+                }
+            }
+        }
+    });
+    $("div[data-id='chosen-categories']").on("click", "[data-action='remove']", function () {
+        $(this).parent().remove();
+        $("select[data-id='category']").removeClass("hide");
+    });
+
+    $(document).on('click', '[data-action="submit"]', function () {
+        var formId = $(this).attr("data-form-id");
+        var chosenCategoriesCount = $("#" + formId + ">div[data-id='chosen-categories']").children().size();
+
+        if (chosenCategoriesCount > 1 && chosenCategoriesCount <= 6)
+            $("#" + formId).submit();
+        else
+            $("#errors").append("<b class='red'>Välj minst 1 kategori!</b>");
+    });
+
+</script>
+
+<a href="/Manage/AddEnterprise" class="btn btn-warning btn-xlarge">Hittar du inte rätt?</a>

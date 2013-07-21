@@ -1,0 +1,13 @@
+﻿{{for Districts}}
+<a href="javascript:void(0)" data-load="enterprises" data-target="{{:#data}}"><h5>{{:#data}}</h5></a>
+<div id="{{:#data}}"></div>
+{{/for}}
+
+<script>
+    $("[data-load='enterprises']").click(function () {
+        var city = $(this).attr("data-target");
+        var el = "#" + city;
+        var stateCode = "{{:StateCode}}";
+        iMenyn.Ajax.BrowseEnterprises(el, stateCode, city);
+    });
+</script>

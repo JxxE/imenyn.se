@@ -1,0 +1,58 @@
+﻿@model iMenyn.Web.Areas.Admin.ViewModels.DashboardViewModel
+
+@{
+    ViewBag.Title = "Välkommen!";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Dashboard</h2>
+
+@if (ViewBag.CurrentAccount.IsAdmin)
+{
+    <div class="col3">
+        <h2>Nyheter</h2>
+        <div class="well">
+            <h4>Nya menyer</h4>
+            <hr />
+            @if (Model.NewEnterprises.Count == 0)
+            {
+                <i>Inga...</i>
+            }
+            else
+            {
+                foreach (var newEnterprise in Model.NewEnterprises)
+                {
+                <a href="/Admin/NewMenu?enterpriseId=@newEnterprise.Id">
+                    <h5>@newEnterprise.Name</h5>
+                    <p>@newEnterprise.PostalCode @newEnterprise.City</p>
+                    <hr />
+                </a>
+                }
+                @Html.ActionLink("Visa alla (" + Model.NewEnterprises.Count + ")", "NewEnterprises", "Admin")
+            }
+
+
+        </div>
+
+        <div class="well">
+            <h4>Modifierade menyer</h4>
+            @if (Model.EnterprisesWithModifiedMenus.Count == 0)
+            {
+                <i>Inga...</i>
+            }
+            else
+            {
+                foreach (var newEnterprise in Model.EnterprisesWithModifiedMenus)
+                {
+                <a href="/Admin/ModifiedMenu?enterpriseKey=@newEnterprise.Key">
+                    <h5>@newEnterprise.Name</h5>
+                    <p>@newEnterprise.PostalCode @newEnterprise.City</p>
+                    <hr />
+                </a>
+                }
+                @Html.ActionLink("Visa alla (" + Model.NewEnterprises.Count + ")", "ModifiedMenus", "Admin")
+            }
+
+        </div>
+    </div>
+}

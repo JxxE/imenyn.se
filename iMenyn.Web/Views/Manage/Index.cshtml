@@ -1,0 +1,79 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Skapa en meny";
+}
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+
+<h3>Vilken restaurang vill du skapa en meny till?</h3>
+
+<div class="form-inline">
+    <input id="q" type="text" placeholder="Restaurang" size="50" />
+    <input id="location" type="text" placeholder="Var? (postnummer, ort)" size="50">
+    <a id="search" href="javascript:void(0)" class="btn btn-info"><span data-icon="&#xe001;" class="marginR5"></span>Sök</a>
+    <div class="loading-by-element"><div id="loading"></div></div>
+</div>
+<small>(En administratör kommer att godkänna din meny innan den publiceras)</small>
+    @Html.ValidationSummary()
+
+    <div id="yelp-results"></div>
+
+
+<script>
+    $("#search").click(function () {
+        var q = $("#q").val();
+        var location = $("#location").val();
+        iMenyn.Ajax.SearchYelp(q, location);
+        get_location();
+    });
+
+
+    $('input').bind("enterKey", function (e) {
+        $("#search").click();
+    });
+    $('input').keyup(function (e) {
+        if (e.keyCode == 13) {
+            $(this).trigger("enterKey");
+        }
+    });
+
+    function initialize() {
+        var input = (document.getElementById('location'));
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.setComponentRestrictions({ "country": "se" });
+        autocomplete.setTypes(['geocode']);
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+    
+
+
+    function get_location() {
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(getPosition, showError);
+        }
+        else { console.log("Geolocation is not supported by this browser."); }
+    }
+
+    function getPosition(pos) {
+        console.log(pos);
+
+    }
+    function showError(error) {
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                console.log("User denied the request for Geolocation.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                console.log("Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                console.log("The request to get user location timed out.");
+                break;
+            case error.UNKNOWN_ERROR:
+                console.log("An unknown error occurred.");
+                break;
+        }
+    }
+</script>
+
