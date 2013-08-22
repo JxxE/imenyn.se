@@ -60,5 +60,16 @@ namespace iMenyn.Yelp.Data
         /// Contains a value that corresponds to the accuracy with which the latitude / longitude was determined in the geocoder. These correspond to Google's GGeoAddressAccuracy field. (http://code.google.com/apis/maps/documentation/javascript/v2/reference.html#GGeoAddressAccuracy)
         /// </summary>
         public double geo_accuracy { get; set; }
+
+
+
+
+
+        //Mine
+        public string county { get; set; }
+        public string locality { get; set; }
+        public string sub_locality { get; set; }
+        public string complete_address { get; set; }
+        public string postal_town { get; set; }
 	}
 }

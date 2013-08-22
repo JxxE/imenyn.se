@@ -1,3 +1,8 @@
 ﻿.visible-inline {
     display: inline-block!important;
 }
+
+.nav-open {
+    max-height: 800px!important;
+    padding-bottom: 2%!important;
+}

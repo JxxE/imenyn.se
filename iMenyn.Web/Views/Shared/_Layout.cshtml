@@ -9,8 +9,8 @@
     <meta name="description" content="Menyer till Sveriges restauranger samlade på en plats. ">
     <meta name="keywords" content="meny,menyer,restaurang,pub,pizzeria,krog,mat,dryck">
     <meta name="author" content="iMenyn.se">
-
-    @Combiner.Css("/Content", "bootstrap.css,base.css,theme.css,layout.css,module.css,state.css,media-queries.css")
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    @Combiner.Css("/Content", "bootstrap.css,base.css,theme.css,layout.css,module.css,media-queries.css,state.css")
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
     @Combiner.Js("/Js", "iMenyn.js")
 </head>
@@ -19,9 +19,9 @@
         <div class="onepcssgrid-1200">
             <a href="/">
                 <img src="/Content/img/logo.png" id="logo" alt="logo" /></a>
-            <button id="btn-nav" type="button" class="btn">
+            <div id="btn-nav" class="btn">
                 <span data-icon="&#xe00e;"></span>
-            </button>
+            </div>
             <ul>
                 <li>
                     <a href="/"><span data-icon="&#xe011;"></span></a>

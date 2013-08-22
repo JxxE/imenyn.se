@@ -1,0 +1,40 @@
+﻿<div class="well col6">
+    <div id="map-container-validate" class="col12 map-container marginB20">
+        <div id='map'></div>
+    </div>
+    <label>Län</label>
+    <select name="state_code">
+        {{for Counties}}
+        <option value="{{>#data.Value}}">{{>#data.Text}}</option>
+        {{/for}}
+    </select>
+        <label>Adress</label>
+    <input type="text" name="address" value="{{:Location.complete_address}}" />
+
+    <label>Postnummer</label>
+    <input type="text" name="postalCode" class="input-mini" value="{{:Location.postal_code}}" />
+
+    <label>Ort</label>
+    <input id="city" type="text" name="city" placeholder="" value="{{:Location.postal_town}}" />
+    
+        <label>Kommun</label>
+    <input id="Text1" type="text" name="city" placeholder="" value="{{:Location.postal_town}}" />
+</div>
+<script>
+    var lat = "{{:Coordinates.Lat}}";
+    var lng = "{{:Coordinates.Lng}}";
+    var map = L.mapbox.map('map', 'jxxe.map-tdq4olrv')
+        .setView([lat, lng], 12);
+
+    L.mapbox.markerLayer({
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [lng, lat]
+        },
+        properties: {
+            title: 'Kontroll',
+            'marker-color': '#f0a'
+        }
+    }).addTo(map);
+</script>

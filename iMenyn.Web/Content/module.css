@@ -7,7 +7,7 @@
     overflow: hidden;
 }
 
-#loading {
+#loading,#loading2 {
     display: none;
     background-image: url('img/ajax-load.gif');
     width: 17px;
@@ -65,7 +65,7 @@
 .purple {
     color: purple;
 }
-.light-grey{ color: rgb(158, 158, 158);}
+.grey{ color:#777;}
 .white {
     color: white;
 }
@@ -106,14 +106,14 @@ h1 small {
                 }
 
 #btn-nav {
-    float: right;
-    display: none;
-    background-color: #6F0054;
+background-color: #6F0054;
     color: white;
-    font-size: 20px;
-    height: 41px;
+    display: none;
+    float: right;
+    font-size: 18px;
+    height: 22px;
     margin: 25px 10px 0 0;
-    width: 81px;
+    width: 19px;
 }
 
 .tag {
@@ -134,7 +134,7 @@ h1 small {
     height: 32px;
     margin: 0;
     padding: 1%;
-    width: 80%;
+    width: 62%;
 }
 
 #search-button {
@@ -165,11 +165,11 @@ h1 small {
 
 .row-result {
     background-color: white;
-    width: 100%;
+    width: 94%;
     border-bottom: 1px solid rgb(233, 233, 233);
     display: block;
     margin: auto;
-    padding: 20px 16px;
+    padding: 20px 3%;
     text-align: left;
 }
 
@@ -188,14 +188,6 @@ h1 small {
         .row-result .content p {
             margin: 0;
         }
-
-    .row-result [data-icon] {
-        float: right;
-        color: rgb(206, 206, 206);
-        font-size: 215%;
-        width: 4%;
-        margin-top: 25px;
-    }
 
     .row-result .tag {
         margin: 5px 3px 0 0;
@@ -219,10 +211,21 @@ h1 small {
     position: relative;
     visibility: hidden;
 }
+.map-container {
+    position: relative;
+    height: 350px;
+}
 
 #edited-menu-container {
     background-color: white;
     padding: 10px;
+}
+
+.menu-head {
+    margin-bottom: 22px;
+}
+.menu-head h1 {
+    margin-bottom: 9px;
 }
 
 #menu .category-header {
@@ -252,7 +255,13 @@ h1 small {
     margin: 0;
     max-width: 70%;
 }
-
+#menu [data-icon] {
+    font-size: 20px;
+    margin-left: 15px;
+}
+#menu .food-type {
+    margin-bottom: 50px;
+}
 
 .price-plans {
     margin: auto;

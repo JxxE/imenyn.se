@@ -26,9 +26,21 @@ $(function () {
         $(this).toggleClass("active");
     });
 
-    $("#btn-nav").click(function() {
-        $(".navbar ul").toggle('fast');
+    var browserEvent;
+    if ("ontouchstart" in document.documentElement) {
+        browserEvent = "touchstart";
+    }
+    else {
+        browserEvent = "click";
+    }
+
+    $("#btn-nav").bind(browserEvent, function (e) {
+        $(".navbar ul").toggleClass('nav-open');
     });
+
+    //$("#btn-nav").click(function() {
+    //    $(".navbar ul").toggleClass('nav-open');
+    //});
 });
 
 
@@ -56,12 +68,12 @@ iMenyn.Ajax = function () {
                 $("#yelp-results").html($.render.yelpResults(data));
             },
             error: function () {
-                console.Error("Kunde inte söka Yelp");
+                console.error("Kunde inte söka Yelp");
             }
         });
     };
 
-    var searchEnterprisesByName = function (searchTerm) {
+    var searchEnterprises = function (searchTerm) {
         $("#search-button-content").hide();
         $.when(
             $.get("/Templates/_ListEnterprises.tmpl.html")
@@ -69,10 +81,10 @@ iMenyn.Ajax = function () {
             $.templates({
                 searchResults: searchResults
             });
-            loadEnterprisesByName(searchTerm);
+            loadEnterprises(searchTerm);
         });
     };
-    var loadEnterprisesByName = function (searchTerm) {
+    var loadEnterprises = function (searchTerm) {
         $.ajax({
             dataType: "json",
             data: { searchTerm: searchTerm },
@@ -83,7 +95,7 @@ iMenyn.Ajax = function () {
                 $("#search-button-content").show();
             },
             error: function () {
-                console.Error("Kunde inte söka");
+                console.error("Kunde inte söka");
             }
         });
     };
@@ -113,20 +125,20 @@ iMenyn.Ajax = function () {
         });
     };
 
-    var renderMapByAddress = function (el, address) {
-        $.when($.get("/Templates/_Map.tmpl.html")).done(function (map) {
+    var renderGeneralInfoByAddress = function (el, address) {
+        $.when($.get("/Templates/_GeneralLocationInfo.tmpl.html")).done(function (map) {
             $.templates({
                 map: map
             });
-            loadMapByAddress(el,address);
+            loadGeneralInfoByAddress(el, address);
         });
     };
 
-    var loadMapByAddress = function (el, address) {
+    var loadGeneralInfoByAddress = function (el, address) {
         $.ajax({
             dataType: "json",
             data: { address: address },
-            url: "/Json/GetCoordinatesByAddress",
+            url: "/Json/GetGeneralLocationInfoByAddress",
             type: "POST",
             success: function (data) {
                 $(el).html($.render.map(data));
@@ -137,10 +149,68 @@ iMenyn.Ajax = function () {
         });
     };
 
+    function searchEnterprisesCloseToMyLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(renderEnterprisesCloseToMyLocation, showGeoError);
+        }
+        else {
+            var el = document.getElementById("error");
+            el.innerHTML = "Platsdata stöds inte av denna webbläsare.";
+        }
+    }
+
+    var renderEnterprisesCloseToMyLocation = function (position) {
+        $("#search-button-content").hide();
+        $.when(
+            $.get("/Templates/_ListEnterprises.tmpl.html")
+        ).done(function (searchResults) {
+            $.templates({
+                searchResults: searchResults
+            });
+            loadEnterprisesCloseToMyLocation(position);
+        });
+    };
+    var loadEnterprisesCloseToMyLocation = function (position) {
+        $.ajax({
+            dataType: "json",
+            data: { latitude: position.coords.latitude, longitude: position.coords.longitude },
+            url: '/Json/GetEnterprisesCloseToMyLocation/',
+            type: "POST",
+            success: function (data) {
+                $("#search-result").html($.render.searchResults(data));
+            },
+            error: function () {
+                console.error("Kunde inte söka med koordinater");
+            }
+        });
+        $("#loading2").hide();
+        $("#search-button-content-location").show();
+        $("#search-button-content").show();
+    };
+    
+    function showGeoError(error) {
+        var el = document.getElementById("error");
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                el.innerHTML = "Användare avslog begäran om platsdata.";
+                break;
+            case error.POSITION_UNAVAILABLE:
+                el.innerHTML = "Din platsinformation är otillgänglig.";
+                break;
+            case error.TIMEOUT:
+                el.innerHTML = "Begäran om att få användarens platsdata tog för lång tid.";
+                break;
+            case error.UNKNOWN_ERROR:
+                el.innerHTML = "Okänt fel uppstod.";
+                break;
+        }
+    }
+
     return {
         SearchYelp: searchYelp,
-        SearchEnterprisesByName: searchEnterprisesByName,
+        SearchEnterprises: searchEnterprises,
         BrowseEnterprises: browseEnterprises,
-        RenderMapByAddress: renderMapByAddress
+        RenderGeneralInfoByAddress: renderGeneralInfoByAddress,
+        SearchEnterprisesCloseToMyLocation: searchEnterprisesCloseToMyLocation
     };
 }();

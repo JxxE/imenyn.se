@@ -10,11 +10,17 @@
     <div class="form-inline marginB20">
         <input id="search-query" type="text" />
         <a href="javascript:void(0)" id="search-button" class="btn btn-info btn-xlarge">
-            <div id="search-button-content"><span data-icon="&#xe001;" class="marginR5"></span>Sök</div>
+            <div id="search-button-content"><span data-icon="&#xe001;" class="marginR5"></span></div>
             <div id="loading">
             </div>
         </a>
+        <a href="javascript:void(0)" id="search-button-my-location" class="btn btn-primary">
+            <div id="search-button-content-location"><span data-icon="&#xe00f;" class="marginR5"></span></div>
+            <div id="loading2">
+            </div>
+        </a>
         <span class="help-block"><b>Sök på:</b> Restaurang, postnummer, ort</span>
+        <div id="error" class="error"></div>
     </div>
 
     <div id="search-result">
@@ -23,10 +29,17 @@
 </div>
 
 
+
 <script>
     $("#search-button").click(function () {
         var query = document.getElementById("search-query").value;
-        iMenyn.Ajax.SearchEnterprisesByName(query);
+        iMenyn.Ajax.SearchEnterprises(query);
+    });
+
+    $("#search-button-my-location").click(function () {
+        $("#search-button-content-location").hide();
+        $("#loading2").show();
+        iMenyn.Ajax.SearchEnterprisesCloseToMyLocation();
     });
 
     $('input').bind("enterKey", function () {

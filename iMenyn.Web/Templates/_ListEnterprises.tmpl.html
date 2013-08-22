@@ -3,19 +3,22 @@
 
     <a href="/cabaret?c={{:Id}}" class="row-result">
         <div class="content"><b class="head">{{:Name}}</b>
-            <p>{{:Address}} {{:PostalCode}} {{:City}}</p>
+            <p>{{:Address}}, {{:PostalCode}}, {{:City}}</p>
 
                 {{for Categories}}
                 <div class="tag">{{:#data}}</div>
                 {{/for}}
 
         </div>
-        <span data-icon="&#xe00d;"></span>
+        {{if DistanceFromMyLocation != "" && DistanceFromMyLocation > 0}}
+        {{:DistanceFromMyLocation}}km
+        {{/if}}
     </a>
 
 {{/if}}
 {{/for}}
 
 {{if Enterprises.length == 0}}
-<i>Inga träffar...</i>
+<i>Inga träffar...<br/></i>
+<a href="/Home/Browse">Bläddra bland restauranger i ditt område</a>
 {{/if}}

@@ -15,6 +15,8 @@ namespace iMenyn.Web.ViewModels
         public int PostalCode { get; set; }
         public string City { get; set; }
         public List<string> Categories { get; set; }
+
+        public double DistanceFromMyLocation { get; set; }
     }
 
 }

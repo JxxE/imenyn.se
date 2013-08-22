@@ -2,16 +2,16 @@
     ViewBag.Title = "Skapa restaurang manuellt";
 }
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-<script src='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.js'></script>
-<link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.css' rel='stylesheet' />
+<script src='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
+<link href='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css' rel='stylesheet' />
 <!--[if lte IE 8]>
-    <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.2/mapbox.ie.css' rel='stylesheet' >
+    <link href='//api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.ie.css' rel='stylesheet' >
   <![endif]-->
 
 <h2>Lägg till en restaurang manuellt</h2>
 
 <hr />
-<h3 class="light-grey">1. Allmän info</h3>
+<h3 class="grey">1. Allmänt</h3>
 <form method="POST" action="/Manage/CreateEnterprise">
     <div class="col12">
         <label>Namn</label>
@@ -31,33 +31,16 @@
         </select>
 
         <hr />
-        <h3 class="light-grey">2. Plats</h3>
-        <label>Län</label>
-        <select name="state_code">
-            @foreach (var county in ViewBag.Counties)
-            {
-                <option value="@county.Value">@county.Text</option>
-            }
-        </select>
-
-        <div class="marginB20">
+        <h3 class="grey">2. Plats <span data-icon="&#xe003;"></span></h3>
+        <div class="marginB20 row">
             <label>Adress</label>
             <input type="text" name="address" id="address" class="input-xlarge pull-left">
-            <a id="map-check" class="btn btn-success marginL5">Kontrollera att kartan stämmer</a>
-            <div id="map-container-validate" style="position: relative" class="col12">
-                <div id='map'></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="well span4">
-                <div class="marginB20"><b>Ju mer du kan fylla i desto bättre</b></div>
-                <label>Postnummer</label>
-                <input type="text" name="postalCode" class="input-mini" />
+            <a id="map-check" class="btn btn-success marginL5">Hämta övrig info</a>
 
-                <label>Ort</label>
-                <input id="city" type="text" name="city" placeholder="" />
-            </div>
         </div>
+
+            <div id="general-location-info"></div>
+
     </div>
     <div class="col12">
         <input type="submit" value="Spara" class="btn btn-success btn-large" />
@@ -112,12 +95,12 @@
             }
         });
         $("#map-check").click(function () {
-            
+
             $("#map").remove();
             $("<div id='map'></div>").appendTo("#map-container-validate");
-            var map = $("#map");
+            var map = $("#general-location-info");
             var address = $("#address").val();
-            iMenyn.Ajax.RenderMapByAddress(map, address);
+            iMenyn.Ajax.RenderGeneralInfoByAddress(map, address);
         });
     });
 

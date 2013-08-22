@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Device.Location;
+using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Script.Serialization;
 using Newtonsoft.Json.Linq;
 using iMenyn.Data.Abstract;
 using iMenyn.Data.Helpers;
 using iMenyn.Data.Models;
-using iMenyn.Web.Extensionmethods;
-using iMenyn.Web.Helpers;
 using iMenyn.Web.ViewModels;
+using iMenyn.Yelp.Data;
 
 namespace iMenyn.Web.Controllers
 {
@@ -138,10 +137,11 @@ namespace iMenyn.Web.Controllers
             return viewModel;
         }
 
-        public JsonResult GetCoordinatesByAddress(string address)
+        public JsonResult GetGeneralLocationInfoByAddress(string address)
         {
             var lowerAddress = address.ToLower();
             var formattedAddress = lowerAddress.Replace(", sverige", string.Empty);
+            // Prewview URL http://maps.googleapis.com/maps/api/geocode/json?address=sk%C3%B6nstav%C3%A4gen%203&sensor=false&region=se
             var url = "http://maps.googleapis.com/maps/api/geocode/json?address=" + formattedAddress + "&sensor=false&region=se";
             var json = new WebClient().DownloadString(url);
 
@@ -153,18 +153,133 @@ namespace iMenyn.Web.Controllers
 
             if (status.ToString() == "OK")
             {
-                var lat = results["geometry"]["location"]["lat"].ToString();
-                var lng = results["geometry"]["location"]["lng"].ToString();
+                var viewModel = new LocationViewModel
+                                    {
+                                        Location = new Location(),
+                                        Coordinates = new Coordinates()
+                                    };
 
-                var coordinates = new Coordinates
+                var address_components = results["address_components"];
+
+                var route = "";
+                var streetNumber = "";
+                var lan = "";
+
+                foreach (var addressComponent in address_components)
+                {
+                    var type = addressComponent.SelectToken("types").First.Value<string>();
+
+                    switch(type)
                     {
-                        Lat = lat,
-                        Lng = lng
-                    };
-                return Json(coordinates);
+                        case "street_number":
+                            streetNumber = addressComponent.SelectToken("long_name").Value<string>();
+                            break;
+                        case "route":
+                            route = addressComponent.SelectToken("long_name").Value<string>();
+                            break;
+                        case "sublocality":
+                            viewModel.Location.sub_locality = addressComponent.SelectToken("long_name").Value<string>();
+                            break;
+                        case "locality":
+                            viewModel.Location.locality = addressComponent.SelectToken("long_name").Value<string>();
+                            break;
+                        case "administrative_area_level_1":
+                            lan = addressComponent.SelectToken("long_name").Value<string>().ToLower().Replace("s län",string.Empty).Replace(" county",string.Empty); //TODO!!!!! BETTER!?!?!
+                            break;
+                        case "administrative_area_level_2":
+                            viewModel.Location.county = addressComponent.SelectToken("long_name").Value<string>();
+                            break;
+                        case "postal_code":
+                            viewModel.Location.postal_code = addressComponent.SelectToken("long_name").Value<string>();
+                            break;
+                        case "postal_town":
+                            viewModel.Location.postal_town = addressComponent.SelectToken("long_name").Value<string>();
+                            break;
+
+                    }
+                }
+
+
+
+                var lat = results["geometry"]["location"]["lat"].ToString().Replace(",", ".");
+                var lng = results["geometry"]["location"]["lng"].ToString().Replace(",", ".");
+                viewModel.Coordinates.Lat = lat;
+                viewModel.Coordinates.Lng = lng;
+
+                //Give streetnumber a space to the left so it looks good with the address.
+                streetNumber = streetNumber == "" ? string.Empty : " " + streetNumber;
+
+                viewModel.Location.complete_address = string.Format("{0}{1}", route, streetNumber);
+
+                var stateCode = GeneralHelper.GetCountyNameAndCodes().FirstOrDefault(p => p.Text.ToLower().Contains(lan));
+                if (stateCode != null && stateCode.Value.Length < 3)
+                    viewModel.Location.state_code = stateCode.Value;
+
+
+                viewModel.Counties = GeneralHelper.GetCountyNameAndCodes();
+
+                return Json(viewModel);
+
+
+
             }
 
             return null;
+        }
+
+        public JsonResult GetEnterprisesCloseToMyLocation(string latitude, string longitude)
+        {
+            var enterprisesCloseToMe = new Dictionary<string, double>();
+
+            var lat = double.Parse(latitude, CultureInfo.InvariantCulture);
+            var lng = double.Parse(longitude, CultureInfo.InvariantCulture);
+
+            var myCoord = new GeoCoordinate(lat, lng);
+
+            var allEnterprises = Repository.GetAllEnterprises();
+
+            foreach (var enterprise in allEnterprises)
+            {
+                var enterpriseLat = double.Parse(enterprise.Coordinates.Lat,CultureInfo.InvariantCulture);
+                var enterpriseLng = double.Parse(enterprise.Coordinates.Lng,CultureInfo.InvariantCulture);
+                var enterpriseCoord = new GeoCoordinate(enterpriseLat, enterpriseLng);
+
+                var distance = myCoord.GetDistanceTo(enterpriseCoord);
+
+                if (distance < 15000)
+                {
+                    enterprisesCloseToMe.Add(enterprise.Id, distance);
+                }
+            }
+
+            var sortedEnterprisesCloseToMe =
+                (from e in enterprisesCloseToMe orderby e.Value ascending select e).ToDictionary(p => p.Key,
+                                                                                                 p => p.Value);
+
+            var enterprisesViewModel = new EnterprisesViewModel
+            {
+                Enterprises = new List<EnterpriseViewModel>()
+            };
+
+
+            foreach (var d in sortedEnterprisesCloseToMe)
+            {
+                var en = allEnterprises.ToList().SingleOrDefault(e => e.Id == d.Key);
+                if(en == null)continue;
+                var enterpriseViewModel = new EnterpriseViewModel
+                                              {
+                                                  Address = en.Address,
+                                                  Categories = en.Categories,
+                                                  City = en.City,
+                                                  Id = en.Id,
+                                                  Name = en.Name,
+                                                  PostalCode = en.PostalCode,
+                                                  DistanceFromMyLocation = Math.Round((d.Value/1000),1)
+                                              };
+                enterprisesViewModel.Enterprises.Add(enterpriseViewModel);
+            }
+
+            return Json(enterprisesViewModel);
         }
     }
 }

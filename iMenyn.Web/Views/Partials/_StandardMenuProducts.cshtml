@@ -7,7 +7,7 @@
 {
     foreach (var foodType in viewModel.FoodTypes)
     {
-        var icon = "";
+        string icon;
         switch(foodType.Key)
         {
             case "main-dish":
@@ -24,8 +24,8 @@
                 break;
         }
         
-    <div class="marginB20">
-        <h1 class="@foodType.Key"><span data-icon="@Html.Raw(icon)" class="purple marginR5"></span>@foodType.Name</h1>
+    <div class="food-type">
+        <h1 class="@foodType.Key">@foodType.Name<span data-icon="@Html.Raw(icon)" class="purple"></span></h1>
         @foreach (var category in foodType.Categories)
         {
             <div class="product-category">
