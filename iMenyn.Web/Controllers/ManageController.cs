@@ -104,6 +104,9 @@ namespace iMenyn.Web.Controllers
 
         public ActionResult CreateEnterprise(FormCollection form)
         {
+            if (!string.IsNullOrEmpty(form["nope"]))
+                return RedirectToAction("Index", "Home");
+
             var name = form["name"];
             var phone = form["phone"];
             var address = form["address"];
@@ -115,6 +118,7 @@ namespace iMenyn.Web.Controllers
             var city = form["city"].Contains(",") ? form["city"].Split(',').First() : form["city"];
             var countryCode = form["countryCode"] ?? "SE";
             var state_code = form["state_code"];
+            var subLocality = form["subLocality"];
             var lat = form["lat"];
             var lng = form["lng"];
             var yelpId = form["yelpId"];
@@ -143,6 +147,7 @@ namespace iMenyn.Web.Controllers
                 PostalCode = postalCode,
                 City = city,
                 CountryCode = countryCode,
+                SubLocality = subLocality,
                 StateCode = state_code,
                 Coordinates = new Coordinates { Lat = lat, Lng = lng },
                 YelpId = yelpId,

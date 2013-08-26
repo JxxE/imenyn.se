@@ -12,81 +12,44 @@
 
 <hr />
 <h3 class="grey">1. Allmänt</h3>
-<form method="POST" action="/Manage/CreateEnterprise">
+<form id="form" method="POST" action="/Manage/CreateEnterprise">
     <div class="col12">
         <label>Namn</label>
-        <input type="text" name="name" required />
+        <input type="text" name="name" />
 
         <label>Telefon</label>
-        <input type="text" name="phone" required />
+        <input type="text" name="phone" />
 
         <label>Kategorier</label>
-        <div id="chosen-categories"></div>
-        <select id="category">
-            <option></option>
+                <div data-id="chosen-categories" class="form-inline marginB20">
+            <select data-id="category">
+        <option></option>
             @foreach (var category in ViewBag.Categories)
             {
                 <option value="@category.Value">@category.Text</option>    
-            }
-        </select>
+            }  
+            </select>
+        </div>
 
         <hr />
         <h3 class="grey">2. Plats <span data-icon="&#xe003;"></span></h3>
         <div class="marginB20 row">
             <label>Adress</label>
-            <input type="text" name="address" id="address" class="input-xlarge pull-left">
+            <input type="text" name="address-search" id="address-search" placeholder="Ange adress" class="input-xlarge pull-left">
             <a id="map-check" class="btn btn-success marginL5">Hämta övrig info</a>
-
+            <div id="no-address-error" class="error hide">Du måste ange en adress</div>
         </div>
-
             <div id="general-location-info"></div>
-
     </div>
     <div class="col12">
-        <input type="submit" value="Spara" class="btn btn-success btn-large" />
+         <input id="nope" name="nope" type="text" style="display: none;" />
+        <input type="submit" id="submit" value="Spara" class="btn btn-success btn-large hide marginT15" />
     </div>
 </form>
 <script src="~/Scripts/jquery.validate.min.js"></script>
 
 <script>
-    $("form").validate({
-        rules: {
-            postalCode: {
-                number: true
-            }
-        },
-        submitHandler: function (form) {
-            var chosenCategoriesCount = $("#chosen-categories").children('div').size();
-            if (chosenCategoriesCount == 0) {
-                $("<b class='red'>Välj minst 1 kategori!</b>").insertAfter("#chosen-categories");
-            }
-            else {
-                form.submit();
-            }
-        }
-    });
-
-    $("#category").change(function () {
-        var value = this.value;
-        if (value != "") {
-            var text = $('#category option:selected').html();
-            var divChosenCategories = $("#chosen-categories");
-            var count = divChosenCategories.children('div').size();
-
-            if (count < 5) {
-                divChosenCategories.append("<div><p class='inline'>" + text + "</p><input type='hidden' name='category" + count + "' value='" + value + "' />" +
-                    "<i class='icon-remove'></i></div>");
-                if (count == 4) {
-                    $("#category").addClass("hide");
-                }
-            }
-        }
-    });
-    $("#chosen-categories").on("click", ".icon-remove", function () {
-        $(this).parent().remove();
-        $("#category").removeClass("hide");
-    });
-
+    iMenyn.Utilities.RenderCategoryChooser();
     $(document).ready(function () {
         $(window).keydown(function (event) {
             if (event.keyCode == 13) {
@@ -99,29 +62,54 @@
             $("#map").remove();
             $("<div id='map'></div>").appendTo("#map-container-validate");
             var map = $("#general-location-info");
-            var address = $("#address").val();
+            var address = $("#address-search").val();
             iMenyn.Ajax.RenderGeneralInfoByAddress(map, address);
         });
+        
+        //Prevent spam
+        var e = document.getElementById("nope");
+        e.parentNode.removeChild(e);
     });
 
-
+    $("#form").validate({
+        rules: {
+            postalCode: {
+                number: true,
+                required: true,
+                rangelength: [5, 5]
+            },
+            address: { required: true },
+            name: { required: true },
+            confirm: { required: true }
+        },
+        messages: {
+            postalCode: {
+                number: "Får endast innehålla siffor",
+                required: "Ange ett postnummer",
+                rangelength: "Postnumret har fel format"
+            },
+            address: { required: "Ange en adress" },
+            name: { required: "Ange restaurangens namn" },
+            confirm: { required: "Du måste godkänna informationen" }
+        },
+        submitHandler: function (form) {
+            var chosenCategoriesCount = $("div[data-id='chosen-categories']").children('div').size();
+            if (chosenCategoriesCount == 0) {
+                $("<p class='error'>Välj minst 1 kategori!</p>").insertAfter("div[data-id='chosen-categories']");
+            }
+            else {
+                form.submit();
+            }
+        }
+    });
 
     function initialize() {
-        var address = (document.getElementById('address'));
+        var address = (document.getElementById('address-search'));
         var addressOptions = {
             componentRestrictions: { country: 'se' }
         };
-        var city = (document.getElementById('city'));
-        var cityOptions = {
-            types: ['(cities)'],
-            componentRestrictions: { country: 'se' }
-        };
-
         var autocompleteAddress = new google.maps.places.Autocomplete(address, addressOptions);
-        var autocompleteCity = new google.maps.places.Autocomplete(city, cityOptions);
-        //autocomplete.setComponentRestrictions({ "country": "se" });
         autocompleteAddress.setTypes(['geocode']);
-        autocompleteCity.setTypes(['geocode']);
     }
     google.maps.event.addDomListener(window, 'load', initialize);
 </script>
@@ -129,10 +117,6 @@
 
 
 <noscript>
-    <style>
-        form {
-            display: none;
-        }
-    </style>
+    <style>form {display: none;}</style>
     <h1>Aktivera JavaScript för att se sidan...</h1>
 </noscript>

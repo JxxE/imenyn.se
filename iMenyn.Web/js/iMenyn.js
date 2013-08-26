@@ -38,9 +38,6 @@ $(function () {
         $(".navbar ul").toggleClass('nav-open');
     });
 
-    //$("#btn-nav").click(function() {
-    //    $(".navbar ul").toggleClass('nav-open');
-    //});
 });
 
 
@@ -126,12 +123,17 @@ iMenyn.Ajax = function () {
     };
 
     var renderGeneralInfoByAddress = function (el, address) {
-        $.when($.get("/Templates/_GeneralLocationInfo.tmpl.html")).done(function (map) {
-            $.templates({
-                map: map
+        if (address == "")
+            $("#no-address-error").show();
+        else {
+            $("#no-address-error").hide();
+            $.when($.get("/Templates/_GeneralLocationInfo.tmpl.html")).done(function (map) {
+                $.templates({
+                    map: map
+                });
+                loadGeneralInfoByAddress(el, address);
             });
-            loadGeneralInfoByAddress(el, address);
-        });
+        }
     };
 
     var loadGeneralInfoByAddress = function (el, address) {
@@ -142,6 +144,7 @@ iMenyn.Ajax = function () {
             type: "POST",
             success: function (data) {
                 $(el).html($.render.map(data));
+                $("#submit").show();
             },
             error: function () {
                 console.error("Could not load map by address...");
@@ -187,7 +190,7 @@ iMenyn.Ajax = function () {
         $("#search-button-content-location").show();
         $("#search-button-content").show();
     };
-    
+
     function showGeoError(error) {
         var el = document.getElementById("error");
         switch (error.code) {

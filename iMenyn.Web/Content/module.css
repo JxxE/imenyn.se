@@ -7,7 +7,7 @@
     overflow: hidden;
 }
 
-#loading,#loading2 {
+#loading, #loading2 {
     display: none;
     background-image: url('img/ajax-load.gif');
     width: 17px;
@@ -26,7 +26,7 @@
     font-size: 165%;
 }
 
-.hide {
+.hide,.error.hide {
     display: none;
 }
 
@@ -57,19 +57,31 @@
 .marginL20 {
     margin-left: 20px;
 }
-
-.red, .error {
+.marginT15 {
+    margin-top: 15px;
+}
+.red {
     color: red;
 }
 
 .purple {
     color: purple;
 }
-.grey{ color:#777;}
+
+.grey {
+    color: #777;
+}
+
 .white {
     color: white;
 }
-
+.error {
+    color: rgb(240, 67, 67);
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    padding-left: 5px;
+}
 .visible {
     visibility: visible!important;
 }
@@ -106,7 +118,7 @@ h1 small {
                 }
 
 #btn-nav {
-background-color: #6F0054;
+    background-color: #6F0054;
     color: white;
     display: none;
     float: right;
@@ -117,11 +129,14 @@ background-color: #6F0054;
 }
 
 .tag {
-    background-color: rgb(211, 5, 145);
+    background-color: #05AAD3;
     padding: 2px 8px;
     display: inline-block;
     color: white;
     margin: 0 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
 
 #main-search-container {
@@ -211,6 +226,7 @@ background-color: #6F0054;
     position: relative;
     visibility: hidden;
 }
+
 .map-container {
     position: relative;
     height: 350px;
@@ -224,9 +240,10 @@ background-color: #6F0054;
 .menu-head {
     margin-bottom: 22px;
 }
-.menu-head h1 {
-    margin-bottom: 9px;
-}
+
+    .menu-head h1 {
+        margin-bottom: 9px;
+    }
 
 #menu .category-header {
     margin: 4px 0 7px 0;
@@ -255,10 +272,12 @@ background-color: #6F0054;
     margin: 0;
     max-width: 70%;
 }
+
 #menu [data-icon] {
     font-size: 20px;
     margin-left: 15px;
 }
+
 #menu .food-type {
     margin-bottom: 50px;
 }

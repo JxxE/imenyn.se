@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace iMenyn.Data.Models
 {
@@ -9,7 +9,9 @@ namespace iMenyn.Data.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public int Price { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public float Abv { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int Size { get; set; }
         public string Image { get; set; }
 
@@ -29,6 +31,5 @@ namespace iMenyn.Data.Models
         MainDish,
         Dessert,
         Appetizer
-
     }
 }

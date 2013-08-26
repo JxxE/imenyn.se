@@ -277,6 +277,7 @@
     <Content Include="Content\media-queries.css" />
     <Content Include="Content\theme.css" />
     <Content Include="favicon.png" />
+    <Content Include="js\iMenyn.jsrender.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Content\external\bootstrap\js\bootstrap.min.js" />
     <Content Include="Content\fonts\iMenyn.dev.svg" />

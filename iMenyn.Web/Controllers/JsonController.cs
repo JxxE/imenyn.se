@@ -4,6 +4,7 @@ using System.Device.Location;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web.Mvc;
 using Newtonsoft.Json.Linq;
 using iMenyn.Data.Abstract;
@@ -143,7 +144,10 @@ namespace iMenyn.Web.Controllers
             var formattedAddress = lowerAddress.Replace(", sverige", string.Empty);
             // Prewview URL http://maps.googleapis.com/maps/api/geocode/json?address=sk%C3%B6nstav%C3%A4gen%203&sensor=false&region=se
             var url = "http://maps.googleapis.com/maps/api/geocode/json?address=" + formattedAddress + "&sensor=false&region=se";
-            var json = new WebClient().DownloadString(url);
+
+            var wc = new WebClient {Encoding = Encoding.UTF8};
+
+            var json = wc.DownloadString(url);
 
             var jo = JObject.Parse(json);
 
@@ -164,6 +168,8 @@ namespace iMenyn.Web.Controllers
                 var route = "";
                 var streetNumber = "";
                 var lan = "";
+                var locality = "";
+                var administrative_area_level_2 = "";
 
                 foreach (var addressComponent in address_components)
                 {
@@ -181,13 +187,13 @@ namespace iMenyn.Web.Controllers
                             viewModel.Location.sub_locality = addressComponent.SelectToken("long_name").Value<string>();
                             break;
                         case "locality":
-                            viewModel.Location.locality = addressComponent.SelectToken("long_name").Value<string>();
+                            locality = addressComponent.SelectToken("long_name").Value<string>();
                             break;
                         case "administrative_area_level_1":
                             lan = addressComponent.SelectToken("long_name").Value<string>().ToLower().Replace("s län",string.Empty).Replace(" county",string.Empty); //TODO!!!!! BETTER!?!?!
                             break;
                         case "administrative_area_level_2":
-                            viewModel.Location.county = addressComponent.SelectToken("long_name").Value<string>();
+                            administrative_area_level_2 = addressComponent.SelectToken("long_name").Value<string>();
                             break;
                         case "postal_code":
                             viewModel.Location.postal_code = addressComponent.SelectToken("long_name").Value<string>();
@@ -199,8 +205,6 @@ namespace iMenyn.Web.Controllers
                     }
                 }
 
-
-
                 var lat = results["geometry"]["location"]["lat"].ToString().Replace(",", ".");
                 var lng = results["geometry"]["location"]["lng"].ToString().Replace(",", ".");
                 viewModel.Coordinates.Lat = lat;
@@ -211,19 +215,17 @@ namespace iMenyn.Web.Controllers
 
                 viewModel.Location.complete_address = string.Format("{0}{1}", route, streetNumber);
 
+                //Sätt kommun
+                viewModel.Location.county = administrative_area_level_2 != "" ? administrative_area_level_2 : locality;
+
                 var stateCode = GeneralHelper.GetCountyNameAndCodes().FirstOrDefault(p => p.Text.ToLower().Contains(lan));
                 if (stateCode != null && stateCode.Value.Length < 3)
                     viewModel.Location.state_code = stateCode.Value;
 
-
                 viewModel.Counties = GeneralHelper.GetCountyNameAndCodes();
 
                 return Json(viewModel);
-
-
-
             }
-
             return null;
         }
 

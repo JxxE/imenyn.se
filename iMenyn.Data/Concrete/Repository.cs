@@ -168,6 +168,7 @@ namespace iMenyn.Data.Concrete
             {
                 session.Store(enterprise);
                 session.SaveChanges();
+                EmailHelper.NewEnterpriseNotification();
             }
         }
 

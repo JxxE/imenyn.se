@@ -212,6 +212,7 @@
     <Compile Include="Concrete\RavenContext.cs" />
     <Compile Include="Concrete\Repository.cs" />
     <Compile Include="Helpers\AccountHelper.cs" />
+    <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\EnterpriseHelper.cs" />
     <Compile Include="Helpers\GeneralHelper.cs" />
     <Compile Include="Helpers\MenuHelper.cs" />

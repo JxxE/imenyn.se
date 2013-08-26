@@ -4,8 +4,8 @@
     </div>
     <label>Län</label>
     <select name="state_code">
-        {{for Counties}}
-        <option value="{{>#data.Value}}">{{>#data.Text}}</option>
+        {{for Counties ~stateCode=Location.state_code}}
+        <option value="{{>#data.Value}}" {{:~SetSelected(#data.Value, ~stateCode)}}>{{>#data.Text}}</option>
         {{/for}}
     </select>
         <label>Adress</label>
@@ -15,10 +15,21 @@
     <input type="text" name="postalCode" class="input-mini" value="{{:Location.postal_code}}" />
 
     <label>Ort</label>
-    <input id="city" type="text" name="city" placeholder="" value="{{:Location.postal_town}}" />
+    <input id="city" type="text" name="city" value="{{:Location.postal_town}}" />
     
-        <label>Kommun</label>
-    <input id="Text1" type="text" name="city" placeholder="" value="{{:Location.postal_town}}" />
+    <label>Kommun</label>
+    <input id="county" type="text" name="county" value="{{:Location.county}}" />
+    
+    <input id="subLocality" type="hidden" name="subLocality" value="{{:Location.sub_locality}}" />
+    <input id="lat" type="hidden" name="lat" value="{{:Coordinates.Lat}}" />
+    <input id="lng" type="hidden" name="lng" value="{{:Coordinates.Lng}}" />
+   
+    <div class="row marginT15">
+        <hr/>
+        <input name="confirm" type="checkbox" class="pull-left"/><label class="marginL10 inline">Jag har läst igenom informationen och bekräftar att jag fyllt i så gott jag kan</label>
+        <hr/>
+    </div>
+    
 </div>
 <script>
     var lat = "{{:Coordinates.Lat}}";

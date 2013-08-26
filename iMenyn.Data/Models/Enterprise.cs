@@ -14,13 +14,12 @@ namespace iMenyn.Data.Models
         public string Address { get; set; }
         public int PostalCode { get; set; }
         public string PostalTown { get; set; }
+        public string County { get; set; }
         public string City { get; set; }
         public string CountryCode { get; set; }
         public string StateCode { get; set; }
         public Coordinates Coordinates { get; set; }
-
-        //Botkyrka
-        public string Locality { get; set; }
+        
         //Norsborg
         public string SubLocality { get; set; }
         
