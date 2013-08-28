@@ -23,10 +23,11 @@ namespace iMenyn.Web.Areas.Admin.Controllers
 
         public ActionResult Index()
         {
-            var viewModel = new DashboardViewModel
+            var model = new DashboardViewModel
             {
                 NewEnterprises = new List<Enterprise>(),
-                EnterprisesWithModifiedMenus = new List<Enterprise>()
+                EnterprisesWithModifiedMenus = new List<Enterprise>(),
+                StandardViewModel = new StandardViewModel()
             };
 
             if (CurrentAccount.IsAdmin)
@@ -36,10 +37,28 @@ namespace iMenyn.Web.Areas.Admin.Controllers
 
                 var enterprisesWithModifiedMenus = Repository.GetEnterprisesWithModifiedMenus();
 
-                viewModel.NewEnterprises = newEnterprises.ToList();
-                viewModel.EnterprisesWithModifiedMenus = enterprisesWithModifiedMenus.ToList();
+                model.NewEnterprises = newEnterprises.ToList();
+                model.EnterprisesWithModifiedMenus = enterprisesWithModifiedMenus.ToList();
             }
-            return View(viewModel);
+            else
+            {
+                if(CurrentAccount.Enterprise == null)
+                {
+                    return View(model);
+                }
+
+                var enterprise = Repository.GetEnterpriseById(CurrentAccount.Enterprise);
+
+                if(enterprise.Menu != null)
+                {
+                    var menu = Repository.GetMenuById(enterprise.Menu);
+                    var products = Repository.GetProducts(menu.Products.ToList());
+
+                    var s = ViewModelHelper.CreateStandardViewModel(enterprise, products);
+                    model.StandardViewModel = s;
+                }
+            }
+            return View(model);
         }
 
         public ActionResult Accounts()
@@ -132,16 +151,21 @@ namespace iMenyn.Web.Areas.Admin.Controllers
         public ActionResult NewMenu(string enterpriseId)
         {
             var enterprise = Repository.GetEnterpriseById(enterpriseId);
+            var model = new StandardViewModel();
+
             if (enterprise.Menu != null)
             {
                 var menu = Repository.GetMenuById(enterprise.Menu);
                 var products = Repository.GetProducts(menu.Products.ToList());
-
-                var model = ViewModelHelper.CreateStandardViewModel(enterprise, products);
-
-                return View(model);
+                model = ViewModelHelper.CreateStandardViewModel(enterprise, products);
             }
-            return RedirectToAction("Index");
+            else
+            {
+                var p = new List<Product>();
+                model = ViewModelHelper.CreateStandardViewModel(enterprise, p);
+            }
+
+            return View(model);
         }
 
 
@@ -200,11 +224,14 @@ namespace iMenyn.Web.Areas.Admin.Controllers
         public RedirectToRouteResult DisapproveMenu(string enterpriseId)
         {
             var enterprise = Repository.GetEnterpriseById(enterpriseId);
-            var menu = Repository.GetMenuById(enterprise.Menu);
-
             Repository.DeleteEnterpriseById(enterprise.Id);
-            Repository.DeleteMenuById(menu.Id);
-            Repository.DeleteProductsByIds(menu.Products.ToList());
+
+            if (enterprise.Menu != null)
+            {
+                var menu = Repository.GetMenuById(enterprise.Menu);
+                Repository.DeleteMenuById(menu.Id);
+                Repository.DeleteProductsByIds(menu.Products.ToList());
+            }
 
             return RedirectToAction("NewEnterprises");
         }
@@ -212,7 +239,38 @@ namespace iMenyn.Web.Areas.Admin.Controllers
         public ActionResult LogOff()
         {
             Authentication.SignOut();
-            return RedirectToAction("Index", "Home", new {area = ""});
+            return RedirectToAction("Index", "Home", new { area = "" });
+        }
+
+        [HttpPost]
+        public ActionResult AddAccount(AccountViewData account)
+        {
+            if (account.UserInput.Password != account.UserInput.ConfirmPassword)
+            {
+                ModelState.AddModelError("ConfirmPassword", "Lösenorden matchar inte!");
+            }
+            if (ModelState.IsValid)
+            {
+                var newAccount = new Account
+                                  {
+                                      Id = Data.Helpers.AccountHelper.GetId(account.UserInput.Email),
+                                      Address = account.UserInput.Address,
+                                      City = account.UserInput.City,
+                                      Email = account.UserInput.Email,
+                                      Enabled = true,
+                                      IsAdmin = false,
+                                      Name = account.UserInput.Name,
+                                      Phone = account.UserInput.Phone,
+                                      PostalCode = account.UserInput.PostalCode
+                                  };
+                newAccount.SetPassword(account.UserInput.Password);
+                Repository.AddAccount(newAccount);
+            }
+
+            var accounts = Repository.GetAccounts().Where(a => a.IsAdmin != true);
+            ViewBag.Accounts = accounts;
+
+            return View("Accounts");
         }
     }
 }

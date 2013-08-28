@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using iMenyn.Data.Models;
-
+using iMenyn.Web.ViewModels;
 
 namespace iMenyn.Web.Areas.Admin.ViewModels
 {
@@ -11,5 +8,8 @@ namespace iMenyn.Web.Areas.Admin.ViewModels
     {
         public List<Enterprise> NewEnterprises { get; set; }
         public List<Enterprise> EnterprisesWithModifiedMenus { get; set; }
+
+        //Accounts, not admin.
+        public StandardViewModel StandardViewModel { get; set; }
     }
 }

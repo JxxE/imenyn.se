@@ -29,8 +29,15 @@ namespace iMenyn.Data.Helpers
             message.Subject = "Ny restaurang har inkommit!";
             message.From = new MailAddress("info@imenyn.se");
             message.Body = "Ny restaurang har inkommit!";
+            message.BodyEncoding = System.Text.Encoding.UTF8;
             var smtp = new SmtpClient(smtpServer);
-            smtp.Send(message);
+            try
+            {
+                smtp.SendAsync(message,"");
+            }
+            catch
+            {
+            }
         }
     }
 }

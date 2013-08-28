@@ -48,7 +48,7 @@ namespace iMenyn.Web.Controllers
             var menu = Repository.GetMenuById(enterprise.Menu);
             var products = Repository.GetProducts(menu.Products.ToList());
 
-            var model = ViewModelHelper.CreateStandardViewModel(enterprise,products);
+            var model = ViewModelHelper.CreateStandardViewModel(enterprise, products);
 
             var recentlyModified = Repository.GetModifiedMenuByEnterpriseId(id) != null;
 

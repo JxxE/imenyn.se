@@ -31,7 +31,7 @@
 @if (Model.ModifiedMenuProducts.FoodTypes != null)
 {
 <div class="onerow">
-    @Html.ActionLink("Godkänn", "ApproveModifiedMenu", "ManageAdmin", new { enterpriseKey = Model.Enterprise.Key }, new { @class = "btn btn-success" })
-    @Html.ActionLink("Ta bort", "DisapproveModifiedMenu", "ManageAdmin", new { modifiedMenuId = Model.ModifiedMenuId }, new { @class = "btn btn-danger", onclick = "return confirm('Vill du verkligen ta bort denna modifiering?');" })
+    @Html.ActionLink("Godkänn", "ApproveModifiedMenu", "Admin", new { enterpriseKey = Model.Enterprise.Key }, new { @class = "btn btn-success" })
+    @Html.ActionLink("Ta bort", "DisapproveModifiedMenu", "Admin", new { modifiedMenuId = Model.ModifiedMenuId }, new { @class = "btn btn-danger", onclick = "return confirm('Vill du verkligen ta bort denna modifiering?');" })
 </div>
 }

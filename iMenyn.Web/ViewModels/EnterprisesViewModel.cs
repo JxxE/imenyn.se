@@ -12,6 +12,7 @@ namespace iMenyn.Web.ViewModels
         public string Id { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
+        public string Phone { get; set; }
         public int PostalCode { get; set; }
         public string City { get; set; }
         public List<string> Categories { get; set; }

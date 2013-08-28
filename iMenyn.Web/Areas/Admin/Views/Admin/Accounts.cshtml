@@ -1,7 +1,7 @@
 ﻿@model iMenyn.Web.Areas.Admin.ViewModels.AccountViewData
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Konton";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
@@ -21,8 +21,8 @@ else
 {
     if (IsPost)
     {
-    <div class="message message-success">
-        OK
+    <div class="message message-success col2 marginB20">
+        Kontot skapades
     </div>
     }
 }
@@ -30,7 +30,7 @@ else
 <a href="javascript:void(0)" class="btn btn-success" data-toggle="collapse" data-target="#accounts-form">Skapa konto</a>
 
 <div id="accounts-form" class="hide">
-    @using (Html.BeginForm("AddAccount", "AccountManagement", FormMethod.Post, new { @class = "form-horizontal" }))
+    @using (Html.BeginForm("AddAccount", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
     {
         <div class="control-group">
             @Html.LabelFor(a => a.UserInput.Name, "Namn", new { @class = "control-label" })
@@ -47,10 +47,31 @@ else
             </div>
         </div>
         <div class="control-group">
-            @Html.LabelFor(a => a.UserInput.Email, "Telefon", new { @class = "control-label" })
+            @Html.LabelFor(a => a.UserInput.Phone, "Telefon", new { @class = "control-label" })
             <div class="controls">
                 @Html.TextBoxFor(a => a.UserInput.Phone, new { @class = "input-xlarge", @value = Model != null ? Model.UserInput.Phone : "" })
                 @Html.ValidationMessageFor(a => a.UserInput.Phone)
+            </div>
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(a => a.UserInput.Address, "Adress", new { @class = "control-label" })
+            <div class="controls">
+                @Html.TextBoxFor(a => a.UserInput.Address, new { @class = "input-xlarge", @value = Model != null ? Model.UserInput.Address : "" })
+                @Html.ValidationMessageFor(a => a.UserInput.Address)
+            </div>
+        </div>
+        <div class="control-group">
+            @Html.LabelFor(a => a.UserInput.City, "Stad", new { @class = "control-label" })
+            <div class="controls">
+                @Html.TextBoxFor(a => a.UserInput.City, new { @class = "input-xlarge", @value = Model != null ? Model.UserInput.City : "" })
+                @Html.ValidationMessageFor(a => a.UserInput.City)
+            </div>
+        </div>
+                <div class="control-group">
+            @Html.LabelFor(a => a.UserInput.PostalCode, "Postnummer", new { @class = "control-label" })
+            <div class="controls">
+                @Html.TextBoxFor(a => a.UserInput.PostalCode, new { @class = "input-xlarge", @value = Model != null ? Model.UserInput.PostalCode : "" })
+                @Html.ValidationMessageFor(a => a.UserInput.PostalCode)
             </div>
         </div>
         <div class="control-group">
