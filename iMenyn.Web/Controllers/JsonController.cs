@@ -82,7 +82,7 @@ namespace iMenyn.Web.Controllers
 
             foreach (var enterpriseViewModel in enterprises.Select(enterprise => new EnterpriseViewModel
                                                                                      {
-                                                                                         Id = enterprise.Id,
+                                                                                         Key = enterprise.Key,
                                                                                          Name = enterprise.Name,
                                                                                          Address = enterprise.Address,
                                                                                          PostalCode = enterprise.PostalCode,
@@ -273,7 +273,7 @@ namespace iMenyn.Web.Controllers
                                                   Address = en.Address,
                                                   Categories = en.Categories,
                                                   City = en.City,
-                                                  Id = en.Id,
+                                                  Key = en.Key,
                                                   Name = en.Name,
                                                   PostalCode = en.PostalCode,
                                                   DistanceFromMyLocation = Math.Round((d.Value/1000),1)

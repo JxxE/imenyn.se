@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using iMenyn.Data.Models;
+using iMenyn.Data.ViewModels;
 
 namespace iMenyn.Data.Abstract
 {
@@ -34,7 +35,7 @@ namespace iMenyn.Data.Abstract
         void UpdateEnterprise(Enterprise enterprise);
 
         Menu GetMenuById(string menuId);
-
+        MenuViewModel GetMenu(string enterpriseKey);
         //Update
         void UpdateProduct(Product product);
 

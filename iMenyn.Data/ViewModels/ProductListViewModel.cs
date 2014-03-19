@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using iMenyn.Data.Models;
 
-namespace iMenyn.Web.ViewModels
+namespace iMenyn.Data.ViewModels
 {
     public class ProductListViewModel
     {

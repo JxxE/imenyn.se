@@ -36,8 +36,8 @@ namespace iMenyn.Data.Concrete
                 //Url = "http://localhost:8080"
                 //Url = "https://ibis.ravenhq.com/databases/AppHarbor_2a23d4e2-9ba7-458d-82f1-ca1c0afa53b5",
                 //ApiKey = "aeabbbbe-139e-4312-85d8-6a9986b30f47"
-                Url = "https://ec2-eu4.cloudbird.net/databases/8c7359fa-4d38-412e-90a5-984077a133c6.iMenyn",
-                ApiKey = "c3b5f4ec-8edc-42c6-ab7e-dd8e892d0ca8"
+                Url = "https://ibis.ravenhq.com/databases/Jesse-imenyn",
+                ApiKey = "5dce1a3a-9a16-4163-bc8d-74afb1135f40"
             };
             _documentStore.Conventions.IdentityPartsSeparator = "-";
             _documentStore.Initialize();

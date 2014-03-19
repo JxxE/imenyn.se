@@ -27,7 +27,7 @@ namespace iMenyn.Web.Areas.Admin.Controllers
             {
                 NewEnterprises = new List<Enterprise>(),
                 EnterprisesWithModifiedMenus = new List<Enterprise>(),
-                StandardViewModel = new StandardViewModel()
+                //StandardViewModel = new StandardViewModel()
             };
 
             if (CurrentAccount.IsAdmin)
@@ -54,8 +54,8 @@ namespace iMenyn.Web.Areas.Admin.Controllers
                     var menu = Repository.GetMenuById(enterprise.Menu);
                     var products = Repository.GetProducts(menu.Products.ToList());
 
-                    var s = ViewModelHelper.CreateStandardViewModel(enterprise, products);
-                    model.StandardViewModel = s;
+                    //var s = ViewModelHelper.CreateStandardViewModel(enterprise, products);
+                    //model.StandardViewModel = s;
                 }
             }
             return View(model);
@@ -94,35 +94,35 @@ namespace iMenyn.Web.Areas.Admin.Controllers
 
             var enterprise = Repository.GetEnterpriseById(enterpriseId);
 
-            if (enterprise != null)
-            {
-                var liveMenu = Repository.GetMenuById(enterprise.Menu);
-                if (liveMenu != null)
-                {
-                    var modifiedProductsViewModel = new ProductListViewModel();
-                    var modifiedMenuId = "";
+            //if (enterprise != null)
+            //{
+            //    var liveMenu = Repository.GetMenuById(enterprise.Menu);
+            //    if (liveMenu != null)
+            //    {
+            //        var modifiedProductsViewModel = new ProductListViewModel();
+            //        var modifiedMenuId = "";
 
-                    if (modifiedMenu != null)
-                    {
-                        var modifiedMenuProducts = Repository.GetProducts(modifiedMenu.ProductIds).ToList();
-                        modifiedProductsViewModel = ViewModelHelper.GetProductListViewModel(modifiedMenuProducts);
-                        modifiedMenuId = modifiedMenu.Id;
-                    }
+            //        if (modifiedMenu != null)
+            //        {
+            //            var modifiedMenuProducts = Repository.GetProducts(modifiedMenu.ProductIds).ToList();
+            //            modifiedProductsViewModel = ViewModelHelper.GetProductListViewModel(modifiedMenuProducts);
+            //            modifiedMenuId = modifiedMenu.Id;
+            //        }
 
-                    var liveMenuProducts = Repository.GetProducts(liveMenu.Products.ToList()).ToList();
-                    var liveMenuProductsViewModel = ViewModelHelper.GetProductListViewModel(liveMenuProducts);
+            //        var liveMenuProducts = Repository.GetProducts(liveMenu.Products.ToList()).ToList();
+            //        var liveMenuProductsViewModel = ViewModelHelper.GetProductListViewModel(liveMenuProducts);
 
 
-                    var viewModel = new CompareModifiedMenuViewModel
-                    {
-                        Enterprise = enterprise,
-                        ModifiedMenuProducts = modifiedProductsViewModel,
-                        LiveMenuProducts = liveMenuProductsViewModel,
-                        ModifiedMenuId = modifiedMenuId
-                    };
-                    return View(viewModel);
-                }
-            }
+            //        var viewModel = new CompareModifiedMenuViewModel
+            //        {
+            //            Enterprise = enterprise,
+            //            ModifiedMenuProducts = modifiedProductsViewModel,
+            //            LiveMenuProducts = liveMenuProductsViewModel,
+            //            ModifiedMenuId = modifiedMenuId
+            //        };
+            //        return View(viewModel);
+            //    }
+            //}
             return View();
         }
         #endregion
@@ -151,21 +151,21 @@ namespace iMenyn.Web.Areas.Admin.Controllers
         public ActionResult NewMenu(string enterpriseId)
         {
             var enterprise = Repository.GetEnterpriseById(enterpriseId);
-            var model = new StandardViewModel();
+            //var model = new StandardViewModel();
 
-            if (enterprise.Menu != null)
-            {
-                var menu = Repository.GetMenuById(enterprise.Menu);
-                var products = Repository.GetProducts(menu.Products.ToList());
-                model = ViewModelHelper.CreateStandardViewModel(enterprise, products);
-            }
-            else
-            {
-                var p = new List<Product>();
-                model = ViewModelHelper.CreateStandardViewModel(enterprise, p);
-            }
+            //if (enterprise.Menu != null)
+            //{
+            //    var menu = Repository.GetMenuById(enterprise.Menu);
+            //    var products = Repository.GetProducts(menu.Products.ToList());
+            //    //model = ViewModelHelper.CreateStandardViewModel(enterprise, products);
+            //}
+            //else
+            //{
+            //    var p = new List<Product>();
+            //   // model = ViewModelHelper.CreateStandardViewModel(enterprise, p);
+            //}
 
-            return View(model);
+            return View();
         }
 
 

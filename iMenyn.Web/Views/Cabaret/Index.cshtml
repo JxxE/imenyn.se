@@ -1,4 +1,13 @@
-﻿@model dynamic
+﻿@model iMenyn.Data.ViewModels.MenuViewModel
 @{
-    ViewBag.Title = "";
+    ViewBag.Title = Model.Name;
+}
+
+@if (Model.IsPremium)
+{
+    <p>Premium</p>
+}
+else
+{
+    @RenderPage("../Partials/_StandardMenu.cshtml", Model)
 }

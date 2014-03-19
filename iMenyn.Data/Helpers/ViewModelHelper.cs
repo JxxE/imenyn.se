@@ -4,25 +4,12 @@ using System.Linq;
 using System.Web;
 using iMenyn.Data.Helpers;
 using iMenyn.Data.Models;
-using iMenyn.Web.ViewModels;
+using iMenyn.Data.ViewModels;
 
-namespace iMenyn.Web.Helpers
-{
+namespace iMenyn.Data.Helpers
+{    
     public class ViewModelHelper
     {
-        public static StandardViewModel CreateStandardViewModel(Enterprise enterprise, IEnumerable<Product> products)
-        {
-            var viewModel = new StandardViewModel
-            {
-                Enterprise = enterprise,
-                Phone = enterprise.Phone.Replace(" ",string.Empty).Replace("-",string.Empty),
-                Products = GetProductListViewModel(products)
-            };
-
-            return viewModel;
-        }
-
-
         public static ProductListViewModel GetProductListViewModel(IEnumerable<Product> products)
         {
             var viewModel = new ProductListViewModel

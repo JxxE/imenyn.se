@@ -10,6 +10,6 @@ namespace iMenyn.Web.Areas.Admin.ViewModels
         public List<Enterprise> EnterprisesWithModifiedMenus { get; set; }
 
         //Accounts, not admin.
-        public StandardViewModel StandardViewModel { get; set; }
+       // public StandardViewModel StandardViewModel { get; set; }
     }
 }

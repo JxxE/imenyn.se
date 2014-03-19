@@ -245,7 +245,6 @@
     <Compile Include="Handlers\CombinerRouteHandler.cs" />
     <Compile Include="Helpers\AccountHelper.cs" />
     <Compile Include="Helpers\CombinerHelper.cs" />
-    <Compile Include="Helpers\ViewModelHelper.cs" />
     <Compile Include="Infrastructure\Authentication.cs" />
     <Compile Include="Infrastructure\OnlyEnabledAttribute.cs" />
     <Compile Include="Infrastructure\NinjectControllerFactory.cs" />
@@ -256,21 +255,12 @@
     <Compile Include="ViewModels\EnterprisesViewModel.cs" />
     <Compile Include="ViewModels\LocationViewModel.cs" />
     <Compile Include="ViewModels\MainSearchViewModel.cs" />
-    <Compile Include="ViewModels\ProductListViewModel.cs" />
     <Compile Include="ViewModels\SearchYelpViewModel.cs" />
-    <Compile Include="ViewModels\StandardViewModel.cs" />
     <Compile Include="YelpConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\admin-layout.css" />
     <Content Include="Content\base.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\external\bootstrap\css\bootstrap-responsive.css" />
-    <Content Include="Content\external\bootstrap\css\bootstrap-responsive.min.css" />
-    <Content Include="Content\external\bootstrap\css\bootstrap.css" />
-    <Content Include="Content\external\bootstrap\css\bootstrap.min.css" />
-    <Content Include="Content\external\bootstrap\img\glyphicons-halflings-white.png" />
-    <Content Include="Content\external\bootstrap\img\glyphicons-halflings.png" />
     <Content Include="Content\img\ajax-load.gif" />
     <Content Include="Content\img\bg.jpg" />
     <Content Include="Content\img\logo.png" />
@@ -278,26 +268,16 @@
     <Content Include="Content\theme.css" />
     <Content Include="favicon.png" />
     <Content Include="js\iMenyn.jsrender.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Content\external\bootstrap\js\bootstrap.min.js" />
-    <Content Include="Content\fonts\iMenyn.dev.svg" />
-    <Content Include="Content\fonts\iMenyn.svg" />
-    <Content Include="Content\img\slide-01.jpg" />
-    <Content Include="Content\img\white-bg.png" />
     <Content Include="Content\layout.css" />
     <Content Include="Content\module.css" />
     <Content Include="Content\state.css" />
     <Content Include="Global.asax" />
     <Content Include="Areas\Admin\Views\Web.config" />
-    <Content Include="Content\fonts\iMenyn.eot" />
-    <Content Include="Content\fonts\iMenyn.ttf" />
-    <Content Include="Content\fonts\iMenyn.woff" />
     <Content Include="App_Code\Combiner.cshtml" />
     <Content Include="Handlers\CombinerHandler.ashx" />
     <Content Include="js\iMenyn.Utilities.js" />
     <Content Include="js\iMenyn.js" />
     <Content Include="js\iMenyn.Admin.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\Admin\Views\Admin\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Admin\Accounts.cshtml" />
     <Content Include="Areas\Admin\Views\Admin\Settings.cshtml" />
@@ -330,7 +310,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Content\Site.css" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
@@ -342,11 +321,8 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Cabaret\Product.cshtml" />
     <Content Include="Views\Cabaret\Index.cshtml" />
-    <Content Include="Views\Cabaret\Premium.cshtml" />
-    <Content Include="Views\Cabaret\Standard.cshtml" />
     <Content Include="Views\Manage\AddEnterprise.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\_LayoutAdmin.cshtml" />
-    <Content Include="Views\Partials\_Carousel.cshtml" />
     <Content Include="Views\Partials\_StandardMenu.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Manage\Products.cshtml" />

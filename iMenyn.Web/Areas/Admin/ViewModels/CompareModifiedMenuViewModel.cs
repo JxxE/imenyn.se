@@ -8,7 +8,7 @@ namespace iMenyn.Web.Areas.Admin.ViewModels
     {
         public Enterprise Enterprise { get; set; }
         public string ModifiedMenuId { get; set; }
-        public ProductListViewModel ModifiedMenuProducts { get; set; }
-        public ProductListViewModel LiveMenuProducts { get; set; }
+        //public ProductListViewModel ModifiedMenuProducts { get; set; }
+        //public ProductListViewModel LiveMenuProducts { get; set; }
     }
 }

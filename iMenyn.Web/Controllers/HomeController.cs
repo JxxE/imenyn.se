@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
+using Raven.Client.Document;
+using Raven.Imports.Newtonsoft.Json.Linq;
 using iMenyn.Data.Abstract;
 using iMenyn.Data.Helpers;
 using iMenyn.Data.Models;
+using iMenyn.Web.Models;
 using iMenyn.Web.ViewModels;
 
 namespace iMenyn.Web.Controllers
@@ -19,23 +23,23 @@ namespace iMenyn.Web.Controllers
 
         public ActionResult Index(string q)
         {
-            var viewModel = new MainSearchViewModel
-            {
-                Counties = GeneralHelper.GetCountyNameAndCodes()
-            };
+            //var viewModel = new MainSearchViewModel
+            //{
+            //    Counties = GeneralHelper.GetCountyNameAndCodes()
+            //};
 
-            if (q == null)
-            {
-                return View(viewModel);
-            }
+            //if (q == null)
+            //{
+            //    return View(viewModel);
+            //}
 
-            var enterprise = Repository.GetEnterpriseByUrlKey(q);
-            if (enterprise != null)
-            {
+            //var enterprise = Repository.GetEnterpriseByUrlKey(q);
+            //if (enterprise != null)
+            //{
 
-            }
+            //}
 
-            return View(viewModel);
+            return View();
         }
 
         public ActionResult Info()

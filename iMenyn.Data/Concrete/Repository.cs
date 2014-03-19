@@ -11,6 +11,7 @@ using Raven.Abstractions.Commands;
 using Raven.Abstractions.Util;
 using Raven.Client;
 using Raven.Json.Linq;
+using iMenyn.Data.ViewModels;
 
 namespace iMenyn.Data.Concrete
 {
@@ -307,6 +308,32 @@ namespace iMenyn.Data.Concrete
             using (var session = _documentStore.OpenSession())
             {
                 return session.Load<Menu>(menuId);
+            }
+        }
+
+        public MenuViewModel GetMenu(string enterpriseKey)
+        {
+            using (var session = _documentStore.OpenSession())
+            {
+                var enterprise = session.Include<Enterprise>(x => x.Products).Load(EnterpriseHelper.GetId(enterpriseKey));
+
+
+                var products = new List<Product>();
+                foreach (var p in enterprise.Products)
+                {
+                    var product = session.Load<Product>(p);
+                    products.Add(product);
+                }
+
+                var viewModel = new MenuViewModel
+                    {
+                        Name = enterprise.Name,
+                        Phone = enterprise.Phone,
+                        Products = ViewModelHelper.GetProductListViewModel(products),
+                        IsPremium = enterprise.IsPremium
+                    };
+
+                return viewModel;
             }
         }
 

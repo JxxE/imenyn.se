@@ -25,7 +25,9 @@ namespace iMenyn.Data.Models
         
         public string YelpId { get; set; }
 
+        [Obsolete]
         public string Menu { get; set; }
+
         public List<string> Categories { get; set; }
 
         public List<string> SearchTags { get; set; }
@@ -34,6 +36,8 @@ namespace iMenyn.Data.Models
         public bool IsTemp { get; set; }
 
         public DateTime LastUpdated { get; set; }
+
+        public List<string> Products { get; set; }
     }
 
     public class Coordinates
