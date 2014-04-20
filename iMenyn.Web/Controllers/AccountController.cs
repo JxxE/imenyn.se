@@ -1,12 +1,14 @@
 ﻿using System.Web.Mvc;
 using iMenyn.Data.Abstract;
+using iMenyn.Data.Abstract.Db;
 using iMenyn.Web.Models;
 
 namespace iMenyn.Web.Controllers
 {
     public class AccountController : BaseController
     {
-        public AccountController(IRepository repository) : base(repository)
+        public AccountController(IDb db, ILogger logger, IAuthentication authentication = null)
+            : base(db, logger, authentication)
         {
         }
         #region Login
@@ -27,24 +29,26 @@ namespace iMenyn.Web.Controllers
         [AllowAnonymous]
         public ActionResult Login(LogOnModel model)
         {
-            var user = Repository.GetUserByEmail(model.UserName);
+            //TODO
+            //var user = Repository.GetUserByEmail(model.UserName);
 
-            if (user == null || !user.ValidatePassword(model.Password))
-            {
-                ModelState.AddModelError("UserNotExistOrPasswordNotMatch", "Matchar inte");
-            }
-            else if (!user.Enabled)
-            {
-                ModelState.AddModelError("NotEnabled", "Kontot är inte aktiverat!");
-            }
+            //if (user == null || !user.ValidatePassword(model.Password))
+            //{
+            //    ModelState.AddModelError("UserNotExistOrPasswordNotMatch", "Matchar inte");
+            //}
+            //else if (!user.Enabled)
+            //{
+            //    ModelState.AddModelError("NotEnabled", "Kontot är inte aktiverat!");
+            //}
 
-            if (ModelState.IsValid && user != null)
-            {
-                Authentication.SetAuthCookie(user.Id, true);
-                return RedirectFromLoginPage(model.ReturnUrl);
-            }
+            //if (ModelState.IsValid && user != null)
+            //{
+            //    Authentication.SetAuthCookie(user.Id, true);
+            //    return RedirectFromLoginPage(model.ReturnUrl);
+            //}
 
-            return View(new LogOnModel { UserName = model.UserName, ReturnUrl = model.ReturnUrl });
+            //return View(new LogOnModel { UserName = model.UserName, ReturnUrl = model.ReturnUrl });
+            return View();
         }
 
         private ActionResult RedirectFromLoginPage(string retrunUrl = null)

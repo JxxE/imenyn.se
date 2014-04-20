@@ -1,6 +1,9 @@
 ﻿using Ninject;
+using Raven.Client;
 using iMenyn.Data.Abstract;
+using iMenyn.Data.Abstract.Db;
 using iMenyn.Data.Concrete;
+using iMenyn.Data.Concrete.Db;
 
 namespace iMenyn.Data.Infrastructure
 {
@@ -21,20 +24,31 @@ namespace iMenyn.Data.Infrastructure
             AddBindings();
         }
 
+        //Add all bindings here
+        private void AddBindings()
+        {
+            _ninjectKernel.Bind<ILogger>().To<Logger>();
+
+            BindDatabaseLayer();
+        }
+
+        private void BindDatabaseLayer()
+        {
+            // All IDb-bindings
+            _ninjectKernel.Bind<IDbAccounts>().To<RavenDbAccounts>();
+            _ninjectKernel.Bind<IDbEnterprises>().To<RavenDbEnterprises>();
+            _ninjectKernel.Bind<IDbProducts>().To<RavenDbProducts>();
+            _ninjectKernel.Bind<IDbMenus>().To<RavenDbMenus>();
+        }
+
         private static IRavenDbContext _ravenDbContext;
 
         public static void InjectRavenDbContext(IRavenDbContext ravenDbContext)
         {
             _ravenDbContext = ravenDbContext;
             NinjectKernel.Rebind<IRavenDbContext>().ToConstant(ravenDbContext);
-            NinjectKernel.Rebind<IRepository>().To<Repository>();
-        }
-
-        //Add all bindings here
-        private void AddBindings()
-        {
-            _ninjectKernel.Bind<IRepository>().To<Repository>();
-            _ninjectKernel.Bind<IRavenDbContext>().ToConstant(RavenContext.Instance);
+            NinjectKernel.Rebind<IDb>().To<RavenDb>();
+            NinjectKernel.Rebind<IDocumentStore>().ToConstant(ravenDbContext.DocumentStore);
         }
 
         public static T GetInstance<T>()
@@ -42,9 +56,19 @@ namespace iMenyn.Data.Infrastructure
             return NinjectKernel.Get<T>();
         }
 
-        public static IRepository Repository
+        public static IDb Db
         {
-            get { return GetInstance<IRepository>(); }
+            get { return GetInstance<IDb>(); }
+        }
+
+        public static IDocumentStore DocumentStore
+        {
+            get { return GetInstance<IDocumentStore>(); }
+        }
+
+        public static ILogger Logger
+        {
+            get { return GetInstance<ILogger>(); }
         }
 
         public static IAuthentication Authentication

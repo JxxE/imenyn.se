@@ -128,16 +128,7 @@ h1 small {
     width: 19px;
 }
 
-.tag {
-    background-color: #05AAD3;
-    padding: 2px 8px;
-    display: inline-block;
-    color: white;
-    margin: 0 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-}
+
 
 #main-search-container {
     max-width: 48%;
@@ -339,9 +330,33 @@ h1 small {
 .alert-block > p {
     margin-bottom: 20px;
 }
-
-.pac-container:after {
-    content: none !important;
-}
-/* Removes "Powered by Google" */
 /* ======= End of Overrides ============*/
+
+
+
+
+
+
+
+
+
+
+
+/* ====== New and approved ======== */
+select#category-chooser {
+    margin-bottom: 10px;
+}
+.tag {
+    background-color: #007491;
+    padding: 2px 8px;
+    float: left;
+    color: white;
+    margin: 0 5px 5px 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+.tag > span {
+    cursor: pointer;
+    margin: 0 0 0 5px;
+}

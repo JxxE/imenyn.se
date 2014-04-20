@@ -32,7 +32,9 @@ namespace iMenyn.Web.Infrastructure
 
         private static bool UserCanAccessAdminArea(string userId)
         {
-            return !string.IsNullOrEmpty(userId) && DependencyManager.Repository.GetAccount(userId).Enabled;
+            return false;
+            //TODO
+            //return !string.IsNullOrEmpty(userId) && DependencyManager.Repository.GetAccount(userId).Enabled;
         }
     }
 }

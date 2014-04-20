@@ -19,6 +19,7 @@ namespace iMenyn.Data.Helpers
             return result;
         }
 
+        [Obsolete]//Kanske inte behöver användads längre. Om jag tar bort Yelp och bara använder  google maps. I databasen sparar nog inte StateCode utan LÄN direkt som den är. 
         public static List<ValueAndText> GetCountyNameAndCodes()
         {
             var countyNameAndCodes = new List<ValueAndText>

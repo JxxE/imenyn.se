@@ -21,15 +21,14 @@
         <input type="text" name="phone" />
 
         <label>Kategorier</label>
-                <div data-id="chosen-categories" class="form-inline marginB20">
-            <select data-id="category">
-        <option></option>
+        <select id="category-chooser">
+            <option></option>
             @foreach (var category in ViewBag.Categories)
             {
                 <option value="@category.Value">@category.Text</option>    
-            }  
-            </select>
-        </div>
+            }
+        </select>
+        <div id="chosen-categories" class="form-inline marginB20"></div>
 
         <hr />
         <h3 class="grey">2. Plats <span data-icon="&#xe003;"></span></h3>
@@ -39,10 +38,10 @@
             <a id="map-check" class="btn btn-success marginL5">Hämta övrig info</a>
             <div id="no-address-error" class="error hide">Du måste ange en adress</div>
         </div>
-            <div id="general-location-info"></div>
+        <div id="general-location-info"></div>
     </div>
     <div class="col12">
-         <input id="nope" name="nope" type="text" style="display: none;" />
+        <input id="nope" name="nope" type="text" style="display: none;" />
         <input type="submit" id="submit" value="Spara" class="btn btn-success btn-large hide marginT15" />
     </div>
 </form>
@@ -50,6 +49,7 @@
 
 <script>
     iMenyn.Utilities.RenderCategoryChooser();
+
     $(document).ready(function () {
         $(window).keydown(function (event) {
             if (event.keyCode == 13) {
@@ -65,7 +65,7 @@
             var address = $("#address-search").val();
             iMenyn.Ajax.RenderGeneralInfoByAddress(map, address);
         });
-        
+
         //Prevent spam
         var e = document.getElementById("nope");
         e.parentNode.removeChild(e);
@@ -117,6 +117,10 @@
 
 
 <noscript>
-    <style>form {display: none;}</style>
+    <style>
+        form {
+            display: none;
+        }
+    </style>
     <h1>Aktivera JavaScript för att se sidan...</h1>
 </noscript>

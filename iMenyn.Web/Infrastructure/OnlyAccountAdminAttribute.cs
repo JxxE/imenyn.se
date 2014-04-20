@@ -28,7 +28,9 @@ namespace iMenyn.Web.Infrastructure
 
         private bool UserCanAccessAdminArea(string userId)
         {
-            return DependencyManager.Repository.GetAccount(userId).IsAdmin;
+            //TODO
+            //return DependencyManager.Repository.GetAccount(userId).IsAdmin;
+            return false;
         }
     }
 }

@@ -1,20 +1,16 @@
 ﻿using System.Linq;
-using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using System.Web.Routing;
 using iMenyn.Data.Abstract;
 using iMenyn.Data.Concrete;
 using iMenyn.Data.Infrastructure;
 using iMenyn.Data.Models;
+using iMenyn.Data.Objects;
 using iMenyn.Web.App_Start;
 using iMenyn.Web.Infrastructure;
 
 namespace iMenyn.Web
 {
-    // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
-    // visit http://go.microsoft.com/?LinkId=9394801
-
     public class MvcApplication : System.Web.HttpApplication
     {
         protected void Application_Start()
@@ -23,36 +19,39 @@ namespace iMenyn.Web
 
             AreaRegistration.RegisterAllAreas();
 
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            //WebApiConfig.Register(GlobalConfiguration.Configuration);
+            //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+            //BundleConfig.RegisterBundles(BundleTable.Bundles);
+            //AuthConfig.RegisterAuth();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-            AuthConfig.RegisterAuth();
 
             // Allow ninject to take care of dependency injection in controllers
             ControllerBuilder.Current.SetControllerFactory(new NinjectControllerFactory());
 
-            // Custom bindings
+            //Custom bindings
             DependencyManager.InjectRavenDbContext(ravenContext);
             DependencyManager.NinjectKernel.Bind<IAuthentication>().To<Authentication>();
             FirstTimeSetup();
         }
 
-        private void FirstTimeSetup()
+        private static void FirstTimeSetup()
         {
-            if (DependencyManager.Repository.GetAccounts().Any()) return;
-            
-            var account = new Account
-            {
-                Name = "Jesse",
-                Email = "jessevem@gmail.com",
-                IsAdmin = true,
-                Enabled = true,
-                Enterprise = null
-            };
-            account.SetPassword("qwerty");
-            DependencyManager.Repository.AddAccount(account);
-        }
+            // Wait until database is not stale anymore
+            RavenContext.Instance.DocumentStore.ClearStaleIndexes();
 
+            if (!DependencyManager.Db.Accounts.GetAccounts().Any())
+            {
+                var account = new Account
+                {
+                    Name = "Jesse",
+                    Email = "jessetinell@gmail.com",
+                    IsAdmin = true,
+                    Enabled = true,
+                    Enterprise = null
+                };
+                account.SetPassword("qwerty");
+                DependencyManager.Db.Accounts.AddAccount(account);
+            }
+        }
     }
 }

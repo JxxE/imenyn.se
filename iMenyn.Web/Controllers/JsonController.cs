@@ -8,6 +8,7 @@ using System.Text;
 using System.Web.Mvc;
 using Newtonsoft.Json.Linq;
 using iMenyn.Data.Abstract;
+using iMenyn.Data.Abstract.Db;
 using iMenyn.Data.Helpers;
 using iMenyn.Data.Models;
 using iMenyn.Web.ViewModels;
@@ -17,84 +18,86 @@ namespace iMenyn.Web.Controllers
 {
     public class JsonController : BaseController
     {
-        public JsonController(IRepository repository, IAuthentication authentication = null)
-            : base(repository, authentication)
+        public JsonController(IDb db, ILogger logger)
+            : base(db, logger)
         {
         }
 
-        public JsonResult SearchYelp(string searchTerm, string location)
-        {
-            var yelp = new Yelp.Yelp(YelpConfig.Options);
-            var search = yelp.Search(searchTerm, location);
+        [Obsolete("NOT USING YELP ANYMORE")]
+        //public JsonResult SearchYelp(string searchTerm, string location)
+        //{
+        //    var yelp = new Yelp.Yelp(YelpConfig.Options);
+        //    var search = yelp.Search(searchTerm, location);
 
-            var categories = GeneralHelper.GetCategories();
+        //    var categories = GeneralHelper.GetCategories();
 
-            foreach (var business in search.Result.businesses)
-            {
-                var key = EnterpriseHelper.GenerateEnterpriseKey(business.name);
+        //    foreach (var business in search.Result.businesses)
+        //    {
+        //        var key = EnterpriseHelper.GenerateEnterpriseKey(business.name, TODO);
 
-                var postalCode = 0;
-                if (business.location.postal_code != null)
-                    int.TryParse(business.location.postal_code.Replace(" ", string.Empty), out postalCode);
+        //        var postalCode = 0;
+        //        if (business.location.postal_code != null)
+        //            int.TryParse(business.location.postal_code.Replace(" ", string.Empty), out postalCode);
 
-                var enterprisesInDb = Repository.CheckIfEnterpriseExists(key, postalCode);
-                if (enterprisesInDb == null) continue;
+        //        //TODO
+        //        //var enterprisesInDb = Repository.CheckIfEnterpriseExists(key, postalCode);
+        //        //if (enterprisesInDb == null) continue;
 
-                var enterprises = enterprisesInDb as Enterprise[] ?? enterprisesInDb.ToArray();
+        //        //var enterprises = enterprisesInDb as Enterprise[] ?? enterprisesInDb.ToArray();
 
-                var mayExistInDb = enterprises.Any();
-                if (!mayExistInDb) continue;
+        //        //var mayExistInDb = enterprises.Any();
+        //        //if (!mayExistInDb) continue;
 
-                business.MayAlreadyExistInDb = true;
-                var urlsForMenus = new List<string>();
-                foreach (var enterprise in enterprises)
-                {
-                    if (enterprise.IsTemp)
-                        urlsForMenus.Add("");
-                    else
-                    {
-                        var kind = enterprise.IsPremium ? "Premium" : "Standard";
-                        var url = string.Format("{0}/{1}", kind, enterprise.Id);
-                        urlsForMenus.Add(url);
-                    }
-                }
-                business.MenyUrls = urlsForMenus;
-            }
+        //        //business.MayAlreadyExistInDb = true;
+        //        //var urlsForMenus = new List<string>();
+        //        //foreach (var enterprise in enterprises)
+        //        //{
+        //        //    if (enterprise.IsTemp)
+        //        //        urlsForMenus.Add("");
+        //        //    else
+        //        //    {
+        //        //        var kind = enterprise.IsPremium ? "Premium" : "Standard";
+        //        //        var url = string.Format("{0}/{1}", kind, enterprise.Id);
+        //        //        urlsForMenus.Add(url);
+        //        //    }
+        //        //}
+        //        //business.MenyUrls = urlsForMenus;
+        //    }
 
 
-            var viewModel = new SearchYelpViewModel
-                                {
-                                    Businesses = search.Result.businesses,
-                                    Categories = categories
-                                };
+        //    var viewModel = new SearchYelpViewModel
+        //                        {
+        //                            Businesses = search.Result.businesses,
+        //                            Categories = categories
+        //                        };
 
-            return Json(viewModel);
-        }
+        //    return Json(viewModel);
+        //}
 
         public JsonResult SearchEnterprises(string searchTerm)
         {
-            var enterprises = Repository.SearchEnterprises(searchTerm, "", "");
+            //TODO
+            //var enterprises = Repository.SearchEnterprises(searchTerm, "", "");
 
-            var enterprisesViewModel = new EnterprisesViewModel
-                                           {
-                                               Enterprises = new List<EnterpriseViewModel>()
-                                           };
+            //var enterprisesViewModel = new EnterprisesViewModel
+            //                               {
+            //                                   Enterprises = new List<EnterpriseViewModel>()
+            //                               };
 
-            foreach (var enterpriseViewModel in enterprises.Select(enterprise => new EnterpriseViewModel
-                                                                                     {
-                                                                                         Key = enterprise.Key,
-                                                                                         Name = enterprise.Name,
-                                                                                         Address = enterprise.Address,
-                                                                                         PostalCode = enterprise.PostalCode,
-                                                                                         City = enterprise.City,
-                                                                                         Categories = (from category in enterprise.Categories select GeneralHelper.GetCategories().FirstOrDefault(c => c.Value == category) into categoryToAdd where categoryToAdd != null select categoryToAdd.Text).ToList()
-                                                                                     }))
-            {
-                enterprisesViewModel.Enterprises.Add(enterpriseViewModel);
-            }
-
-
-            return Json(enterprisesViewModel);
+            //foreach (var enterpriseViewModel in enterprises.Select(enterprise => new EnterpriseViewModel
+            //                                                                         {
+            //                                                                             Key = enterprise.Key,
+            //                                                                             Name = enterprise.Name,
+            //                                                                             Address = enterprise.Address,
+            //                                                                             PostalCode = enterprise.PostalCode,
+            //                                                                             City = enterprise.City,
+            //                                                                             Categories = (from category in enterprise.Categories select GeneralHelper.GetCategories().FirstOrDefault(c => c.Value == category) into categoryToAdd where categoryToAdd != null select categoryToAdd.Text).ToList()
+            //                                                                         }))
+            //{
+            //    enterprisesViewModel.Enterprises.Add(enterpriseViewModel);
+            //}
+            //return Json(enterprisesViewModel);
+            return null;
         }
 
 
@@ -113,29 +116,33 @@ namespace iMenyn.Web.Controllers
 
         private BrowseViewModel GetEnterprisesByStateCode(string stateCode)
         {
-            var enterprises = Repository.GetEnterprisesByLocation(stateCode, null);
+            //TODO
+            //var enterprises = Repository.GetEnterprisesByLocation(stateCode, null);
 
-            var districts = enterprises.Select(enterprise => enterprise.City).Distinct().OrderBy(d => d).ToList();
+            //var districts = enterprises.Select(enterprise => enterprise.City).Distinct().OrderBy(d => d).ToList();
 
-            var viewModel = new BrowseViewModel
-            {
-                Districts = districts,
-                StateCode = stateCode
-            };
+            //var viewModel = new BrowseViewModel
+            //{
+            //    Districts = districts,
+            //    StateCode = stateCode
+            //};
 
-            return viewModel;
+            //return viewModel;
+            return null;
         }
 
         private BrowseViewModel GetEnterprisesByCity(string city, string stateCode)
         {
-            var enterprises = Repository.GetEnterprisesByLocation(stateCode, city);
+            return null;
+            //TODO
+            //var enterprises = Repository.GetEnterprisesByLocation(stateCode, city);
 
-            var viewModel = new BrowseViewModel
-            {
-                Enterprises = enterprises
-            };
+            //var viewModel = new BrowseViewModel
+            //{
+            //    Enterprises = enterprises
+            //};
 
-            return viewModel;
+            //return viewModel;
         }
 
         public JsonResult GetGeneralLocationInfoByAddress(string address)
@@ -233,55 +240,137 @@ namespace iMenyn.Web.Controllers
         {
             var enterprisesCloseToMe = new Dictionary<string, double>();
 
-            var lat = double.Parse(latitude, CultureInfo.InvariantCulture);
-            var lng = double.Parse(longitude, CultureInfo.InvariantCulture);
+            //TODO
+            //var lat = double.Parse(latitude, CultureInfo.InvariantCulture);
+            //var lng = double.Parse(longitude, CultureInfo.InvariantCulture);
 
-            var myCoord = new GeoCoordinate(lat, lng);
+            //var myCoord = new GeoCoordinate(lat, lng);
 
-            var allEnterprises = Repository.GetAllEnterprises();
+            //var allEnterprises = Repository.GetAllEnterprises();
 
-            foreach (var enterprise in allEnterprises)
+            //foreach (var enterprise in allEnterprises)
+            //{
+            //    var enterpriseLat = double.Parse(enterprise.Coordinates.Lat,CultureInfo.InvariantCulture);
+            //    var enterpriseLng = double.Parse(enterprise.Coordinates.Lng,CultureInfo.InvariantCulture);
+            //    var enterpriseCoord = new GeoCoordinate(enterpriseLat, enterpriseLng);
+
+            //    var distance = myCoord.GetDistanceTo(enterpriseCoord);
+
+            //    if (distance < 15000)
+            //    {
+            //        enterprisesCloseToMe.Add(enterprise.Id, distance);
+            //    }
+            //}
+
+            //var sortedEnterprisesCloseToMe =
+            //    (from e in enterprisesCloseToMe orderby e.Value ascending select e).ToDictionary(p => p.Key,
+            //                                                                                     p => p.Value);
+
+            //var enterprisesViewModel = new EnterprisesViewModel
+            //{
+            //    Enterprises = new List<EnterpriseViewModel>()
+            //};
+
+
+            //foreach (var d in sortedEnterprisesCloseToMe)
+            //{
+            //    var en = allEnterprises.ToList().SingleOrDefault(e => e.Id == d.Key);
+            //    if(en == null)continue;
+            //    var enterpriseViewModel = new EnterpriseViewModel
+            //                                  {
+            //                                      Address = en.Address,
+            //                                      Categories = en.Categories,
+            //                                      City = en.City,
+            //                                      Key = en.Key,
+            //                                      Name = en.Name,
+            //                                      PostalCode = en.PostalCode,
+            //                                      DistanceFromMyLocation = Math.Round((d.Value/1000),1)
+            //                                  };
+            //    enterprisesViewModel.Enterprises.Add(enterpriseViewModel);
+            //}
+
+            //return Json(enterprisesViewModel);
+            return null;
+        }
+
+        //public JsonResult GetMenu(string menuString)
+        //{
+
+
+
+        //    return null;
+        //}
+
+        public string CreateTempEnterprise(EnterpriseViewModel viewModel)
+        {
+            if (!string.IsNullOrEmpty(viewModel.Nope) && string.IsNullOrEmpty(viewModel.Name))
+                return string.Empty;
+
+            //var name = form["name"];
+            //var phone = form["phone"];
+
+            //var key = EnterpriseHelper.GenerateEnterpriseKey(name, Db.Enterprises);
+            //var id = EnterpriseHelper.GetId(key);
+
+            ////Gatuadress
+            //var streetNumber = form["street_number"];
+            //var streetRoute = form["street_route"];
+
+            ////Postnummer
+            //int postalCode = 0;
+            //if (!string.IsNullOrEmpty(viewModel.PostalCode))
+            //{
+            //    var postalCodeString = form["postal_code"].Replace(" ", string.Empty);
+            //    int.TryParse(postalCodeString, out postalCode);
+            //}
+            
+            var categoryList = new List<string>();
+            categoryList.AddRange(viewModel.ChosenCategories.Take(6).Select(catgory => catgory.Value));
+
+            //TODO generate search-tags
+
+            var enterprise = new Enterprise
             {
-                var enterpriseLat = double.Parse(enterprise.Coordinates.Lat,CultureInfo.InvariantCulture);
-                var enterpriseLng = double.Parse(enterprise.Coordinates.Lng,CultureInfo.InvariantCulture);
-                var enterpriseCoord = new GeoCoordinate(enterpriseLat, enterpriseLng);
+                Name = viewModel.Name,
+                Phone = viewModel.Phone,
+                StreetNumber = viewModel.StreetNumber,
+                StreetRoute = viewModel.StreetRoute,
+                PostalCode = viewModel.PostalCode,
+                PostalTown = viewModel.PostalTown,
+                Commune = viewModel.Commune,
+                County = viewModel.County,
+                SubLocality = viewModel.SubLocality,
+                CountryCode = viewModel.CountryCode ?? "SE",
 
-                var distance = myCoord.GetDistanceTo(enterpriseCoord);
+                Coordinates = new Coordinates { Lat = viewModel.Coordinates.Lat, Lng = viewModel.Coordinates.Lng },
+                Categories = categoryList,
 
-                if (distance < 15000)
+                IsNew = true,
+                IsPremium = false,
+                LockedFromEdit = true,
+                
+                LastUpdated = DateTime.Now
+            };
+            
+            var key = viewModel.EditKey;
+            if(!string.IsNullOrEmpty(key))
+            {
+                var enterpriseInDb = Db.Enterprises.GetEnterpriseById(EnterpriseHelper.GetId(key));
+                if(enterpriseInDb != null && enterpriseInDb.IsNew)
                 {
-                    enterprisesCloseToMe.Add(enterprise.Id, distance);
+                    enterprise.Id = enterpriseInDb.Id;
+                    Db.Enterprises.UpdateEnterprise(enterprise);
+                    return key;
                 }
             }
-
-            var sortedEnterprisesCloseToMe =
-                (from e in enterprisesCloseToMe orderby e.Value ascending select e).ToDictionary(p => p.Key,
-                                                                                                 p => p.Value);
-
-            var enterprisesViewModel = new EnterprisesViewModel
+            else
             {
-                Enterprises = new List<EnterpriseViewModel>()
-            };
-
-
-            foreach (var d in sortedEnterprisesCloseToMe)
-            {
-                var en = allEnterprises.ToList().SingleOrDefault(e => e.Id == d.Key);
-                if(en == null)continue;
-                var enterpriseViewModel = new EnterpriseViewModel
-                                              {
-                                                  Address = en.Address,
-                                                  Categories = en.Categories,
-                                                  City = en.City,
-                                                  Key = en.Key,
-                                                  Name = en.Name,
-                                                  PostalCode = en.PostalCode,
-                                                  DistanceFromMyLocation = Math.Round((d.Value/1000),1)
-                                              };
-                enterprisesViewModel.Enterprises.Add(enterpriseViewModel);
+                var enterpriseId = Db.Enterprises.CreateEnterprise(enterprise);
+                return EnterpriseHelper.GetKey(enterpriseId);
             }
 
-            return Json(enterprisesViewModel);
+            return string.Empty;
         }
+
     }
 }

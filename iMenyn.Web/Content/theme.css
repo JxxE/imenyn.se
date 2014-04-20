@@ -1,4 +1,8 @@
-﻿.btn {
+﻿body {
+    background: #3C3C3C;
+}
+
+.btn {
     /* Structure */
     display: inline-block;
     *display: inline; /*IE 6/7*/
@@ -178,8 +182,9 @@ a.btn-selected {
     background-color: rgb(223, 223, 223);
     box-shadow: 1px 1px rgb(247, 247, 247);
 }
+
 .btn-inverse.active {
-    background-color:rgb(155, 155, 155);
+    background-color: rgb(155, 155, 155);
     box-shadow: 1px 1px rgb(0, 0, 0);
 }
 /* == End of active == */
@@ -218,3 +223,17 @@ a.btn-selected {
     font-size: 75px;
 }
 /* == End of sizes == */
+
+
+
+/* == Special buttons == */
+.btn.btn-search {
+    color: #FFF;
+    background-color: rgb(5, 209, 209);
+}
+
+.btn.btn-search > span {
+    margin-right: 7px;
+}
+/* == End of Special buttons == */
+

@@ -40,6 +40,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\packages\AutoMapper.3.2.0\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\packages\AutoMapper.3.2.0\lib\net40\AutoMapper.Net4.dll</HintPath>
+    </Reference>
     <Reference Include="EcmaScript.NET">
       <HintPath>..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll</HintPath>
     </Reference>
@@ -252,7 +258,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\BrowseViewModel.cs" />
-    <Compile Include="ViewModels\EnterprisesViewModel.cs" />
+    <Compile Include="ViewModels\EnterpriseViewModel.cs" />
     <Compile Include="ViewModels\LocationViewModel.cs" />
     <Compile Include="ViewModels\MainSearchViewModel.cs" />
     <Compile Include="ViewModels\SearchYelpViewModel.cs" />
@@ -260,7 +266,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\admin-layout.css" />
-    <Content Include="Content\base.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\old\iMenyn.dev.svg" />
+    <Content Include="fonts\old\iMenyn.svg" />
     <Content Include="Content\img\ajax-load.gif" />
     <Content Include="Content\img\bg.jpg" />
     <Content Include="Content\img\logo.png" />
@@ -268,7 +278,7 @@
     <Content Include="Content\theme.css" />
     <Content Include="favicon.png" />
     <Content Include="js\iMenyn.jsrender.js" />
-    <Content Include="Content\layout.css" />
+    <Content Include="Content\layout-old.css" />
     <Content Include="Content\module.css" />
     <Content Include="Content\state.css" />
     <Content Include="Global.asax" />
@@ -285,6 +295,12 @@
     <Content Include="Areas\Admin\Views\Admin\ModifiedMenus.cshtml" />
     <Content Include="Areas\Admin\Views\Admin\NewMenu.cshtml" />
     <Content Include="Areas\Admin\Views\Admin\NewEnterprises.cshtml" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\old\iMenyn.eot" />
+    <Content Include="fonts\old\iMenyn.ttf" />
+    <Content Include="fonts\old\iMenyn.woff" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
@@ -296,6 +312,7 @@
     <Content Include="Scripts\jsrender.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Templates\_EditableProduct.tmpl.html" />
     <Content Include="Templates\_GeneralLocationInfo.tmpl.html" />
     <Content Include="Templates\_BrowsedCities.tmpl.html" />
     <Content Include="Templates\_BrowsedEnterprises.tmpl.html" />
@@ -330,6 +347,7 @@
     <Content Include="Views\Cabaret\NoMenu.cshtml" />
     <Content Include="Views\Home\Info.cshtml" />
     <Content Include="Views\Home\Browse.cshtml" />
+    <Content Include="Views\Manage\OLD copy of Products.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -376,6 +394,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\packages\AutoMapper.3.2.0\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.0\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

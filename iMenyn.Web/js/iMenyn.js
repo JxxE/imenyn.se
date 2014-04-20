@@ -13,9 +13,9 @@ $(function () {
             $(this).addClass('active');
         }
     });
-    $(document).on("click", "[data-toggle='collapse']", function () {
+    $(document).on("click", "[data-toggle='hide']", function () {
         var target = $(this).attr("data-target");
-        $(target).toggle();
+        $(target).toggleClass('hide');
     });
     $(document).on("click", "[data-toggle='buttons-radio'] .btn", function () {
         var parent = $(this).parent();
@@ -191,6 +191,47 @@ iMenyn.Ajax = function () {
         $("#search-button-content").show();
     };
 
+    var saveProduct = function (productForm, enterpriseKey) {
+        $.ajax({
+            dataType: "json",
+            data: { productForm: productForm, enterpriseKey: enterpriseKey },
+            url: '/Manage/SaveProduct/',
+            type: "POST",
+            success: function (data) {
+               // $("#create-products").html($.render.product(data));
+            },
+            error: function () {
+                console.error("Kunde inte skapa produkt");
+            }
+        });
+//        $.when(
+//    $.get("/Templates/_EditableProduct.tmpl.html")
+//).done(function (p) {
+//    $.templates({
+//        product: p
+//    });
+//});
+
+    };
+
+    var createTempEnterprise = function (form) {
+        $.ajax({
+            type: 'POST',
+            data: form,
+            url: '/Json/CreateTempEnterprise',
+            success: function (data) {
+                var key = iMenyn.Utilities.GetUrlParameter("key");
+                if(key === null)
+                    document.location = document.location + "?key=" + data;
+                iMenyn.Utilities.ShowStep(2);
+            },
+            error:function () {
+                console.log("ERROR, createTempEnterprise");
+            }
+        });
+    };
+
+
     function showGeoError(error) {
         var el = document.getElementById("error");
         switch (error.code) {
@@ -214,6 +255,9 @@ iMenyn.Ajax = function () {
         SearchEnterprises: searchEnterprises,
         BrowseEnterprises: browseEnterprises,
         RenderGeneralInfoByAddress: renderGeneralInfoByAddress,
-        SearchEnterprisesCloseToMyLocation: searchEnterprisesCloseToMyLocation
+        SearchEnterprisesCloseToMyLocation: searchEnterprisesCloseToMyLocation,
+        SaveProduct: saveProduct,
+        
+        CreateTempEnterprise: createTempEnterprise
     };
 }();

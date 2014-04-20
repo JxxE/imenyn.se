@@ -24,7 +24,7 @@ namespace iMenyn.Data.Infrastructure.Index
                                                 enterprise.CountryCode,
                                                 enterprise.Id,
                                                 enterprise.IsPremium,
-                                                enterprise.IsTemp,
+                                                IsTemp = enterprise.IsNew,
                                                 enterprise.LastUpdated,
                                                 enterprise.Menu,
                                                 enterprise.Phone

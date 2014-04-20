@@ -16,55 +16,58 @@ namespace iMenyn.Web.Areas.Admin.Controllers
 {
     public class AdminController : AdminBaseController
     {
-        public AdminController(IRepository repository, IAuthentication authentication = null)
-            : base(repository, authentication)
+        public AdminController(IAuthentication authentication = null)
+            : base(authentication)
         {
         }
 
         public ActionResult Index()
         {
-            var model = new DashboardViewModel
-            {
-                NewEnterprises = new List<Enterprise>(),
-                EnterprisesWithModifiedMenus = new List<Enterprise>(),
-                //StandardViewModel = new StandardViewModel()
-            };
+            //TODO
+            //var model = new DashboardViewModel
+            //{
+            //    NewEnterprises = new List<Enterprise>(),
+            //    EnterprisesWithModifiedMenus = new List<Enterprise>(),
+            //    //StandardViewModel = new StandardViewModel()
+            //};
 
-            if (CurrentAccount.IsAdmin)
-            {
-                var newEnterprises = Repository.GetNewEnterprises().Take(5);
-                //var modifiedMenus = Repository.GetAllModifiedMenus();
+            //if (CurrentAccount.IsAdmin)
+            //{
+            //    var newEnterprises = Repository.GetNewEnterprises().Take(5);
+            //    //var modifiedMenus = Repository.GetAllModifiedMenus();
 
-                var enterprisesWithModifiedMenus = Repository.GetEnterprisesWithModifiedMenus();
+            //    var enterprisesWithModifiedMenus = Repository.GetEnterprisesWithModifiedMenus();
 
-                model.NewEnterprises = newEnterprises.ToList();
-                model.EnterprisesWithModifiedMenus = enterprisesWithModifiedMenus.ToList();
-            }
-            else
-            {
-                if(CurrentAccount.Enterprise == null)
-                {
-                    return View(model);
-                }
+            //    model.NewEnterprises = newEnterprises.ToList();
+            //    model.EnterprisesWithModifiedMenus = enterprisesWithModifiedMenus.ToList();
+            //}
+            //else
+            //{
+            //    if(CurrentAccount.Enterprise == null)
+            //    {
+            //        return View(model);
+            //    }
 
-                var enterprise = Repository.GetEnterpriseById(CurrentAccount.Enterprise);
+            //    var enterprise = Repository.GetEnterpriseById(CurrentAccount.Enterprise);
 
-                if(enterprise.Menu != null)
-                {
-                    var menu = Repository.GetMenuById(enterprise.Menu);
-                    var products = Repository.GetProducts(menu.Products.ToList());
+            //    if(enterprise.Menu != null)
+            //    {
+            //        var menu = Repository.GetMenuById(enterprise.Menu);
+            //        var products = Repository.GetProducts(menu.Products.ToList());
 
-                    //var s = ViewModelHelper.CreateStandardViewModel(enterprise, products);
-                    //model.StandardViewModel = s;
-                }
-            }
-            return View(model);
+            //        //var s = ViewModelHelper.CreateStandardViewModel(enterprise, products);
+            //        //model.StandardViewModel = s;
+            //    }
+            //}
+            //return View(model);
+            return View();
         }
 
         public ActionResult Accounts()
         {
-            var accounts = Repository.GetAccounts().Where(a => a.IsAdmin != true);
-            ViewBag.Accounts = accounts;
+            //TODO
+            //var accounts = Repository.GetAccounts().Where(a => a.IsAdmin != true);
+            //ViewBag.Accounts = accounts;
             return View();
         }
 
@@ -77,22 +80,24 @@ namespace iMenyn.Web.Areas.Admin.Controllers
         //Show all enterprises with modified menus
         public ActionResult ModifiedMenus()
         {
-            var modifiedMenus = Repository.GetAllModifiedMenus();
-            var enterprises = modifiedMenus.Select(modifiedMenu => Repository.GetEnterpriseById(modifiedMenu.EnterpriseId)).ToList();
+            //TODO
+            return null;
+            //var modifiedMenus = Repository.GetAllModifiedMenus();
+            //var enterprises = modifiedMenus.Select(modifiedMenu => Repository.GetEnterpriseById(modifiedMenu.EnterpriseId)).ToList();
 
-            var model = new AllEnterprisesViewModel
-            {
-                Enterprises = enterprises
-            };
-            return View(model);
+            //var model = new AllEnterprisesViewModel
+            //{
+            //    Enterprises = enterprises
+            //};
+            //return View(model);
         }
         public ActionResult ModifiedMenu(string enterpriseKey)
         {
-            var enterpriseId = EnterpriseHelper.GetId(enterpriseKey);
+            //var enterpriseId = EnterpriseHelper.GetId(enterpriseKey);
 
-            var modifiedMenu = Repository.GetModifiedMenuByEnterpriseId(enterpriseId);
+            //var modifiedMenu = Repository.GetModifiedMenuByEnterpriseId(enterpriseId);
 
-            var enterprise = Repository.GetEnterpriseById(enterpriseId);
+            //var enterprise = Repository.GetEnterpriseById(enterpriseId);
 
             //if (enterprise != null)
             //{
@@ -140,17 +145,19 @@ namespace iMenyn.Web.Areas.Admin.Controllers
         //Show all new contributions
         public ActionResult NewEnterprises()
         {
-            var model = new AllEnterprisesViewModel
-                                {
-                                    Enterprises = Repository.GetAllEnterprises().Where(e => e.IsTemp)
-                                };
-            return View(model);
+            //TODO
+            return View();
+            //var model = new AllEnterprisesViewModel
+            //                    {
+            //                        Enterprises = Repository.GetAllEnterprises().Where(e => e.IsTemp)
+            //                    };
+            //return View(model);
         }
 
         //Display the new temp-menu
         public ActionResult NewMenu(string enterpriseId)
         {
-            var enterprise = Repository.GetEnterpriseById(enterpriseId);
+            //var enterprise = Repository.GetEnterpriseById(enterpriseId);
             //var model = new StandardViewModel();
 
             //if (enterprise.Menu != null)
@@ -171,39 +178,41 @@ namespace iMenyn.Web.Areas.Admin.Controllers
 
         public RedirectToRouteResult ApproveModifiedMenu(string enterpriseKey)
         {
-            var modifiedMenuId = ModifiedMenuHelper.GetId(enterpriseKey);
-            var modifiedMenu = Repository.GetModifiedMenuById(modifiedMenuId);
+            //TODO
+            //var modifiedMenuId = ModifiedMenuHelper.GetId(enterpriseKey);
+            //var modifiedMenu = Repository.GetModifiedMenuById(modifiedMenuId);
 
-            if (modifiedMenu == null) return RedirectToAction("Index");
+            //if (modifiedMenu == null) return RedirectToAction("Index");
 
-            var liveMenuId = MenuHelper.GetId(enterpriseKey);
-            var liveMenu = Repository.GetMenuById(liveMenuId);
+            //var liveMenuId = MenuHelper.GetId(enterpriseKey);
+            //var liveMenu = Repository.GetMenuById(liveMenuId);
 
-            if (liveMenu == null) return RedirectToAction("Index");
+            //if (liveMenu == null) return RedirectToAction("Index");
 
-            var liveMenuProductList = liveMenu.Products.ToList();
-            var oldProductIds = new List<string>();
+            //var liveMenuProductList = liveMenu.Products.ToList();
+            //var oldProductIds = new List<string>();
 
-            foreach (var productId in liveMenuProductList)
-            {
-                oldProductIds.Add(productId);
-            }
+            //foreach (var productId in liveMenuProductList)
+            //{
+            //    oldProductIds.Add(productId);
+            //}
 
-            liveMenuProductList.Clear();
-            liveMenuProductList.AddRange(modifiedMenu.ProductIds);
+            //liveMenuProductList.Clear();
+            //liveMenuProductList.AddRange(modifiedMenu.ProductIds);
 
-            liveMenu.Products = liveMenuProductList;
+            //liveMenu.Products = liveMenuProductList;
 
-            Repository.UpdateMenu(liveMenu);
-            Repository.DeleteModifiedMenuById(modifiedMenuId);
-            Repository.DeleteProductsByIds(oldProductIds);
-
-            return RedirectToAction("ModifiedMenu", "Admin", new { enterpriseKey });
+            ////Repository.UpdateMenu(liveMenu);
+            ////Repository.DeleteModifiedMenuById(modifiedMenuId);
+            ////Repository.DeleteProductsByIds(oldProductIds);
+            return null;
+            //return RedirectToAction("ModifiedMenu", "Admin", new { enterpriseKey });
 
         }
         public RedirectToRouteResult DisapproveModifiedMenu(string modifiedMenuId)
         {
-            Repository.DeleteModifiedMenuById(modifiedMenuId);
+            //TODO
+            //Repository.DeleteModifiedMenuById(modifiedMenuId);
             return RedirectToAction("ModifiedMenus");
         }
 
@@ -211,29 +220,33 @@ namespace iMenyn.Web.Areas.Admin.Controllers
         //Convert the temp to a real one.
         public RedirectToRouteResult ApproveMenu(string enterpriseId)
         {
-            var enterprise = Repository.GetEnterpriseById(enterpriseId);
+            //TODO
+            return null;
+            //var enterprise = Repository.GetEnterpriseById(enterpriseId);
 
-            enterprise.IsTemp = false;
+            //enterprise.IsTemp = false;
 
-            Repository.UpdateEnterprise(enterprise);
+            //Repository.UpdateEnterprise(enterprise);
 
-            return RedirectToAction("NewEnterprises");
+            //return RedirectToAction("NewEnterprises");
         }
 
         //Delete the temporary menu.
         public RedirectToRouteResult DisapproveMenu(string enterpriseId)
         {
-            var enterprise = Repository.GetEnterpriseById(enterpriseId);
-            Repository.DeleteEnterpriseById(enterprise.Id);
+            //TODO
+            return null;
+            //var enterprise = Repository.GetEnterpriseById(enterpriseId);
+            //Repository.DeleteEnterpriseById(enterprise.Id);
 
-            if (enterprise.Menu != null)
-            {
-                var menu = Repository.GetMenuById(enterprise.Menu);
-                Repository.DeleteMenuById(menu.Id);
-                Repository.DeleteProductsByIds(menu.Products.ToList());
-            }
+            //if (enterprise.Menu != null)
+            //{
+            //    var menu = Repository.GetMenuById(enterprise.Menu);
+            //    Repository.DeleteMenuById(menu.Id);
+            //    Repository.DeleteProductsByIds(menu.Products.ToList());
+            //}
 
-            return RedirectToAction("NewEnterprises");
+            //return RedirectToAction("NewEnterprises");
         }
 
         public ActionResult LogOff()
@@ -264,11 +277,12 @@ namespace iMenyn.Web.Areas.Admin.Controllers
                                       PostalCode = account.UserInput.PostalCode
                                   };
                 newAccount.SetPassword(account.UserInput.Password);
-                Repository.AddAccount(newAccount);
+                //Repository.AddAccount(newAccount);
             }
 
-            var accounts = Repository.GetAccounts().Where(a => a.IsAdmin != true);
-            ViewBag.Accounts = accounts;
+            //TODO
+            //var accounts = Repository.GetAccounts().Where(a => a.IsAdmin != true);
+            //ViewBag.Accounts = accounts;
 
             return View("Accounts");
         }

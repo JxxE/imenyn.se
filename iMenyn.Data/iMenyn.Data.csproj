@@ -72,6 +72,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Users\Jesse\Desktop\Ninject.dll</HintPath>
     </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.2.1.0\lib\net40\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="PowerCollections">
       <HintPath>..\packages\RavenDB.Database.2.0.2230\lib\net40\PowerCollections.dll</HintPath>
     </Reference>
@@ -206,11 +209,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\Db\IDb.cs" />
+    <Compile Include="Abstract\Db\IDbAccounts.cs" />
+    <Compile Include="Abstract\Db\IDbEnterprises.cs" />
+    <Compile Include="Abstract\Db\IDbMenus.cs" />
+    <Compile Include="Abstract\Db\IDbProducts.cs" />
     <Compile Include="Abstract\IAuthentication.cs" />
+    <Compile Include="Abstract\ILogger.cs" />
     <Compile Include="Abstract\IRavenDbContext.cs" />
-    <Compile Include="Abstract\IRepository.cs" />
+    <Compile Include="Concrete\Db\RavenDbMenus.cs" />
+    <Compile Include="Concrete\Db\RavenDbProducts.cs" />
+    <Compile Include="Concrete\Db\RavenDb.cs" />
+    <Compile Include="Concrete\Db\RavenDbAccounts.cs" />
+    <Compile Include="Concrete\Db\RavenDbEnterprises.cs" />
+    <Compile Include="Concrete\Logger.cs" />
     <Compile Include="Concrete\RavenContext.cs" />
-    <Compile Include="Concrete\Repository.cs" />
     <Compile Include="Helpers\AccountHelper.cs" />
     <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\EnterpriseHelper.cs" />
@@ -221,12 +234,15 @@
     <Compile Include="Helpers\ViewModelHelper.cs" />
     <Compile Include="Infrastructure\DependencyManager.cs" />
     <Compile Include="Infrastructure\Index\Enterprises.cs" />
+    <Compile Include="Infrastructure\Index\LogEvents.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Enterprise.cs" />
+    <Compile Include="Models\LogEvent.cs" />
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\ModifiedMenu.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ValueAndText.cs" />
+    <Compile Include="Objects\ExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MenuViewModel.cs" />
     <Compile Include="ViewModels\ProductListViewModel.cs" />

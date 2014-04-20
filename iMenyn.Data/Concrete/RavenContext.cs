@@ -30,14 +30,14 @@ namespace iMenyn.Data.Concrete
 
         private void InitDocumentStore()
         {
+            //_documentStore = new DocumentStore
+            //{
+            //    Url = "https://ibis.ravenhq.com/databases/Jesse-imenyn",
+            //    ApiKey = "5dce1a3a-9a16-4163-bc8d-74afb1135f40"
+            //};
             _documentStore = new DocumentStore
             {
-                //DefaultDatabase = "iMenyn",
-                //Url = "http://localhost:8080"
-                //Url = "https://ibis.ravenhq.com/databases/AppHarbor_2a23d4e2-9ba7-458d-82f1-ca1c0afa53b5",
-                //ApiKey = "aeabbbbe-139e-4312-85d8-6a9986b30f47"
-                Url = "https://ibis.ravenhq.com/databases/Jesse-imenyn",
-                ApiKey = "5dce1a3a-9a16-4163-bc8d-74afb1135f40"
+                ConnectionStringName = "imenyn",
             };
             _documentStore.Conventions.IdentityPartsSeparator = "-";
             _documentStore.Initialize();

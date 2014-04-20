@@ -19,10 +19,12 @@ namespace iMenyn.Web.Extensionmethods
 
         public static string GetKeyByAccountId(string accountId)
         {
-            var repository = DependencyManager.Repository;
-            var account = repository.GetAccount(accountId);
-            var enterprise = repository.GetEnterpriseById(account.Enterprise);
-            return enterprise.Key;
+            //TODO
+            //var repository = DependencyManager.Repository;
+            //var account = repository.GetAccount(accountId);
+            //var enterprise = repository.GetEnterpriseById(account.Enterprise);
+            //return enterprise.Key;
+            return null;
         }
 
         public static void UploadImage(HttpPostedFileBase file, string accountId)

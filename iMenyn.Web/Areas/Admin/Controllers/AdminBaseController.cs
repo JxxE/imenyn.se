@@ -11,7 +11,6 @@ namespace iMenyn.Web.Areas.Admin.Controllers
     [OnlyEnabled]
     public class AdminBaseController : Controller
     {
-        protected IRepository Repository;
         protected IAuthentication Authentication;
 
         protected Account CurrentAccount
@@ -21,9 +20,9 @@ namespace iMenyn.Web.Areas.Admin.Controllers
 
         private Account _currentAccount;
 
-        public AdminBaseController(IRepository repository, IAuthentication authentication = null)
+        public AdminBaseController( IAuthentication authentication = null)
         {
-            Repository = repository;
+            
 
             // Allows us to injects a IUserHelper in unit tests
             Authentication = authentication ?? DependencyManager.Authentication;
