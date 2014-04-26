@@ -8,10 +8,11 @@ using iMenyn.Data.Abstract.Db;
 using iMenyn.Data.Helpers;
 using iMenyn.Data.Infrastructure.Index;
 using iMenyn.Data.Models;
+using iMenyn.Data.ViewModels;
 
 namespace iMenyn.Data.Concrete.Db
 {
-    public class RavenDbEnterprises :IDbEnterprises
+    public class RavenDbEnterprises : IDbEnterprises
     {
         private readonly IDocumentStore _documentStore;
         private readonly ILogger _logger;
@@ -22,16 +23,21 @@ namespace iMenyn.Data.Concrete.Db
             _logger = logger;
         }
 
-        public void UpdateEnterprise(Enterprise enterprise)
+        public void UpdateEnterprise(Enterprise enterprise, List<Product> products)
         {
             using (var session = _documentStore.OpenSession())
             {
                 session.Store(enterprise);
+                foreach (var product in products)
+                {
+                    session.Store(product);
+                }
                 session.SaveChanges();
                 _logger.Info("Updated enterprise " + enterprise.Name);
             }
         }
 
+        //TODO
         public string CreateEnterprise(Enterprise enterprise)
         {
             using (var session = _documentStore.OpenSession())
@@ -45,6 +51,7 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
+        //TODO
         public void DeleteEnterpriseById(string enterpriseId)
         {
             using (var session = _documentStore.OpenSession())
@@ -56,6 +63,7 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
+        //TODO
         public IEnumerable<Enterprise> SearchEnterprises(string searchTerm, string location, string categorySearch)
         {
             using (var session = _documentStore.OpenSession())
@@ -102,7 +110,8 @@ namespace iMenyn.Data.Concrete.Db
                                 var stateCode = GeneralHelper.GetCountyNameAndCodes().FirstOrDefault(c => c.Text.ToLower().Contains(searchQuery));
                                 if (stateCode != null)
                                 {
-                                    query = query.WhereEquals(x => x.StateCode, stateCode.Value).OrElse();
+                                    //County search
+                                    //query = query.WhereEquals(x => x.StateCode, stateCode.Value).OrElse();
                                 }
 
                                 #region PostalCode search
@@ -114,17 +123,20 @@ namespace iMenyn.Data.Concrete.Db
                                 }
                                 #endregion
 
-                                query = query.WhereStartsWith(x => x.City, searchQuery);
+                                //Commune, sublocality, county m.m.
+                                //query = query.WhereStartsWith(x => x.City, searchQuery);
                                 query = query.CloseSubclause();
 
                             }
                             if (isCategorySearch)
                             {
                                 if (categorySearch == "All")
-                                    query = query.WhereEquals(x => x.StateCode, location);
+                                {
+                                    //query = query.WhereEquals(x => x.StateCode, location);
+                                }
                                 else
                                 {
-                                    query = query.WhereEquals(x => x.StateCode, location).AndAlso();
+                                    //query = query.WhereEquals(x => x.StateCode, location).AndAlso();
                                     query = query.WhereIn("Categories", new[] { searchQuery });
                                 }
 
@@ -142,6 +154,7 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
+        //TODO
         public IEnumerable<Enterprise> CheckIfEnterpriseExists(string key, int postalCode)
         {
             using (var session = _documentStore.OpenSession())
@@ -160,6 +173,7 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
+        //TODO
         public IEnumerable<Enterprise> GetAllEnterprises()
         {
             using (var session = _documentStore.OpenSession())
@@ -168,6 +182,7 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
+        //TODO
         public IEnumerable<Enterprise> GetNewEnterprises()
         {
             using (var session = _documentStore.OpenSession())
@@ -175,6 +190,7 @@ namespace iMenyn.Data.Concrete.Db
                 return session.Advanced.LuceneQuery<Enterprise, Enterprises>().WhereEquals(e => e.IsNew, true);
             }
         }
+
 
         public Enterprise GetEnterpriseById(string enterpriseId)
         {
@@ -184,13 +200,56 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        public IEnumerable<Enterprise> GetEnterprisesWithModifiedMenus()
+        public CompleteEnterpriseViewModel GetCompleteEnterprise(string enterpriseId)
         {
             using (var session = _documentStore.OpenSession())
             {
-                var modifiedMenus = session.Query<ModifiedMenu>();
-                var enterpriseIds = modifiedMenus.Select(m => m.EnterpriseId);
-                return session.Load<Enterprise>(enterpriseIds);
+                var viewModel = new CompleteEnterpriseViewModel();
+
+                // Load enterprise, include products
+                var enterprise = session.Include<Enterprise>(e => e.Menu.Categories.Select(c => c.Products)).Load(enterpriseId);
+                
+                var products = new List<Product>();
+                foreach (var p in enterprise.Menu.Categories.Select(category => session.Load<Product>(category.Products)))
+                {
+                    products.AddRange(p);
+                }
+
+                // Create to viewmodel
+                var categoriesViewModel = new List<ViewModelCategory>();
+                foreach (var category in enterprise.Menu.Categories)
+                {
+                    var categoryViewModel = new ViewModelCategory
+                                {
+                                    Name = category.Name,
+                                    Id= category.Id,
+                                    Products = new List<Product>()
+                                };
+
+                    foreach (var product in category.Products.Select(productForCategory => products.FirstOrDefault(p => p.Id == productForCategory)))
+                    {
+                        categoryViewModel.Products.Add(product);
+                    }
+
+                    categoriesViewModel.Add(categoryViewModel);
+                }
+
+                // Add to viewmodel
+                viewModel.Name = enterprise.Name;
+                viewModel.Id = enterprise.Id;
+                viewModel.ViewModelCategories = categoriesViewModel;
+
+                return viewModel;
+            }
+        }
+
+        public IEnumerable<string> GetModifiedMenus()
+        {
+            using (var session = _documentStore.OpenSession())
+            {
+                var menus = session.Query<Menu>();
+                var enterpriseIds = menus.Where(m => !string.IsNullOrEmpty(m.TempMenuId));
+                return null;
             }
         }
 
@@ -212,12 +271,12 @@ namespace iMenyn.Data.Concrete.Db
 
                 if (!string.IsNullOrEmpty(city) && !string.IsNullOrEmpty(stateCode))
                 {
-                    query = query.WhereEquals(x => x.StateCode, stateCode).AndAlso();
-                    query = query.WhereEquals(x => x.City, city);
+                    //query = query.WhereEquals(x => x.StateCode, stateCode).AndAlso();
+                    //query = query.WhereEquals(x => x.City, city);
                 }
                 else
                 {
-                    query = query.WhereEquals(x => x.StateCode, stateCode);
+                    //query = query.WhereEquals(x => x.StateCode, stateCode);
                 }
 
 

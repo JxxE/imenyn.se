@@ -1,0 +1,11 @@
+﻿@model iMenyn.Data.Models.Product
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-product" }))
+{
+    <div class="product row">
+        @Html.TextBoxFor(p => p.Name)
+        @Html.HiddenFor(p => p.Id)
+        <input type="submit" value="Spara" class="btn" />
+        <i class="glyphicon glyphicon-resize-vertical"></i>
+    </div>
+}

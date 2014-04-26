@@ -1,0 +1,75 @@
+﻿@model iMenyn.Data.ViewModels.CompleteEnterpriseViewModel
+<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+@{
+    ViewBag.Title = "Demomeny";
+}
+@Model.Name
+
+@foreach (var c in Model.ViewModelCategories)
+{
+    <h3>@c.Name</h3>
+    <div class="category" data-category="@c.Id">
+        @foreach (var p in c.Products)
+        {
+            @Html.Partial("_AddOrEditProduct", p)
+        }
+        <div>
+            @Html.Partial("_AddOrEditProduct", new iMenyn.Data.Models.Product())
+        </div>
+        <a href="javascript:void(0)">Lägg til produkt</a>
+    </div>
+}
+
+<a id="save-menu-setup" href="javascript:void(0)" class="btn btn-success">Spara</a>
+
+<script>
+    $(".category").sortable({ items: ">form", handle: ".glyphicon-resize-vertical" });
+
+    $("#save-menu-setup").click(function() {
+        var $categories = $(".category");
+        var categories = new Object();
+        categories.c = new Array();
+        for (var i = 0; i < $categories.length; i++) {
+            var $category = $($categories[i]);
+            //var category = { id: $category.data('category'), products: [] };
+            var category = new Object();
+            category.id = $category.data('category');
+            category.products = new Array();
+            var products = $category.children().find('.product');
+            for (var j = 0; j < products.length; j++) {
+                var productId = $(products[j]).find("input[name='Id']").val();
+                if(productId)
+                    category.products.push({ id: productId });
+            }
+            categories.c.push({ category: category });
+        }
+        console.log(JSON.stringify(categories))
+        iMenyn.Ajax.SaveMenuSetup(JSON.stringify(categories));
+    });
+
+    $(".form-product").submit(function () {
+        //var formData = $(this).serialize();
+        //iMenyn.Ajax.SaveProduct(formData);
+        var formData = JSON.stringify($(this).serializeObject());
+        var categoryId = $(this).closest("[data-category]").data("category");
+        iMenyn.Ajax.SaveProduct(formData, categoryId, '@Model.Id');
+        return false;
+    });
+
+
+    $.fn.serializeObject = function () {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+</script>

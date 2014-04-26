@@ -17,8 +17,7 @@ namespace iMenyn.Web.Helpers
             if (currentAccount == null)
             {
                 // Load account by ID
-                //TODO
-                //currentAccount = DependencyManager.Repository.GetAccount(HttpContext.Current.User.Identity.Name);
+                currentAccount = DependencyManager.Db.Accounts.GetAccount(HttpContext.Current.User.Identity.Name);
                 HttpContext.Current.Items.Add(cacheKey, currentAccount);
             }
 

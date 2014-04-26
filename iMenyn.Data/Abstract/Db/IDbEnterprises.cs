@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using iMenyn.Data.Models;
+using iMenyn.Data.ViewModels;
 
 namespace iMenyn.Data.Abstract.Db
 {
     public interface IDbEnterprises
     {
-        void UpdateEnterprise(Enterprise enterprise);
+        void UpdateEnterprise(Enterprise enterprise, List<Product> products);
 
         string CreateEnterprise(Enterprise enterprise);
 
@@ -20,8 +21,9 @@ namespace iMenyn.Data.Abstract.Db
         IEnumerable<Enterprise> GetNewEnterprises();
 
         Enterprise GetEnterpriseById(string enterpriseId);
+        CompleteEnterpriseViewModel GetCompleteEnterprise(string enterpriseId);
 
-        IEnumerable<Enterprise> GetEnterprisesWithModifiedMenus();
+        IEnumerable<string> GetModifiedMenus();
 
         Enterprise GetEnterpriseByUrlKey(string urlKey);
 

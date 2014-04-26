@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace iMenyn.Data.Models
 {
@@ -8,28 +7,22 @@ namespace iMenyn.Data.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int Price { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public float Abv { get; set; }
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public int Size { get; set; }
+
+        public List<ProductPrice> Prices { get; set; }
         public string Image { get; set; }
 
-        public string Category { get; set; }
-        public string ProductType { get; set; }
 
-        //Good for i.e. wine. 1 glas 59kr o kommentaren (Flaska 500kr).
-        public string AdditionalComment { get; set; }
-
+        //List of ids who liked
         public List<string> Likes { get; set; }
+
+        // Dryck
+        public float Abv { get; set; }
+        public int Size { get; set; }
     }
 
-
-    public enum ProductType
+    public class ProductPrice
     {
-        Drink,
-        MainDish,
-        Dessert,
-        Appetizer
+        public int Price { get; set; }
+        public string Description { get; set; }
     }
 }

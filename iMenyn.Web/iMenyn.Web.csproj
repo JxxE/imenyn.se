@@ -73,7 +73,24 @@
     <Reference Include="Lucene.Net.Contrib.Spatial.NTS">
       <HintPath>..\packages\RavenDB.Database.2.0.2230\lib\net40\Lucene.Net.Contrib.Spatial.NTS.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Net4">
+      <HintPath>..\packages\Microsoft.CompilerServices.AsyncTargetingPack.1.0.1\lib\net40\Microsoft.CompilerServices.AsyncTargetingPack.Net4.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.2.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.OData.5.2.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage">
+      <HintPath>..\packages\WindowsAzure.Storage.2.0.6.1\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil">
       <HintPath>..\packages\RavenDB.Database.2.0.2230\lib\net40\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -86,17 +103,24 @@
     <Reference Include="PowerCollections">
       <HintPath>..\packages\RavenDB.Database.2.0.2230\lib\net40\PowerCollections.dll</HintPath>
     </Reference>
-    <Reference Include="Raven.Abstractions">
-      <HintPath>..\packages\RavenDB.Client.2.0.2230\lib\net40\Raven.Abstractions.dll</HintPath>
+    <Reference Include="Raven.Abstractions, Version=2.5.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RavenDB.Client.2.5.2874\lib\net40\Raven.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Raven.Client.Embedded">
-      <HintPath>..\packages\RavenDB.Embedded.2.0.2230\lib\net40\Raven.Client.Embedded.dll</HintPath>
+    <Reference Include="Raven.Client.Embedded, Version=2.5.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RavenDB.Embedded.2.5.2874\lib\net40\Raven.Client.Embedded.dll</HintPath>
     </Reference>
-    <Reference Include="Raven.Client.Lightweight">
-      <HintPath>..\packages\RavenDB.Client.2.0.2230\lib\net40\Raven.Client.Lightweight.dll</HintPath>
+    <Reference Include="Raven.Client.Lightweight, Version=2.5.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RavenDB.Client.2.5.2874\lib\net40\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
-    <Reference Include="Raven.Database">
-      <HintPath>..\packages\RavenDB.Database.2.0.2230\lib\net40\Raven.Database.dll</HintPath>
+    <Reference Include="Raven.Client.MvcIntegration">
+      <HintPath>..\packages\RavenDB.Client.MvcIntegration.2.5.2874\lib\net40\Raven.Client.MvcIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Database, Version=2.5.0.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RavenDB.Database.2.5.2874\lib\net40\Raven.Database.dll</HintPath>
     </Reference>
     <Reference Include="Spatial4n.Core.NTS">
       <HintPath>..\packages\RavenDB.Database.2.0.2230\lib\net40\Spatial4n.Core.NTS.dll</HintPath>
@@ -106,8 +130,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Device" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Spatial, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -226,15 +255,15 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
-    <Compile Include="Areas\Admin\Controllers\AdminBaseController.cs" />
-    <Compile Include="Areas\Admin\Controllers\AdminController.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AccountViewData.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AccountViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\AllEnterprisesViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\CompareModifiedMenuViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\DashboardViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\UserInputViewModel.cs" />
+    <Compile Include="Areas\AdminOLD\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\AdminOLD\Controllers\AdminBaseController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Areas\AdminOLD\ViewModels\AccountViewData.cs" />
+    <Compile Include="Areas\AdminOLD\ViewModels\AccountViewModel.cs" />
+    <Compile Include="Areas\AdminOLD\ViewModels\AllEnterprisesViewModel.cs" />
+    <Compile Include="Areas\AdminOLD\ViewModels\CompareModifiedMenuViewModel.cs" />
+    <Compile Include="Areas\AdminOLD\ViewModels\DashboardViewModel.cs" />
+    <Compile Include="Areas\AdminOLD\ViewModels\UserInputViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CabaretController.cs" />
@@ -265,7 +294,6 @@
     <Compile Include="YelpConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\admin-layout.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -275,26 +303,23 @@
     <Content Include="Content\img\bg.jpg" />
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\media-queries.css" />
-    <Content Include="Content\theme.css" />
     <Content Include="favicon.png" />
     <Content Include="js\iMenyn.jsrender.js" />
-    <Content Include="Content\layout-old.css" />
     <Content Include="Content\module.css" />
-    <Content Include="Content\state.css" />
     <Content Include="Global.asax" />
-    <Content Include="Areas\Admin\Views\Web.config" />
+    <Content Include="Areas\AdminOLD\Views\Web.config" />
     <Content Include="App_Code\Combiner.cshtml" />
     <Content Include="Handlers\CombinerHandler.ashx" />
     <Content Include="js\iMenyn.Utilities.js" />
     <Content Include="js\iMenyn.js" />
     <Content Include="js\iMenyn.Admin.js" />
-    <Content Include="Areas\Admin\Views\Admin\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\Admin\Accounts.cshtml" />
-    <Content Include="Areas\Admin\Views\Admin\Settings.cshtml" />
-    <Content Include="Areas\Admin\Views\Admin\ModifiedMenu.cshtml" />
-    <Content Include="Areas\Admin\Views\Admin\ModifiedMenus.cshtml" />
-    <Content Include="Areas\Admin\Views\Admin\NewMenu.cshtml" />
-    <Content Include="Areas\Admin\Views\Admin\NewEnterprises.cshtml" />
+    <Content Include="Areas\AdminOLD\Views\Admin\Index.cshtml" />
+    <Content Include="Areas\AdminOLD\Views\Admin\Accounts.cshtml" />
+    <Content Include="Areas\AdminOLD\Views\Admin\Settings.cshtml" />
+    <Content Include="Areas\AdminOLD\Views\Admin\ModifiedMenu.cshtml" />
+    <Content Include="Areas\AdminOLD\Views\Admin\ModifiedMenus.cshtml" />
+    <Content Include="Areas\AdminOLD\Views\Admin\NewMenu.cshtml" />
+    <Content Include="Areas\AdminOLD\Views\Admin\NewEnterprises.cshtml" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -302,6 +327,7 @@
     <Content Include="fonts\old\iMenyn.ttf" />
     <Content Include="fonts\old\iMenyn.woff" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Kanske ta bort.txt" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -311,7 +337,7 @@
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\jsrender.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
-    <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="js\modernizr-2.5.3.js" />
     <Content Include="Templates\_EditableProduct.tmpl.html" />
     <Content Include="Templates\_GeneralLocationInfo.tmpl.html" />
     <Content Include="Templates\_BrowsedCities.tmpl.html" />
@@ -339,19 +365,21 @@
     <Content Include="Views\Cabaret\Product.cshtml" />
     <Content Include="Views\Cabaret\Index.cshtml" />
     <Content Include="Views\Manage\AddEnterprise.cshtml" />
-    <Content Include="Areas\Admin\Views\Shared\_LayoutAdmin.cshtml" />
+    <Content Include="Areas\AdminOLD\Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Views\Partials\_StandardMenu.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
-    <Content Include="Views\Manage\Products.cshtml" />
     <Content Include="Views\Partials\_StandardMenuProducts.cshtml" />
     <Content Include="Views\Cabaret\NoMenu.cshtml" />
     <Content Include="Views\Home\Info.cshtml" />
     <Content Include="Views\Home\Browse.cshtml" />
     <Content Include="Views\Manage\OLD copy of Products.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Manage\DemoMenu.cshtml" />
+    <Content Include="Views\Manage\_AddOrEditProduct.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\AdminOLD\Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

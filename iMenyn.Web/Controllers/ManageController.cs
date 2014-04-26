@@ -6,14 +6,16 @@ using iMenyn.Data.Abstract;
 using iMenyn.Data.Abstract.Db;
 using iMenyn.Data.Helpers;
 using iMenyn.Data.Models;
+using iMenyn.Data.ViewModels;
 using iMenyn.Web.ViewModels;
+using Category = iMenyn.Data.Models.Category;
 
 namespace iMenyn.Web.Controllers
 {
     public class ManageController : BaseController
     {
         public ManageController(IDb db, ILogger logger)
-            : base(db,logger)
+            : base(db, logger)
         {
         }
 
@@ -21,25 +23,50 @@ namespace iMenyn.Web.Controllers
         {
             var viewModel = new EnterpriseViewModel();
 
-            if(!string.IsNullOrEmpty(key))
-            {
-                var enterprise = Db.Enterprises.GetEnterpriseById(EnterpriseHelper.GetId(key));
-                if(enterprise != null && enterprise.IsNew)
-                {
-                    viewModel.Name = enterprise.Name;
-                    viewModel.EditKey = key;
+            //if (!string.IsNullOrEmpty(key))
+            //{
+            //    var enterprise = Db.Enterprises.GetEnterpriseById(EnterpriseHelper.GetId(key));
+            //    if (enterprise != null && enterprise.IsNew)
+            //    {
+            //        viewModel.Name = enterprise.Name;
+            //        viewModel.Phone = enterprise.Name;
 
-                    // Add chosen categories to viewmodel
-                    var availableCategories = GeneralHelper.GetCategories();
-                    viewModel.ChosenCategories = new List<ValueAndText>();
-                    foreach (var c in enterprise.Categories)
-                    {
-                        var category = availableCategories.FirstOrDefault(p => p.Value == c);
-                        if (category != null)
-                            viewModel.ChosenCategories.Add(new ValueAndText { Text = category.Text, Value = c });
-                    }
-                }
-            }
+            //        // Geolocation
+            //        viewModel.StreetNumber = enterprise.StreetNumber;
+            //        viewModel.StreetRoute = enterprise.StreetRoute;
+            //        viewModel.PostalCode = enterprise.PostalCode;
+            //        viewModel.PostalTown = enterprise.PostalTown;
+            //        viewModel.Commune = enterprise.Commune;
+            //        viewModel.County = enterprise.County;
+
+            //        // Hidden fields
+            //        viewModel.CountryCode = enterprise.CountryCode;
+            //        viewModel.SubLocality = enterprise.SubLocality;
+            //        viewModel.Coordinates = enterprise.Coordinates;
+            //        viewModel.EditKey = key;
+
+
+            //        // Add chosen categories to viewmodel
+            //        var availableCategories = GeneralHelper.GetCategories();
+            //        viewModel.ChosenCategories = new List<ValueAndText>();
+            //        foreach (var c in enterprise.Categories)
+            //        {
+            //            var category = availableCategories.FirstOrDefault(p => p.Value == c);
+            //            if (category != null)
+            //                viewModel.ChosenCategories.Add(new ValueAndText { Text = category.Text, Value = c });
+            //        }
+            //    }
+            //}
+
+            CreateMenu();
+
+            return View(viewModel);
+        }
+
+        [AllowAnonymous]
+        public ActionResult DemoMenu()
+        {
+            var viewModel = Db.Enterprises.GetCompleteEnterprise("enterprises-jessetinell");
 
             return View(viewModel);
         }
@@ -51,167 +78,80 @@ namespace iMenyn.Web.Controllers
             return View();
         }
 
-
-        public ActionResult Products(string r)
+        public void CreateMenu()
         {
-            if (r == null)
-                return RedirectToAction("Index");
-            
-            var enterprise = Db.Enterprises.GetEnterpriseByUrlKey(r);
-            if (enterprise == null)
+            var enterprise = Db.Enterprises.GetEnterpriseById("enterprises-jessetinell");
+
+            var menu = new Menu();
+            var categories = new List<Category>();
+            var drinks = new List<string>();
+            var pizzas = new List<string>();
+            var allProducts = new List<Product>();
+
+
+            var p1 = new Product { Id = ProductHelper.GenerateId(), Name = "Vesuvio", Prices = new List<ProductPrice>{new ProductPrice{Price = 74}}};
+            var p2 = new Product { Id = ProductHelper.GenerateId(), Name = "Oscar", Prices = new List<ProductPrice> { new ProductPrice { Price = 55 } } };
+            pizzas.Add(p1.Id);
+            pizzas.Add(p2.Id);
+
+            var p3 = new Product { Id = ProductHelper.GenerateId(), Name = "Heineken", Prices = new List<ProductPrice> { new ProductPrice { Price = 85 } } };
+            var p4 = new Product { Id = ProductHelper.GenerateId(), Name = "Xider", Prices = new List<ProductPrice> { new ProductPrice { Price = 35 } } };
+            drinks.Add(p3.Id);
+            drinks.Add(p4.Id);
+
+            allProducts.Add(p1);
+            allProducts.Add(p2);
+            allProducts.Add(p3);
+            allProducts.Add(p4);
+
+            var c1 = new Category
+                         {
+                             Id = Guid.NewGuid().ToString("N"),
+                             Name = "Dryck",
+                             Products = drinks
+                         };
+            var c2 = new Category
             {
-                Logger.Warn(string.Format("Enterprise (key: {0}) was null when editing",r));
-                return RedirectToAction("Index");
-            }
-
-            //Check if there already is a modified menu wating for approval
-            //var modifiedMenu = Repository.GetModifiedMenuByEnterpriseId(r);
-            //if (modifiedMenu != null)
-            //    return RedirectToAction("Index");
-
-            ViewBag.EnterpriseName = enterprise.Name;
-            ViewBag.EnterpriseKey = r;
-
-            //var isEdit = enterprise.Menu != null;
-
-            //if (isEdit)
-            //{
-            //    ViewBag.IsEdit = true;
-            //    var menu = Repository.GetMenuById(enterprise.Menu);
-            //    var products = Repository.GetProducts(menu.Products.ToList());
-            //    ViewBag.Products = products;
-            //}
-            //else
-            //{
-            //    ViewBag.IsEdit = false;
-            //}
-
-            return View();
-        }
-
-        public Product SaveProduct(FormCollection productForm, string enterpriseKey)
-        {
-            //Kolla om enterpriset finns
-            return new Product
-                       {
-                           Name = "HEJ",
-                           Price = 56
-                       };
-        }
-
-        public void SaveProducts(List<Product> products, string enterpriseId)
-        {
-            /*
-             * Spara produkt:
-             * Sparar en produkt o returnerar ID
-             * 
-             * */
-
-
-
-            //TODO
-            //var enterprise = Repository.GetEnterpriseById(enterpriseId);
-            //if (enterprise == null) return;
-
-            //var isModified = enterprise.Menu != null;
-
-
-            //var updatedProducts = ProductHelper.InitiateProductList(products, enterprise.Key);
-
-            //var productIds = new List<string>();
-            //productIds.AddRange(updatedProducts.Select(updatedProduct => updatedProduct.Id));
-
-            //if (isModified)
-            //{               
-            //    var modifiedMenu = new ModifiedMenu
-            //                           {
-            //                               Id = ModifiedMenuHelper.GetId(enterprise.Key),
-            //                               EnterpriseId = enterpriseId,
-            //                               ProductIds = productIds
-            //                           };
-            //    Repository.CreateModifiedMenu(modifiedMenu);
-            //}
-            //else
-            //{
-            //    var menu = new Menu
-            //    {
-            //        Id = MenuHelper.GetId(enterprise.Key),
-            //        Products = productIds
-            //    };
-
-            //    enterprise.Menu = menu.Id;
-
-            //    Repository.CreateMenu(menu);
-            //    Repository.UpdateEnterprise(enterprise);
-            //}
-
-            //Repository.CreateProducts(updatedProducts);
-        }
-
-        [Obsolete("Using other method in JsonController now")]
-        public ActionResult CreateEnterprise(FormCollection form)
-        {
-            //TODO
-            if (!string.IsNullOrEmpty(form["nope"]))
-                return RedirectToAction("Index", "Home");
-
-            var name = form["name"];
-            var phone = form["phone"];
-            var address = form["address"];
-
-            int postalCode;
-            var postalCodeString = form["postalCode"].Replace(" ",string.Empty);
-            int.TryParse(postalCodeString, out postalCode);
-
-            var city = form["city"].Contains(",") ? form["city"].Split(',').First() : form["city"];
-            var countryCode = form["countryCode"] ?? "SE";
-            var state_code = form["state_code"];
-            var subLocality = form["subLocality"];
-            var lat = form["lat"];
-            var lng = form["lng"];
-            var yelpId = form["yelpId"];
-
-            var categoryList = new List<string>();
-            for (var i = 0; i < 6; i++)
-            {
-                var category = form["category" + i];
-                if(category != null)
-                {
-                    categoryList.Add(category);
-                }
-            }
-
-            //var possibleKey = EnterpriseHelper.GenerateEnterpriseKey(name, TODO);
-            //var enterpriseExist = Db.Enterprises.GetEnterpriseByUrlKey(possibleKey) != null;
-            //var key = enterpriseExist ? string.Format("{0}-{1}", possibleKey, GeneralHelper.RandomString(4)) : possibleKey;
-
-            //var id = EnterpriseHelper.GetId(key);
-
-            var enterprise = new Enterprise
-            {
-                Name = name,
-                Phone = phone,
-                Address = address,
-                PostalCode = postalCode,
-                City = city,
-                CountryCode = countryCode,
-                SubLocality = subLocality,
-                StateCode = state_code,
-                Coordinates = new Coordinates { Lat = lat, Lng = lng },
-                YelpId = yelpId,
-                Categories = categoryList,
-
-                IsNew = true,
-                IsPremium = false,
-                LastUpdated = DateTime.Now
+                Id = Guid.NewGuid().ToString("N"),
+                Name = "Pizza",
+                Products = pizzas
             };
 
-            Db.Enterprises.CreateEnterprise(enterprise);
-           
-           return RedirectToAction("Products", "Manage", new { r = "" });
+            categories.Add(c1);
+            categories.Add(c2);
+
+            menu.Categories = categories;
+
+            enterprise.Menu = menu;
+
+            Db.Enterprises.UpdateEnterprise(enterprise,allProducts);
+            //Db.Menus.CreateMenu(enterprise, allProducts);
+
         }
 
+        // Detta gäller en NY enterprise. När man redigerar en nuvarande enterprise måste det sparas en TEMP-meny!
+        [HttpPost]
+        public void AddOrEditNewProduct(Product product,string categoryId,string enterpriseId)
+        {
+            if(product != null)
+            {
+                if (product.Id != null && Db.Products.GetProductById(product.Id) != null)
+                {
+                    Db.Products.UpdateProduct(product);
+                }
+                else
+                {
+                    Db.Products.AddProduct(product, categoryId,enterpriseId);
+                }
+            }
+        }
 
+        //Sparar ordningen på menyn. Kategori, produkt-placering 
+        [HttpPost]
+        public void SaveMenuSetup(string categories)
+        {
+            //TODO, denna är alltid null!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        }
 
     }
 }

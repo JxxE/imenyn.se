@@ -41,8 +41,6 @@ namespace iMenyn.Data.Models
         public List<string> Categories { get; set; }
 
 
-        public string Menu { get; set; }
-
         public List<string> SearchTags { get; set; }
 
         public bool IsPremium { get;set;}
@@ -51,17 +49,17 @@ namespace iMenyn.Data.Models
 
         public DateTime LastUpdated { get; set; }
 
-        public List<string> Products { get; set; }
+        public Menu Menu { get; set; }
 
 
-        [Obsolete]
-        public string StateCode { get; set; }
-        [Obsolete]
-        public string City { get; set; }
-        [Obsolete]
-        public string YelpId { get; set; }
-        [Obsolete]
-        public string Address { get; set; }
+        //[Obsolete]
+        //public string StateCode { get; set; }
+        //[Obsolete]
+        //public string City { get; set; }
+        //[Obsolete]
+        //public string YelpId { get; set; }
+        //[Obsolete]
+        //public string Address { get; set; }
     }
 
     public class Coordinates

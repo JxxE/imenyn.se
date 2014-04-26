@@ -18,7 +18,7 @@ namespace iMenyn.Data.Concrete.Db
             _logger = logger;
         }
 
-        public Account GetACcountByEmail(string email)
+        public Account GetAccountByEmail(string email)
         {
             using (var session = _documentStore.OpenSession())
             {

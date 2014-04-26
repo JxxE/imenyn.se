@@ -1,80 +1,4 @@
-﻿#l-content-wrapper {
-    background-color: rgba(245, 245, 245, 0.69);
-    min-height: 500px;
-    padding: 1%;
-    border: 1px solid rgb(226, 226, 226);
-    margin: 15px 0 30px 0;
-    overflow: hidden;
-}
-
-#loading, #loading2 {
-    display: none;
-    background-image: url('img/ajax-load.gif');
-    width: 17px;
-    height: 17px;
-}
-/*========= Common utilities ================*/
-.pull-left {
-    float: left;
-}
-
-.pull-right {
-    float: right;
-}
-
-.font-xl {
-    font-size: 165%;
-}
-
-.hide,.error.hide {
-    display: none;
-}
-
-.inline {
-    display: inline-block;
-}
-
-.no-margin {
-    margin: 0;
-}
-
-.marginR5 {
-    margin-right: 5px;
-}
-
-.marginB20 {
-    margin-bottom: 20px;
-}
-
-.marginL5 {
-    margin-left: 5px;
-}
-
-.marginL10 {
-    margin-left: 10px;
-}
-
-.marginL20 {
-    margin-left: 20px;
-}
-.marginT15 {
-    margin-top: 15px;
-}
-.red {
-    color: red;
-}
-
-.purple {
-    color: purple;
-}
-
-.grey {
-    color: #777;
-}
-
-.white {
-    color: white;
-}
+﻿
 .error {
     color: rgb(240, 67, 67);
     display: inline-block;
@@ -82,92 +6,9 @@
     zoom: 1;
     padding-left: 5px;
 }
-.visible {
-    visibility: visible!important;
-}
-/*=========================*/
-h1 small {
-    font-size: 13px;
-    font-weight: normal;
-}
-
-.navbar {
-    background-color: rgba(255, 255, 255, 0.24);
-    margin-top: 25px;
-    height: 80px;
-}
-
-    .navbar ul {
-        float: right;
-        margin-top: 30px;
-    }
-
-        .navbar ul li {
-            display: inline;
-        }
-
-            .navbar ul li a {
-                color: #FFF;
-                text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-                padding: 12px 15px 12px;
-                background-color: rgb(92, 92, 92);
-            }
-
-                .navbar ul li a.active, .navbar ul li a.active, .navbar ul li a:hover {
-                    background-color: rgb(111, 0, 84);
-                }
-
-#btn-nav {
-    background-color: #6F0054;
-    color: white;
-    display: none;
-    float: right;
-    font-size: 18px;
-    height: 22px;
-    margin: 25px 10px 0 0;
-    width: 19px;
-}
 
 
 
-#main-search-container {
-    max-width: 48%;
-    margin: auto;
-}
-
-#search-query {
-    font-size: 28px;
-    height: 32px;
-    margin: 0;
-    padding: 1%;
-    width: 62%;
-}
-
-#search-button {
-    margin: 0;
-    padding: 2%;
-    width: 10%;
-}
-
-
-.add-product-form {
-    display: none;
-    margin-bottom: 80px;
-}
-
-    .add-product-form.active {
-        display: block;
-    }
-
-.loading-by-element {
-    display: inline-block;
-    height: 23px;
-    width: 32px;
-}
-
-    .loading-by-element:first-child {
-        position: absolute;
-    }
 
 .row-result {
     background-color: white;
@@ -205,133 +46,6 @@ h1 small {
 
 
 
-#map {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    height: 350px;
-}
-
-#map-container {
-    position: relative;
-    visibility: hidden;
-}
-
-.map-container {
-    position: relative;
-    height: 350px;
-}
-
-#edited-menu-container {
-    background-color: white;
-    padding: 10px;
-}
-
-.menu-head {
-    margin-bottom: 22px;
-}
-
-    .menu-head h1 {
-        margin-bottom: 9px;
-    }
-
-#menu .category-header {
-    margin: 4px 0 7px 0;
-    border-bottom: 1px solid rgb(224, 224, 224);
-    padding-bottom: 4px;
-}
-
-#menu .product-name {
-    font-size: 17px;
-}
-
-#menu .product-category {
-    overflow: hidden;
-    margin: 0 0 20px 20px;
-}
-
-#menu h1.extra {
-    margin-bottom: 0;
-}
-
-#menu li {
-    margin-bottom: 15px;
-}
-
-#menu p {
-    margin: 0;
-    max-width: 70%;
-}
-
-#menu [data-icon] {
-    font-size: 20px;
-    margin-left: 15px;
-}
-
-#menu .food-type {
-    margin-bottom: 50px;
-}
-
-.price-plans {
-    margin: auto;
-    float: none;
-    text-align: center;
-}
-
-.price-plan {
-    border: 1px solid rgb(213, 213, 213);
-    padding: 25px 10px;
-}
-
-    .price-plan h1, .price-plan h4 {
-        margin: 0 0 11px 0;
-    }
-
-.price-plan-content {
-    text-align: left;
-    padding: 0 31px;
-}
-
-    .price-plan-content p {
-        display: inline-block;
-        margin: 0;
-        max-width: 94%;
-    }
-
-    .price-plan-content .onerow {
-        margin: 27px 0;
-    }
-
-    .price-plan-content [data-icon] {
-        margin-right: 5px;
-        float: left;
-    }
-
-
-
-
-
-.browse-enterprises h3 {
-    margin: 0 0 8px 0;
-}
-
-.browse-enterprises h5 {
-    margin: 13PX 0 5px 15px;
-}
-
-.browse-enterprises a.enterprise {
-    margin: 0 0 0 25px;
-}
-
-
-
-/* ======= Overrides ============*/
-.alert-block > p {
-    margin-bottom: 20px;
-}
-/* ======= End of Overrides ============*/
-
 
 
 
@@ -343,6 +57,13 @@ h1 small {
 
 
 /* ====== New and approved ======== */
+body {
+    background-color: grey;
+    color: #494949;
+}
+#main-container {
+    background-color: white;
+}
 select#category-chooser {
     margin-bottom: 10px;
 }
@@ -360,3 +81,28 @@ select#category-chooser {
     cursor: pointer;
     margin: 0 0 0 5px;
 }
+
+a > span.glyphicon {
+    margin-left: 5px;
+}
+
+
+/*
+    Not used or tested
+    #toastr {
+  padding: 15px 15px 15px 50px;
+  width: 300px;
+  background-color: #030303;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 0 12px #999;
+  -webkit-box-shadow: 0 0 12px #999;
+  box-shadow: 0 0 12px #999;
+  color: #fff;
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+.toast-error {
+  background-color: #bd362f;
+}*/

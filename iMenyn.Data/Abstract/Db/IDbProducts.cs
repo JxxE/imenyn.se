@@ -5,7 +5,7 @@ namespace iMenyn.Data.Abstract.Db
 {
     public interface IDbProducts
     {
-        void AddProduct(Product product);
+        void AddProduct(Product product,string categoryId,string enterpriseId);
 
         IEnumerable<Product> GetProducts(List<string> productIds);
 

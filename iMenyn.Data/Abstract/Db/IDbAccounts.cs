@@ -5,7 +5,7 @@ namespace iMenyn.Data.Abstract.Db
 {
     public interface IDbAccounts
     {
-        Account GetACcountByEmail(string email);
+        Account GetAccountByEmail(string email);
 
         void AddAccount(Account account);
 

@@ -32,6 +32,13 @@ namespace iMenyn.Web
             DependencyManager.InjectRavenDbContext(ravenContext);
             DependencyManager.NinjectKernel.Bind<IAuthentication>().To<Authentication>();
             FirstTimeSetup();
+
+            InitializeRavenProfiler();
+        }
+
+        private void InitializeRavenProfiler()
+        {
+            Raven.Client.MvcIntegration.RavenProfiler.InitializeFor(RavenContext.Instance.DocumentStore);
         }
 
         private static void FirstTimeSetup()

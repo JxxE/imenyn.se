@@ -356,12 +356,12 @@ namespace iMenyn.Web.Controllers
             if(!string.IsNullOrEmpty(key))
             {
                 var enterpriseInDb = Db.Enterprises.GetEnterpriseById(EnterpriseHelper.GetId(key));
-                if(enterpriseInDb != null && enterpriseInDb.IsNew)
-                {
-                    enterprise.Id = enterpriseInDb.Id;
-                    Db.Enterprises.UpdateEnterprise(enterprise);
-                    return key;
-                }
+                //if(enterpriseInDb != null && enterpriseInDb.IsNew)
+                //{
+                //    enterprise.Id = enterpriseInDb.Id;
+                //    Db.Enterprises.UpdateEnterprise(enterprise);
+                //    return key;
+                //}
             }
             else
             {

@@ -1,0 +1,48 @@
+﻿@model iMenyn.Web.ViewModels.DashboardViewModel
+
+@{
+    ViewBag.Title = "Hantera";
+}
+
+<h2>Hantera</h2>
+
+@if (ViewBag.IsAdmin)
+{
+    <div class="row ">
+        <div class="col-sm-6 well">
+
+            <h4>Nya restauranger<span class="badge">@Model.NewEnterprises.Count</span></h4>
+            <hr />
+            @if (Model.NewEnterprises.Count == 0)
+            {
+                <i>Inga...</i>
+            }
+            else
+            {
+                foreach (var newEnterprise in Model.NewEnterprises)
+                {
+                    <a href="/Admin/NewMenu?enterpriseId=@newEnterprise.Id">
+                        <h5>@newEnterprise.Name</h5>
+                        <hr />
+                    </a>
+                }
+            }
+        </div>
+        <div class="col-sm-6 well">
+            <h4>Modifierade menyer <span class="badge">@Model.ModifiedMenus.Count</span></h4>
+            @if (Model.ModifiedMenus.Count == 0)
+            {
+                <i>Inga...</i>
+            }
+            else
+            {
+                foreach (var modifiedMenu in Model.ModifiedMenus)
+                {
+                    <a href="/Admin/ModifiedMenu?menu=@modifiedMenu">
+                        @modifiedMenu
+                    </a>
+                }
+            }
+        </div>
+    </div>
+}

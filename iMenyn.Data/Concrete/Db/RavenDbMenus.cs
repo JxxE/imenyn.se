@@ -30,29 +30,26 @@ namespace iMenyn.Data.Concrete.Db
         }
 
         //Former GetMenu
-        public MenuViewModel GetMenuByEnterpriseKey(string enterpriseKey)
+        public CompleteEnterpriseViewModel GetMenuByEnterpriseKey(string enterpriseKey)
         {
             using (var session = _documentStore.OpenSession())
             {
-                var enterprise = session.Include<Enterprise>(x => x.Products).Load(EnterpriseHelper.GetId(enterpriseKey));
+                //var enterprise = session.Include<Enterprise>(x => x.Products).Load(EnterpriseHelper.GetId(enterpriseKey));
 
 
-                var products = new List<Product>();
-                foreach (var p in enterprise.Products)
-                {
-                    var product = session.Load<Product>(p);
-                    products.Add(product);
-                }
+                //var products = new List<Product>();
+                //foreach (var p in enterprise.Products)
+                //{
+                //    var product = session.Load<Product>(p);
+                //    products.Add(product);
+                //}
 
-                var viewModel = new MenuViewModel
-                {
-                    Name = enterprise.Name,
-                    Phone = enterprise.Phone,
-                    Products = ViewModelHelper.GetProductListViewModel(products),
-                    IsPremium = enterprise.IsPremium
-                };
+                //var viewModel = new CompleteEnterpriseViewModel
+                //{
 
-                return viewModel;
+                //};
+
+                return null;
             }
         }
 
@@ -72,10 +69,6 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        public IEnumerable<ModifiedMenu> GetAllModifiedMenus()
-        {
-            throw new NotImplementedException();
-        }
 
         public void UpdateMenu(Menu menu)
         {
@@ -107,11 +100,18 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        public void CreateMenu(Menu menu)
+        public void CreateMenu(Menu menu, List<Product>products)
         {
             using (var session = _documentStore.OpenSession())
             {
                 session.Store(menu);
+                
+
+                foreach (var product in products)
+                {
+                    session.Store(product);    
+                }
+                
                 session.SaveChanges();
             }
         }

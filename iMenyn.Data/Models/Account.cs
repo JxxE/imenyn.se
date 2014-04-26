@@ -9,10 +9,10 @@ namespace iMenyn.Data.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public string Phone { get; set; }
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string PostalCode { get; set; }
+        //public string Phone { get; set; }
+        //public string Address { get; set; }
+        //public string City { get; set; }
+        //public string PostalCode { get; set; }
         public bool IsAdmin { get; set; }
         public bool Enabled { get; set; }
         public string Enterprise { get; set; }

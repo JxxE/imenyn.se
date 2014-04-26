@@ -23,12 +23,26 @@ namespace iMenyn.Data.Concrete.Db
         }
 
 
-        public void AddProduct(Product product)
+        public void AddProduct(Product product,string categoryId,string enterpriseId)
         {
             using (var session = _documentStore.OpenSession())
             {
-                session.Store(product);
-                session.SaveChanges();
+                var enterprise = session.Load<Enterprise>(enterpriseId);
+                if(enterprise != null)
+                {
+                    //TODO, gör en koll om denna enterprise får redigeras och om denna produkt inte redan finns. Gör en session.Load på produktId:t. Så inte någon tar Id:t från en annan enterprise o ändrar DOM:en på denna
+
+                    var category = enterprise.Menu.Categories.FirstOrDefault(c => c.Id == categoryId);
+                    if(category != null)
+                    {
+                        session.Store(product);
+
+                        category.Products.Add(product.Id);
+                        session.Store(enterprise);
+
+                        session.SaveChanges();
+                    }
+                }
             }
         }
 
@@ -53,6 +67,7 @@ namespace iMenyn.Data.Concrete.Db
         {
             using (var session = _documentStore.OpenSession())
             {
+                //TODO, gör en koll om denna får redigeras och om den tillhör denna enterprise!
                 session.Store(product);
                 session.SaveChanges();
             }

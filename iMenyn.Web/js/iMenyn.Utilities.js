@@ -14,9 +14,14 @@ iMenyn.Utilities = function () {
 
                 var divChosenCategories = $("#chosen-categories");
                 var count = divChosenCategories.children('div').size();
-
+                var index = 0;
                 if (count < 5) {
-                    divChosenCategories.append("<div class='tag'>" + text + "<input type='hidden' name='ChosenCategories["+count+"].Value' value='" + value + "' />" +
+                    var tagId = 0;
+                    while ($("#tag-" + index).length > 0 && index < 5) {
+                        index++;
+                        tagId = index;
+                    }
+                    divChosenCategories.append("<div id='tag-" + tagId + "' class='tag'>" + text + "<input type='hidden' name='ChosenCategories[" + tagId + "].Value' value='" + value + "' />" +
                         "<span class='glyphicon glyphicon-remove'></span></div>");
                     if (count == 4) {
                         $("#category-chooser").addClass("hide");
@@ -32,16 +37,65 @@ iMenyn.Utilities = function () {
 
     var showStep = function (step) {
         window.location.hash = step;
-
         //Hide all steps
         $("div[id^=step-]").addClass("hide");
         //Show current step
         $("#step-" + step).removeClass("hide");
+        
+        //Navigation
+        var $stepNavigation = $("#steps-navigation");
+        var stepAmount = $stepNavigation.data('length');
+        $stepNavigation.find('span[data-step="current"]').html(step);
+        $stepNavigation.find('span[data-step="total"]').html(stepAmount);
+        if (step == stepAmount) {
+            $("#next-step").addClass('hide');
+        }
+        else {
+            $("#next-step").removeClass('hide');
+        }
+        if (step == 1) {
+            $("#prev-step").addClass('hide');
+        }
+        else {
+            $("#prev-step").removeClass('hide');
+        }
+    };
+
+    var myLocation = function (callback) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (data) {
+                callback(data.coords);
+            },function(error) {
+                switch (error.code) {
+                //TODO Toast errors
+                    case error.PERMISSION_DENIED:
+                        console.log("User denied the request for Geolocation.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                            console.log("Location information is unavailable.");
+                        break;
+                    case error.TIMEOUT:
+                        console.log("The request to get user location timed out.");
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        console.log("An unknown error occurred");
+                        break;
+                }
+                callback(0);
+            });
+        }
+        return null;
+    };
+
+    var toast = function(obj) {
+        
     };
 
     return {
         InitCategoryChooser: initCategoryChooser,
         GetUrlParameter: getUrlParameter,
-        ShowStep: showStep
+        ShowStep: showStep,
+        MyLocation: myLocation,
+        Toast:toast
     };
 }();

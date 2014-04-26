@@ -13,18 +13,14 @@ namespace iMenyn.Data.Infrastructure.Index
                                  select new
                                             {
                                                 enterprise.Name,
-                                                enterprise.StateCode,
                                                 enterprise.Key,
-                                                enterprise.City,
-                                                enterprise.Address,
                                                 enterprise.PostalCode,
-                                                enterprise.YelpId,
                                                 enterprise.Categories,
                                                 enterprise.Coordinates,
                                                 enterprise.CountryCode,
                                                 enterprise.Id,
                                                 enterprise.IsPremium,
-                                                IsTemp = enterprise.IsNew,
+                                                enterprise.IsNew,
                                                 enterprise.LastUpdated,
                                                 enterprise.Menu,
                                                 enterprise.Phone
@@ -55,10 +51,9 @@ namespace iMenyn.Data.Infrastructure.Index
 
 
             Indexes.Add(x => x.Name, FieldIndexing.Analyzed);
-            Indexes.Add(x => x.StateCode, FieldIndexing.Default);
             Indexes.Add(x => x.Key, FieldIndexing.Default);
-            Indexes.Add(x => x.City, FieldIndexing.Default);
             Indexes.Add(x=>x.PostalCode, FieldIndexing.Analyzed);
+            Indexes.Add(x => x.IsNew, FieldIndexing.Default);
             Indexes.Add(x=>x.Categories,FieldIndexing.Default);
         }
     }

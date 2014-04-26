@@ -29,32 +29,36 @@ namespace iMenyn.Web.Controllers
         [AllowAnonymous]
         public ActionResult Login(LogOnModel model)
         {
-            //TODO
-            //var user = Repository.GetUserByEmail(model.UserName);
+            var user = Db.Accounts.GetAccountByEmail(model.UserName);
 
-            //if (user == null || !user.ValidatePassword(model.Password))
-            //{
-            //    ModelState.AddModelError("UserNotExistOrPasswordNotMatch", "Matchar inte");
-            //}
-            //else if (!user.Enabled)
-            //{
-            //    ModelState.AddModelError("NotEnabled", "Kontot är inte aktiverat!");
-            //}
+            if (user == null || !user.ValidatePassword(model.Password))
+            {
+                ModelState.AddModelError("UserNotExistOrPasswordNotMatch", "Fel lösenord");
+            }
+            else if (!user.Enabled)
+            {
+                ModelState.AddModelError("NotEnabled", "Kontot är inte aktiverat!");
+            }
 
-            //if (ModelState.IsValid && user != null)
-            //{
-            //    Authentication.SetAuthCookie(user.Id, true);
-            //    return RedirectFromLoginPage(model.ReturnUrl);
-            //}
+            if (ModelState.IsValid && user != null)
+            {
+                Authentication.SetAuthCookie(user.Id, true);
+                return RedirectFromLoginPage(model.ReturnUrl);
+            }
 
-            //return View(new LogOnModel { UserName = model.UserName, ReturnUrl = model.ReturnUrl });
-            return View();
+            return View(new LogOnModel { UserName = model.UserName, ReturnUrl = model.ReturnUrl });
+        }
+
+        public ActionResult Logout()
+        {
+            Authentication.SignOut();
+            return RedirectToAction("Index", "Home");
         }
 
         private ActionResult RedirectFromLoginPage(string retrunUrl = null)
         {
             if (string.IsNullOrEmpty(retrunUrl) || retrunUrl.Contains("AutoLogOn"))
-                return RedirectToAction("Index", "Admin");
+                return RedirectToAction("Index", "Home");
             return Redirect(retrunUrl);
         }
         #endregion

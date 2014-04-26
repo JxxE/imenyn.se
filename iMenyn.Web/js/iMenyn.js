@@ -45,30 +45,30 @@ var iMenyn = iMenyn || {};
 
 iMenyn.Ajax = function () {
 
-    var searchYelp = function (searchTerm, location) {
-        $.when(
-            $.get("/Templates/_YelpResults.tmpl.html")
-        ).done(function (yelpResults) {
-            $.templates({
-                yelpResults: yelpResults
-            });
-            loadYelp(searchTerm, location);
-        });
-    };
-    var loadYelp = function (searchTerm, location) {
-        $.ajax({
-            dataType: "json",
-            data: { searchTerm: searchTerm, location: location },
-            url: '/Json/SearchYelp/',
-            type: "POST",
-            success: function (data) {
-                $("#yelp-results").html($.render.yelpResults(data));
-            },
-            error: function () {
-                console.error("Kunde inte söka Yelp");
-            }
-        });
-    };
+    //var searchYelp = function (searchTerm, location) {
+    //    $.when(
+    //        $.get("/Templates/_YelpResults.tmpl.html")
+    //    ).done(function (yelpResults) {
+    //        $.templates({
+    //            yelpResults: yelpResults
+    //        });
+    //        loadYelp(searchTerm, location);
+    //    });
+    //};
+    //var loadYelp = function (searchTerm, location) {
+    //    $.ajax({
+    //        dataType: "json",
+    //        data: { searchTerm: searchTerm, location: location },
+    //        url: '/Json/SearchYelp/',
+    //        type: "POST",
+    //        success: function (data) {
+    //            $("#yelp-results").html($.render.yelpResults(data));
+    //        },
+    //        error: function () {
+    //            console.error("Kunde inte söka Yelp");
+    //        }
+    //    });
+    //};
 
     var searchEnterprises = function (searchTerm) {
         $("#search-button-content").hide();
@@ -153,13 +153,13 @@ iMenyn.Ajax = function () {
     };
 
     function searchEnterprisesCloseToMyLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(renderEnterprisesCloseToMyLocation, showGeoError);
-        }
-        else {
-            var el = document.getElementById("error");
-            el.innerHTML = "Platsdata stöds inte av denna webbläsare.";
-        }
+        //if (navigator.geolocation) {
+        //    navigator.geolocation.getCurrentPosition(renderEnterprisesCloseToMyLocation, showGeoError);
+        //}
+        //else {
+        //    var el = document.getElementById("error");
+        //    el.innerHTML = "Platsdata stöds inte av denna webbläsare.";
+        //}
     }
 
     var renderEnterprisesCloseToMyLocation = function (position) {
@@ -191,11 +191,14 @@ iMenyn.Ajax = function () {
         $("#search-button-content").show();
     };
 
-    var saveProduct = function (productForm, enterpriseKey) {
+    var saveProduct = function (product,categoryId,enterpriseId) {
+        var json = '{ "product":' + product + ', "categoryId":"' + categoryId + '", "enterpriseId": "' + enterpriseId + '" }';
+        console.log(json)
         $.ajax({
+            data: json,
+            url: '/Manage/AddOrEditNewProduct/',
             dataType: "json",
-            data: { productForm: productForm, enterpriseKey: enterpriseKey },
-            url: '/Manage/SaveProduct/',
+            contentType: "application/json; charset=utf-8",
             type: "POST",
             success: function (data) {
                // $("#create-products").html($.render.product(data));
@@ -204,14 +207,25 @@ iMenyn.Ajax = function () {
                 console.error("Kunde inte skapa produkt");
             }
         });
-//        $.when(
-//    $.get("/Templates/_EditableProduct.tmpl.html")
-//).done(function (p) {
-//    $.templates({
-//        product: p
-//    });
-//});
-
+    };
+    
+    //TODO, denna JSON är alltid null!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    var saveMenuSetup = function (setup) {
+        console.log(setup)
+        var json = '{ "categories": ' + setup + '}';
+        $.ajax({
+            data: setup,
+            url: '/Manage/SaveMenuSetup/',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            type: "POST",
+            success: function (data) {
+        
+            },
+            error: function () {
+                console.error("Kunde inte spara setup");
+            }
+        });
     };
 
     var createTempEnterprise = function (form) {
@@ -219,11 +233,12 @@ iMenyn.Ajax = function () {
             type: 'POST',
             data: form,
             url: '/Json/CreateTempEnterprise',
-            success: function (data) {
+            success: function (data) {               
                 var key = iMenyn.Utilities.GetUrlParameter("key");
-                if(key === null)
-                    document.location = document.location + "?key=" + data;
-                iMenyn.Utilities.ShowStep(2);
+                if (key === null)
+                    document.location = document.location + "?key=" + data + "#2";
+                else
+                    iMenyn.Utilities.ShowStep(2);
             },
             error:function () {
                 console.log("ERROR, createTempEnterprise");
@@ -232,31 +247,31 @@ iMenyn.Ajax = function () {
     };
 
 
-    function showGeoError(error) {
-        var el = document.getElementById("error");
-        switch (error.code) {
-            case error.PERMISSION_DENIED:
-                el.innerHTML = "Användare avslog begäran om platsdata.";
-                break;
-            case error.POSITION_UNAVAILABLE:
-                el.innerHTML = "Din platsinformation är otillgänglig.";
-                break;
-            case error.TIMEOUT:
-                el.innerHTML = "Begäran om att få användarens platsdata tog för lång tid.";
-                break;
-            case error.UNKNOWN_ERROR:
-                el.innerHTML = "Okänt fel uppstod.";
-                break;
-        }
-    }
+    //function showGeoError(error) {
+    //    var el = document.getElementById("error");
+    //    switch (error.code) {
+    //        case error.PERMISSION_DENIED:
+    //            el.innerHTML = "Användare avslog begäran om platsdata.";
+    //            break;
+    //        case error.POSITION_UNAVAILABLE:
+    //            el.innerHTML = "Din platsinformation är otillgänglig.";
+    //            break;
+    //        case error.TIMEOUT:
+    //            el.innerHTML = "Begäran om att få användarens platsdata tog för lång tid.";
+    //            break;
+    //        case error.UNKNOWN_ERROR:
+    //            el.innerHTML = "Okänt fel uppstod.";
+    //            break;
+    //    }
+    //}
 
     return {
-        SearchYelp: searchYelp,
         SearchEnterprises: searchEnterprises,
         BrowseEnterprises: browseEnterprises,
         RenderGeneralInfoByAddress: renderGeneralInfoByAddress,
         SearchEnterprisesCloseToMyLocation: searchEnterprisesCloseToMyLocation,
         SaveProduct: saveProduct,
+        SaveMenuSetup:saveMenuSetup,
         
         CreateTempEnterprise: createTempEnterprise
     };
