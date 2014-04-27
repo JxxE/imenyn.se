@@ -191,7 +191,7 @@ iMenyn.Ajax = function () {
         $("#search-button-content").show();
     };
 
-    var saveProduct = function (product,categoryId,enterpriseId) {
+    var saveProduct = function (product, categoryId, enterpriseId) {
         var json = '{ "product":' + product + ', "categoryId":"' + categoryId + '", "enterpriseId": "' + enterpriseId + '" }';
         console.log(json)
         $.ajax({
@@ -201,26 +201,26 @@ iMenyn.Ajax = function () {
             contentType: "application/json; charset=utf-8",
             type: "POST",
             success: function (data) {
-               // $("#create-products").html($.render.product(data));
+                // $("#create-products").html($.render.product(data));
             },
             error: function () {
                 console.error("Kunde inte skapa produkt");
             }
         });
     };
-    
+
     //TODO, denna JSON är alltid null!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    var saveMenuSetup = function (setup) {
+    var saveMenuSetup = function (setup, enterpriseId) {
         console.log(setup)
-        var json = '{ "categories": ' + setup + '}';
+        var json = '{ "menu": ' + setup + ', "enterpriseId":"' + enterpriseId + '"}';
         $.ajax({
-            data: setup,
+            data: json,
             url: '/Manage/SaveMenuSetup/',
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             type: "POST",
             success: function (data) {
-        
+
             },
             error: function () {
                 console.error("Kunde inte spara setup");
@@ -233,14 +233,14 @@ iMenyn.Ajax = function () {
             type: 'POST',
             data: form,
             url: '/Json/CreateTempEnterprise',
-            success: function (data) {               
+            success: function (data) {
                 var key = iMenyn.Utilities.GetUrlParameter("key");
                 if (key === null)
                     document.location = document.location + "?key=" + data + "#2";
                 else
                     iMenyn.Utilities.ShowStep(2);
             },
-            error:function () {
+            error: function () {
                 console.log("ERROR, createTempEnterprise");
             }
         });
@@ -271,8 +271,8 @@ iMenyn.Ajax = function () {
         RenderGeneralInfoByAddress: renderGeneralInfoByAddress,
         SearchEnterprisesCloseToMyLocation: searchEnterprisesCloseToMyLocation,
         SaveProduct: saveProduct,
-        SaveMenuSetup:saveMenuSetup,
-        
+        SaveMenuSetup: saveMenuSetup,
+
         CreateTempEnterprise: createTempEnterprise
     };
 }();

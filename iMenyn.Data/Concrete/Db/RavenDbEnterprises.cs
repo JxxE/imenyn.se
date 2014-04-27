@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Raven.Abstractions.Util;
 using Raven.Client;
 using iMenyn.Data.Abstract;
@@ -23,17 +24,32 @@ namespace iMenyn.Data.Concrete.Db
             _logger = logger;
         }
 
-        public void UpdateEnterprise(Enterprise enterprise, List<Product> products)
+        public void UpdateEnterprise(Enterprise enterprise)
         {
             using (var session = _documentStore.OpenSession())
             {
                 session.Store(enterprise);
-                foreach (var product in products)
-                {
-                    session.Store(product);
-                }
                 session.SaveChanges();
-                _logger.Info("Updated enterprise " + enterprise.Name);
+                _logger.Info("Updated enterprise " + enterprise.Name, ", id: " + enterprise.Id);
+            }
+        }
+
+        public void UpdateEnterprise(string enterpriseId, Menu menu)
+        {
+            using (var session = _documentStore.OpenSession())
+            {
+                var enterprise = session.Load<Enterprise>(enterpriseId);
+                if (enterprise != null)
+                {
+                    // TODO if is valid editable
+                    enterprise.Menu = menu;
+                    //Loopa igenom nuvarande meny o jämför om en produkt har tagits bort. Ta då bort den från databasen.
+                    session.Store(enterprise);
+
+                    session.SaveChanges();
+                    _logger.Info("Updated enterprise menu settings: " + enterprise.Name); 
+                }
+                
             }
         }
 
@@ -204,6 +220,7 @@ namespace iMenyn.Data.Concrete.Db
         {
             using (var session = _documentStore.OpenSession())
             {
+                
                 var viewModel = new CompleteEnterpriseViewModel();
 
                 // Load enterprise, include products
@@ -217,18 +234,20 @@ namespace iMenyn.Data.Concrete.Db
 
                 // Create to viewmodel
                 var categoriesViewModel = new List<ViewModelCategory>();
+                Mapper.CreateMap<Product, ProductViewModel>();
                 foreach (var category in enterprise.Menu.Categories)
                 {
                     var categoryViewModel = new ViewModelCategory
                                 {
                                     Name = category.Name,
                                     Id= category.Id,
-                                    Products = new List<Product>()
+                                    Products = new List<ProductViewModel>()
                                 };
 
                     foreach (var product in category.Products.Select(productForCategory => products.FirstOrDefault(p => p.Id == productForCategory)))
                     {
-                        categoryViewModel.Products.Add(product);
+                        var p = Mapper.Map<Product, ProductViewModel>(product);
+                        categoryViewModel.Products.Add(p);
                     }
 
                     categoriesViewModel.Add(categoryViewModel);

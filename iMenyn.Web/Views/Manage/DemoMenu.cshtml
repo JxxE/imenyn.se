@@ -7,14 +7,15 @@
 
 @foreach (var c in Model.ViewModelCategories)
 {
-    <h3>@c.Name</h3>
+    
     <div class="category" data-category="@c.Id">
+        <h3 class="category-name">@c.Name</h3>
         @foreach (var p in c.Products)
         {
             @Html.Partial("_AddOrEditProduct", p)
         }
         <div>
-            @Html.Partial("_AddOrEditProduct", new iMenyn.Data.Models.Product())
+            @Html.Partial("_AddOrEditProduct", new iMenyn.Data.ViewModels.ProductViewModel())
         </div>
         <a href="javascript:void(0)">Lägg til produkt</a>
     </div>
@@ -25,26 +26,25 @@
 <script>
     $(".category").sortable({ items: ">form", handle: ".glyphicon-resize-vertical" });
 
-    $("#save-menu-setup").click(function() {
+    $("#save-menu-setup").click(function () {
         var $categories = $(".category");
-        var categories = new Object();
-        categories.c = new Array();
+        var setup = new Object();
+        setup.Categories = new Array();
         for (var i = 0; i < $categories.length; i++) {
             var $category = $($categories[i]);
-            //var category = { id: $category.data('category'), products: [] };
             var category = new Object();
             category.id = $category.data('category');
+            category.name = $category.find('.category-name').html();
             category.products = new Array();
             var products = $category.children().find('.product');
             for (var j = 0; j < products.length; j++) {
                 var productId = $(products[j]).find("input[name='Id']").val();
-                if(productId)
-                    category.products.push({ id: productId });
+                if (productId)
+                    category.products.push(productId);
             }
-            categories.c.push({ category: category });
+            setup.Categories.push({ Id: category.id, Name:category.name, Products:category.products });
         }
-        console.log(JSON.stringify(categories))
-        iMenyn.Ajax.SaveMenuSetup(JSON.stringify(categories));
+       iMenyn.Ajax.SaveMenuSetup(JSON.stringify(setup),'@Model.Id');
     });
 
     $(".form-product").submit(function () {

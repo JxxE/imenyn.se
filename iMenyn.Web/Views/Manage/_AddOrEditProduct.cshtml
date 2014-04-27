@@ -1,11 +1,81 @@
-﻿@model iMenyn.Data.Models.Product
+﻿@model iMenyn.Data.ViewModels.ProductViewModel
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-product" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-product form-horizontal" }))
 {
     <div class="product row">
-        @Html.TextBoxFor(p => p.Name)
-        @Html.HiddenFor(p => p.Id)
-        <input type="submit" value="Spara" class="btn" />
-        <i class="glyphicon glyphicon-resize-vertical"></i>
+        <div class="info">
+            <p>@Model.Name</p>
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <p>@Model.Description</p>
+            }
+            @if (Model.Prices != null)
+            {
+                foreach (var price in Model.Prices)
+                {
+                <span>@price.Price kr @price.Description</span>
+                }
+            }
+            @if (Model.Abv > 0)
+            {
+                <span>@string.Format("Alkoholhalt: {0}%", Model.Abv)</span>
+            }
+        </div>
+
+        <div class="edit-form col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(p => p.Name, new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(p => p.Name, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(p => p.Description, new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(p => p.Description, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(p => p.Prices, new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-10">
+                    @if (Model.Prices != null)
+                    {
+                        foreach (var price in Model.Prices)
+                        {
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <input value="@price.Price" class="form-control"/>
+                                <span class="input-group-addon">kr</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <input value="@price.Description" class="form-control" placeholder="Ex. 4cl, glas, medium"/>
+                            </div>
+                        </div>  
+                        }
+                        <a href="javascript:void(0)">Lägg till pris</a>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(p => p.Abv, new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-3">
+                    <div class="input-group">
+                        @Html.TextBoxFor(p => p.Abv, new { type = "number", max="90", @class = "form-control" })
+                        <span class="input-group-addon">%</span>
+                    </div>
+                </div>
+            </div>
+            @Html.HiddenFor(p => p.Id)
+            <input type="submit" value="Spara" class="btn" />
+        </div>
+        <div class="edit-controls">
+            <i class="glyphicon glyphicon-resize-vertical"></i>
+            <i class="glyphicon glyphicon-pencil"></i>
+        </div>
     </div>
 }

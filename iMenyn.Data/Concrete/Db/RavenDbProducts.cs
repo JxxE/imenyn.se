@@ -31,6 +31,7 @@ namespace iMenyn.Data.Concrete.Db
                 if(enterprise != null)
                 {
                     //TODO, gör en koll om denna enterprise får redigeras och om denna produkt inte redan finns. Gör en session.Load på produktId:t. Så inte någon tar Id:t från en annan enterprise o ändrar DOM:en på denna
+                    //is valid editable
 
                     var category = enterprise.Menu.Categories.FirstOrDefault(c => c.Id == categoryId);
                     if(category != null)
@@ -68,6 +69,7 @@ namespace iMenyn.Data.Concrete.Db
             using (var session = _documentStore.OpenSession())
             {
                 //TODO, gör en koll om denna får redigeras och om den tillhör denna enterprise!
+                //is valid editable
                 session.Store(product);
                 session.SaveChanges();
             }

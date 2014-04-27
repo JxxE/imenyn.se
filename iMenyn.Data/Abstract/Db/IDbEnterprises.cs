@@ -6,7 +6,8 @@ namespace iMenyn.Data.Abstract.Db
 {
     public interface IDbEnterprises
     {
-        void UpdateEnterprise(Enterprise enterprise, List<Product> products);
+        void UpdateEnterprise(Enterprise enterprise);
+        void UpdateEnterprise(string enterpriseId, Menu menu);
 
         string CreateEnterprise(Enterprise enterprise);
 

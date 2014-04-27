@@ -66,7 +66,7 @@ namespace iMenyn.Web.Controllers
         [AllowAnonymous]
         public ActionResult DemoMenu()
         {
-            var viewModel = Db.Enterprises.GetCompleteEnterprise("enterprises-jessetinell");
+            var viewModel = Db.Enterprises.GetCompleteEnterprise("enterprises-1");
 
             return View(viewModel);
         }
@@ -80,7 +80,7 @@ namespace iMenyn.Web.Controllers
 
         public void CreateMenu()
         {
-            var enterprise = Db.Enterprises.GetEnterpriseById("enterprises-jessetinell");
+            var enterprise = Db.Enterprises.GetEnterpriseById("enterprises-1");
 
             var menu = new Menu();
             var categories = new List<Category>();
@@ -124,7 +124,7 @@ namespace iMenyn.Web.Controllers
 
             enterprise.Menu = menu;
 
-            Db.Enterprises.UpdateEnterprise(enterprise,allProducts);
+            //Db.Enterprises.UpdateEnterprise(enterprise,allProducts);
             //Db.Menus.CreateMenu(enterprise, allProducts);
 
         }
@@ -148,9 +148,9 @@ namespace iMenyn.Web.Controllers
 
         //Sparar ordningen på menyn. Kategori, produkt-placering 
         [HttpPost]
-        public void SaveMenuSetup(string categories)
+        public void SaveMenuSetup(Menu menu,string enterpriseId)
         {
-            //TODO, denna är alltid null!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            Db.Enterprises.UpdateEnterprise(enterpriseId,menu);
         }
 
     }
