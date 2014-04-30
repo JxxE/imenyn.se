@@ -1,4 +1,7 @@
-﻿
+﻿.vertical-bottom {
+    vertical-align: bottom;
+}
+
 .error {
     color: rgb(240, 67, 67);
     display: inline-block;

@@ -12,7 +12,7 @@ namespace iMenyn.Data.Models
         public string Description { get; set; }
 
         [Display(Name = "Pris")]
-        public List<ProductPrice> Prices { get; set; }
+        public IList<ProductPrice> Prices { get; set; }
         [Display(Name = "Bild")]
         public string Image { get; set; }
 

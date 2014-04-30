@@ -193,7 +193,6 @@ iMenyn.Ajax = function () {
 
     var saveProduct = function (product, categoryId, enterpriseId) {
         var json = '{ "product":' + product + ', "categoryId":"' + categoryId + '", "enterpriseId": "' + enterpriseId + '" }';
-        console.log(json)
         $.ajax({
             data: json,
             url: '/Manage/AddOrEditNewProduct/',

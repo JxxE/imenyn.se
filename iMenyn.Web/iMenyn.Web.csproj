@@ -274,6 +274,7 @@
     <Compile Include="Handlers\CombinerRouteHandler.cs" />
     <Compile Include="Helpers\AccountHelper.cs" />
     <Compile Include="Helpers\CombinerHelper.cs" />
+    <Compile Include="Helpers\MvcHtmlHelpers.cs" />
     <Compile Include="Infrastructure\Authentication.cs" />
     <Compile Include="Infrastructure\OnlyEnabledAttribute.cs" />
     <Compile Include="Infrastructure\NinjectControllerFactory.cs" />
@@ -370,6 +371,7 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Manage\DemoMenu.cshtml" />
     <Content Include="Views\Manage\_AddOrEditProduct.cshtml" />
+    <Content Include="Views\Manage\_ProductPrice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

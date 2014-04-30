@@ -58,7 +58,7 @@ namespace iMenyn.Web.Controllers
             //    }
             //}
 
-            CreateMenu();
+            //CreateMenu();
 
             return View(viewModel);
         }
@@ -66,7 +66,7 @@ namespace iMenyn.Web.Controllers
         [AllowAnonymous]
         public ActionResult DemoMenu()
         {
-            var viewModel = Db.Enterprises.GetCompleteEnterprise("enterprises-1");
+            var viewModel = Db.Enterprises.GetCompleteEnterprise("enterprises-jessetinell");
 
             return View(viewModel);
         }
@@ -129,6 +129,13 @@ namespace iMenyn.Web.Controllers
 
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        public void DemoMenu(CompleteEnterpriseViewModel prices )
+        {
+            
+        }
+
         // Detta gäller en NY enterprise. När man redigerar en nuvarande enterprise måste det sparas en TEMP-meny!
         [HttpPost]
         public void AddOrEditNewProduct(Product product,string categoryId,string enterpriseId)
@@ -153,5 +160,9 @@ namespace iMenyn.Web.Controllers
             Db.Enterprises.UpdateEnterprise(enterpriseId,menu);
         }
 
+        public ViewResult BlankProductPrice()
+        {
+            return View("_ProductPrice", new ProductPrice());
+        }
     }
 }

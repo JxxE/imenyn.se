@@ -17,14 +17,42 @@
         <div>
             @Html.Partial("_AddOrEditProduct", new iMenyn.Data.ViewModels.ProductViewModel())
         </div>
+       
         <a href="javascript:void(0)">Lägg til produkt</a>
     </div>
 }
 
 <a id="save-menu-setup" href="javascript:void(0)" class="btn btn-success">Spara</a>
 
+<form id="test">
+    <input name="Name" value="Namn"/>
+
+                <input value="8a9488b7-f803-4192-8f4f-f640f944e89e" autocomplete="off" name="ViewModelCategories.index" type="hidden">
+                <input id="ViewModelCategories_8a9488b7-f803-4192-8f4f-f640f944e89e__Name" name="ViewModelCategories[8a9488b7-f803-4192-8f4f-f640f944e89e].Name" type="text" value="TJA">
+    
+                <input value="7a9488b7-f803-4192-8f4f-f640f944e89e" autocomplete="off" name="ViewModelCategories.index" type="hidden">
+    <input id="ViewModelCategories_7a9488b7-f803-4192-8f4f-f640f944e89e__Name" name="ViewModelCategories[7a9488b7-f803-4192-8f4f-f640f944e89e].Name" type="text" value="sdf">
+
+                <input type="submit" value="kör"/>
+</form>
+
 <script>
+    /*?Name=namn&ViewModelCategories.index=123&ViewModelCategories[123].Name=TJA&ViewModelCategories.index=777&ViewModelCategories[777].Name=sdf*/
+    $(".add-product-price").click(function() {
+        var $this = $(this);
+        $.ajax({
+            url: this.href,
+            cache: false,
+            success: function (html) {
+                console.log(html)
+                $this.append(html);
+            }
+        });
+        return false;
+    });
     $(".category").sortable({ items: ">form", handle: ".glyphicon-resize-vertical" });
+
+    iMenyn.Utilities.DynamicFieldAdd();
 
     $("#save-menu-setup").click(function () {
         var $categories = $(".category");
@@ -44,16 +72,44 @@
             }
             setup.Categories.push({ Id: category.id, Name:category.name, Products:category.products });
         }
-       iMenyn.Ajax.SaveMenuSetup(JSON.stringify(setup),'@Model.Id');
+        iMenyn.Ajax.SaveMenuSetup(JSON.stringify(setup),'@Model.Id');
     });
 
     $(".form-product").submit(function () {
         //var formData = $(this).serialize();
         //iMenyn.Ajax.SaveProduct(formData);
         var formData = JSON.stringify($(this).serializeObject());
+        
+        /*TEST*/
+        var priceGuids = $(this).serializeObject()['Prices.index'];
+        for (var i = 0; i < priceGuids; i++) {
+            console.log(priceGuids[i])
+            formData = formData.toString().replaceAll("Name", "a");
+        }
+        console.log(formData)
+        /*slut TEST*/
+
         var categoryId = $(this).closest("[data-category]").data("category");
-        iMenyn.Ajax.SaveProduct(formData, categoryId, '@Model.Id');
+        //iMenyn.Ajax.SaveProduct(formData, categoryId, '@Model.Id');
         return false;
+    });
+    
+    $("#test").submit(function () {
+        //var formData = $(this).serialize();
+        //iMenyn.Ajax.SaveProduct(formData);
+        // var a = '{ "prices":{"Name":"namn","ViewModelCategories.index":["6a9488b7-f803-4192-8f4f-f640f944e89e","8a9488b7-f803-4192-8f4f-f640f944e89e"],"ViewModelCategories":[{"ViewModelCategories[6a9488b7-f803-4192-8f4f-f640f944e89e].Name":"asd"},{"ViewModelCategories[8a9488b7-f803-4192-8f4f-f640f944e89e].Name":"TJA"}]}     }';
+        // //var a = '{ "prices":{"Name":"namn","ViewModelCategories.index":["6a9488b7-f803-4192-8f4f-f640f944e89e","8a9488b7-f803-4192-8f4f-f640f944e89e"],"ViewModelCategories[6a9488b7-f803-4192-8f4f-f640f944e89e].Name":"asd"},{"ViewModelCategories[8a9488b7-f803-4192-8f4f-f640f944e89e].Name":"TJA"}}     }';
+        // var formData = JSON.stringify($(this).serializeObject());
+        // var j = '{ "prices": ' + formData + '}';
+        //console.log(a)
+        // $.ajax({
+        //     data: a,
+        //     dataType: "json",
+        //     contentType: "application/json; charset=utf-8",
+        //     url: '/Manage/T/',
+        //     type: "POST"
+        // });
+        // return false;
     });
 
 

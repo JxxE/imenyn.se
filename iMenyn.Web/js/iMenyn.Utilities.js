@@ -35,13 +35,74 @@ iMenyn.Utilities = function () {
         });
     };
 
+    var dynamicFieldAdd = function () {
+        var $dynamicFields = $('.dynamic-fields');
+
+        $($dynamicFields).on('click', 'a', function () {
+            var $container = $(this).closest('.dynamic-fields');
+            var subNodes = $container.children('div');
+            var html = subNodes[0].outerHTML;
+            // Matchar: value="något"
+            var inputValues = html.match(/value="([^"]*")/g);
+            if (inputValues.length > 0) {
+                for (var i = 0; i < inputValues.length; i++) {
+                    html = html.replaceAll(inputValues[i], 'value=""');
+                }
+            }
+
+            html = reorganizeBracketNumbers(subNodes.length, html);
+            $(this).before(html);
+        });
+
+        $($dynamicFields).on('click', '.glyphicon-remove', function () {
+            var $container = $(this).closest('.dynamic-fields');
+            console.log("a: " + $container.children('div').length);
+            var containerChildCount = $container.children('div').length;
+            var parent = $(this).parent();
+            
+            while (!parent.parent().hasClass('dynamic-fields')) {
+                parent = parent.parent();
+            }
+            parent.remove();
+            var html = $container.html();
+    
+            var a = containerChildCount-1;
+
+            html = reorganizeBracketNumbers(a, html);
+            
+            $container.html(html);
+        });
+
+
+        //Reorganize all bracket numbers
+
+    };
+    function reorganizeBracketNumbers(containerChildCount, html) {
+        // Matchar: [siffra]           
+        var numberBrackets = new RegExp(/\[\d\]/);
+
+        var result = numberBrackets.exec(html);
+        if (result) {
+            var matchedString = result[0].toString();
+            // Ersätt alla [siffra] mot rätt siffra
+            console.log(matchedString)
+            html = html.replaceAll(matchedString, '[' + containerChildCount + ']');   
+        }
+        else {
+            //TODO toastr
+            html = "<p>Något gick fel...</p>";
+        }
+        return html;
+    }
+
+
     var showStep = function (step) {
         window.location.hash = step;
         //Hide all steps
         $("div[id^=step-]").addClass("hide");
         //Show current step
         $("#step-" + step).removeClass("hide");
-        
+
         //Navigation
         var $stepNavigation = $("#steps-navigation");
         var stepAmount = $stepNavigation.data('length');
@@ -65,14 +126,14 @@ iMenyn.Utilities = function () {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (data) {
                 callback(data.coords);
-            },function(error) {
+            }, function (error) {
                 switch (error.code) {
-                //TODO Toast errors
+                    //TODO Toast errors
                     case error.PERMISSION_DENIED:
                         console.log("User denied the request for Geolocation.");
                         break;
                     case error.POSITION_UNAVAILABLE:
-                            console.log("Location information is unavailable.");
+                        console.log("Location information is unavailable.");
                         break;
                     case error.TIMEOUT:
                         console.log("The request to get user location timed out.");
@@ -87,8 +148,8 @@ iMenyn.Utilities = function () {
         return null;
     };
 
-    var toast = function(obj) {
-        
+    var toast = function (obj) {
+
     };
 
     return {
@@ -96,6 +157,14 @@ iMenyn.Utilities = function () {
         GetUrlParameter: getUrlParameter,
         ShowStep: showStep,
         MyLocation: myLocation,
-        Toast:toast
+        Toast: toast,
+        DynamicFieldAdd: dynamicFieldAdd
     };
 }();
+
+
+// Replace ALL. 
+String.prototype.replaceAll = function (find, replace) {
+    var str = this;
+    return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
+};

@@ -1,0 +1,22 @@
+﻿@using iMenyn.Web.Helpers
+@model iMenyn.Data.Models.ProductPrice
+@{
+    Layout = null;
+}
+<div class="form-group">
+    <div class="col-sm-3">
+        <div class="input-group">
+            @*<input name="Prices[@i].Price" value="" class="form-control"/>*@
+            @using(Html.BeginCollectionItem("Prices"))
+            {
+                @Html.TextBoxFor(p=>p.Price)
+            }
+            <span class="input-group-addon">kr</span>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        @*<input name="Prices[@i].Description" value="@Model.Prices[i].Description" class="form-control" placeholder="Ex. 4cl, glas, medium"/>*@
+    </div>
+    <span class="glyphicon glyphicon-remove vertical-bottom"></span>
+</div>
+

@@ -39,23 +39,29 @@
 
             <div class="form-group">
                 @Html.LabelFor(p => p.Prices, new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-10">
+                <div class="dynamic-fields col-sm-10">
                     @if (Model.Prices != null)
                     {
-                        foreach (var price in Model.Prices)
+                        @*for (var i = 0; i < Model.Prices.Count(); i++)
                         {
-                        <div class="row">
+                        <div class="form-group">
                             <div class="col-sm-3">
                                 <div class="input-group">
-                                    <input value="@price.Price" class="form-control"/>
-                                <span class="input-group-addon">kr</span>
+                                    <input name="Prices[@i].Price" value="@Model.Prices[i].Price" class="form-control"/>
+                                    <span class="input-group-addon">kr</span>
                                 </div>
                             </div>
-                            <div class="col-sm-9">
-                                <input value="@price.Description" class="form-control" placeholder="Ex. 4cl, glas, medium"/>
+                            <div class="col-sm-8">
+                                <input name="Prices[@i].Description" value="@Model.Prices[i].Description" class="form-control" placeholder="Ex. 4cl, glas, medium"/>
                             </div>
+                            <span class="glyphicon glyphicon-remove vertical-bottom"></span>
                         </div>  
+                        }*@
+                        foreach (var price in Model.Prices)
+                        {
+                               @Html.Partial("_ProductPrice",price)
                         }
+                         @Html.ActionLink("Add another...","BlankProductPrice",null,new{@class="add-product-price"})
                         <a href="javascript:void(0)">Lägg till pris</a>
                     }
                 </div>
@@ -65,7 +71,7 @@
                 @Html.LabelFor(p => p.Abv, new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-3">
                     <div class="input-group">
-                        @Html.TextBoxFor(p => p.Abv, new { type = "number", max="90", @class = "form-control" })
+                        @Html.TextBoxFor(p => p.Abv, new { type = "number", max = "90", @class = "form-control" })
                         <span class="input-group-addon">%</span>
                     </div>
                 </div>
@@ -74,8 +80,8 @@
             <input type="submit" value="Spara" class="btn" />
         </div>
         <div class="edit-controls">
-            <i class="glyphicon glyphicon-resize-vertical"></i>
-            <i class="glyphicon glyphicon-pencil"></i>
+            <span class="glyphicon glyphicon-resize-vertical"></span>
+            <span class="glyphicon glyphicon-pencil"></span>
         </div>
     </div>
 }
