@@ -3,56 +3,76 @@
 @{
     ViewBag.Title = "Demomeny";
 }
-@Model.Name
-
-@foreach (var c in Model.ViewModelCategories)
-{
-    
-    <div class="category" data-category="@c.Id">
-        <h3 class="category-name">@c.Name</h3>
-        @foreach (var p in c.Products)
-        {
-            @Html.Partial("_AddOrEditProduct", p)
-        }
-        <div>
-            @Html.Partial("_AddOrEditProduct", new iMenyn.Data.ViewModels.ProductViewModel())
+<h1>a: @HttpContext.Current.User.Identity.Name</h1>
+<div class="row">
+    <div class="col-sm-8 edit">
+        @Model.Name
+        <div class="row">
+            <div class="col-sm-12">
+                <a class="dynamic-add btn btn-info" data-before="false" href="@Url.Action("BlankCategory","Manage",new{enterpriseId = Model.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus"></span></a>
+                <a href="javascript:void(0)" data-action="toggleclass" data-class="sorting-categories" class="btn btn-warning">Sortera kategorier<span class="glyphicon glyphicon-sort"></span></a>
+            </div>
         </div>
-       
-        <a href="javascript:void(0)">Lägg til produkt</a>
+        @foreach (var category in Model.ViewModelCategories)
+        {
+            @Html.Partial("_Category", category)
+        }
+        
     </div>
-}
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+            <a id="save-menu-setup" href="javascript:void(0)" class="btn btn-success">Spara & avsluta<span class="glyphicon glyphicon-ok"></span></a>
+        </div>
+    </div>
+</div>
 
-<a id="save-menu-setup" href="javascript:void(0)" class="btn btn-success">Spara</a>
-
-<form id="test">
-    <input name="Name" value="Namn"/>
-
-                <input value="8a9488b7-f803-4192-8f4f-f640f944e89e" autocomplete="off" name="ViewModelCategories.index" type="hidden">
-                <input id="ViewModelCategories_8a9488b7-f803-4192-8f4f-f640f944e89e__Name" name="ViewModelCategories[8a9488b7-f803-4192-8f4f-f640f944e89e].Name" type="text" value="TJA">
+<script>   
+    $(document).on('click', '.product-prices-edit .glyphicon', (function () {
+        $(this).closest('.form-group').remove();
+    }));
     
-                <input value="7a9488b7-f803-4192-8f4f-f640f944e89e" autocomplete="off" name="ViewModelCategories.index" type="hidden">
-    <input id="ViewModelCategories_7a9488b7-f803-4192-8f4f-f640f944e89e__Name" name="ViewModelCategories[7a9488b7-f803-4192-8f4f-f640f944e89e].Name" type="text" value="sdf">
-
-                <input type="submit" value="kör"/>
-</form>
-
-<script>
-    /*?Name=namn&ViewModelCategories.index=123&ViewModelCategories[123].Name=TJA&ViewModelCategories.index=777&ViewModelCategories[777].Name=sdf*/
-    $(".add-product-price").click(function() {
+    $(document).on('click', '.dynamic-add', (function () {
         var $this = $(this);
-        $.ajax({
-            url: this.href,
-            cache: false,
-            success: function (html) {
-                console.log(html)
-                $this.append(html);
-            }
-        });
+        var before = true;
+        var maxOccurs = 0;
+        var maxType = undefined;
+        var maxParent = undefined;
+        
+        if ($this.data('before') != undefined && $this.data('before').toString() == "false") {
+            before = false;
+        }
+        if ($this.data('max') != undefined) {
+            maxOccurs = $this.data('max');
+            maxParent = $(this).parent();
+            maxType = 'div';
+        }
+        var status = iMenyn.Utilities.DynamicAdd({ href: this.href, senderObj: $this, before: before, maxOccurs: maxOccurs, maxParent: maxParent, maxType: maxType });
+            
         return false;
-    });
-    $(".category").sortable({ items: ">form", handle: ".glyphicon-resize-vertical" });
+    }));
 
-    iMenyn.Utilities.DynamicFieldAdd();
+    $(document).on('click', '.glyphicon-pencil', (function () {
+        var $this = $(this);
+        var editForm = $this.closest('form');
+        var editModeClass = 'edit-mode';
+        var removeClass = 'glyphicon-remove';
+
+        //Hide all opened edit-forms
+        $('.form-product.edit-mode').not(editForm).removeClass(editModeClass);
+        $('.glyphicon-pencil.glyphicon-remove').not($this).removeClass(removeClass);
+
+        //Toggle active classes
+        editForm.toggleClass(editModeClass);
+        $this.toggleClass(removeClass);
+    }));
+    
+    $(document).on('click', '.delete-product', (function () {
+        var editForm = $(this).closest('form');
+        editForm.remove();
+    }));
+    
+    $(".category").sortable({ items: "form", handle: ".glyphicon-resize-vertical", connectWith:".category" });
+    $("#main-container").sortable({ items: ".category", handle: ".glyphicon-resize-vertical" });
 
     $("#save-menu-setup").click(function () {
         var $categories = $(".category");
@@ -70,30 +90,17 @@
                 if (productId)
                     category.products.push(productId);
             }
-            setup.Categories.push({ Id: category.id, Name:category.name, Products:category.products });
+            setup.Categories.push({ Id: category.id, Name: category.name, Products: category.products });
         }
-        iMenyn.Ajax.SaveMenuSetup(JSON.stringify(setup),'@Model.Id');
+        iMenyn.Ajax.SaveMenuSetup(JSON.stringify(setup), '@Model.Id');
     });
 
-    $(".form-product").submit(function () {
-        //var formData = $(this).serialize();
-        //iMenyn.Ajax.SaveProduct(formData);
-        var formData = JSON.stringify($(this).serializeObject());
-        
-        /*TEST*/
-        var priceGuids = $(this).serializeObject()['Prices.index'];
-        for (var i = 0; i < priceGuids; i++) {
-            console.log(priceGuids[i])
-            formData = formData.toString().replaceAll("Name", "a");
-        }
-        console.log(formData)
-        /*slut TEST*/
-
-        var categoryId = $(this).closest("[data-category]").data("category");
-        //iMenyn.Ajax.SaveProduct(formData, categoryId, '@Model.Id');
+    $(document).on('submit', '.form-product', (function () {
+        var formData = $(this).serialize();
+        iMenyn.Ajax.SaveProduct($(this), formData);
         return false;
-    });
-    
+    }));
+
     $("#test").submit(function () {
         //var formData = $(this).serialize();
         //iMenyn.Ajax.SaveProduct(formData);

@@ -346,8 +346,8 @@ namespace iMenyn.Web.Controllers
                 Categories = categoryList,
 
                 IsNew = true,
-                IsPremium = false,
-                LockedFromEdit = true,
+                OwnedByAccount = false,
+                LockedFromEdit = false,
                 
                 LastUpdated = DateTime.Now
             };

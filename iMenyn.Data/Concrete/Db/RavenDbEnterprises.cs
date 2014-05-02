@@ -241,12 +241,15 @@ namespace iMenyn.Data.Concrete.Db
                                 {
                                     Name = category.Name,
                                     Id= category.Id,
+                                    EnterpriseId = enterpriseId,
                                     Products = new List<ProductViewModel>()
                                 };
 
                     foreach (var product in category.Products.Select(productForCategory => products.FirstOrDefault(p => p.Id == productForCategory)))
                     {
-                        var p = Mapper.Map<Product, ProductViewModel>(product);
+                        var p = ProductHelper.ModelToViewModel(product);
+                        p.EnterpriseId = enterpriseId;
+                        p.CategoryId = category.Id;
                         categoryViewModel.Products.Add(p);
                     }
 

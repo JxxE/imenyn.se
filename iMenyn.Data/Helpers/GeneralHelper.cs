@@ -9,6 +9,11 @@ namespace iMenyn.Data.Helpers
     {
         static readonly Random _random = new Random();
 
+        public static string GetGuid()
+        {
+            return Guid.NewGuid().ToString("N");
+        }
+
         public static string RandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

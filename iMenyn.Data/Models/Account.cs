@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -15,7 +16,7 @@ namespace iMenyn.Data.Models
         //public string PostalCode { get; set; }
         public bool IsAdmin { get; set; }
         public bool Enabled { get; set; }
-        public string Enterprise { get; set; }
+        public List<string> Enterprises { get; set; }
 
         #region Password
 

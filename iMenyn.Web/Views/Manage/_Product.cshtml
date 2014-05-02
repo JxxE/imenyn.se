@@ -1,0 +1,101 @@
+﻿@using iMenyn.Data.Models
+@model iMenyn.Data.ViewModels.ProductViewModel
+@{
+    Layout = null;
+    var editModeClass = string.IsNullOrEmpty(Model.Id) ? " edit-mode" : string.Empty;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-product form-horizontal" + editModeClass }))
+{
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="product">
+                <div class="info">
+                    <p class="product-name">@Model.Name</p>
+                    <div class="product-prices">
+                        @if (Model.Prices != null)
+                        {
+                            foreach (var price in Model.Prices)
+                            {
+                            <span>@string.Format("{0}kr", price.Price) @price.Description</span>
+                            }
+                        }
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Description))
+                    {
+                        <div class="row">
+
+                            <p class="product-description col-sm-12">@Model.Description</p>
+                        </div>
+               
+                    }
+                    @if (Model.Abv > 0)
+                    {
+                        <span>@string.Format("Alkoholhalt: {0}%", Model.Abv)</span>
+                    }
+                </div>
+
+                <div class="edit-form col-sm-12">
+                    <div class="form-group">
+                        @Html.LabelFor(p => p.Name, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(p => p.Name, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(p => p.Description, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextAreaFor(p => p.Description, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(p => p.Prices, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @if (Model.Prices != null && Model.Prices.Count > 0)
+                            {
+                                foreach (var price in Model.Prices)
+                                {
+                                @Html.Partial("_ProductPrice", price)
+                                }
+                            }
+                            else
+                            {
+                                @Html.Partial("_ProductPrice", new ProductPrice())
+                            }
+                            @Html.ActionLink("Lägg till pris", "BlankProductPrice", null, new { @class = "dynamic-add", data_max = 5 })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(p => p.Abv, new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                @Html.TextBoxFor(p => p.Abv, new { @class = "form-control" })
+                                <span class="input-group-addon">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(p => p.Id)
+                    @Html.HiddenFor(p => p.EnterpriseId)
+                    @Html.HiddenFor(p => p.CategoryId)
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"></label>
+                        <div class="col-sm-6">
+                            <button type="submit" class="btn btn-info">
+                                Spara produkt<span class="glyphicon glyphicon-ok"></span>
+                            </button>
+                            <a href="javascript:void(0)" class="btn btn-danger delete-product pull-right">Ta bort<span class="glyphicon glyphicon-trash"></span></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="edit-controls col-sm-2">
+            <span class="glyphicon glyphicon-resize-vertical"></span>
+            <span class="glyphicon glyphicon-pencil"></span>
+        </div>
+    </div>
+}

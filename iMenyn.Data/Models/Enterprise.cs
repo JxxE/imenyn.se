@@ -31,21 +31,18 @@ namespace iMenyn.Data.Models
         //Norsborg, Södermalm
         public string SubLocality { get; set; }
 
-
         public string CountryCode { get; set; }
-
 
         public Coordinates Coordinates { get; set; }
 
-
         public List<string> Categories { get; set; }
-
 
         public List<string> SearchTags { get; set; }
 
-        public bool IsPremium { get;set;}
+        public bool OwnedByAccount { get; set; }
         public bool IsNew { get; set; }
         public bool LockedFromEdit { get; set; }
+        public string ModifiedMenu { get; set; }
 
         public DateTime LastUpdated { get; set; }
 

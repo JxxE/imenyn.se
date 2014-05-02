@@ -19,7 +19,6 @@ namespace iMenyn.Data.Infrastructure.Index
                                                 enterprise.Coordinates,
                                                 enterprise.CountryCode,
                                                 enterprise.Id,
-                                                enterprise.IsPremium,
                                                 enterprise.IsNew,
                                                 enterprise.LastUpdated,
                                                 enterprise.Menu,

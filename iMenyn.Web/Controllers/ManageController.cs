@@ -89,7 +89,7 @@ namespace iMenyn.Web.Controllers
             var allProducts = new List<Product>();
 
 
-            var p1 = new Product { Id = ProductHelper.GenerateId(), Name = "Vesuvio", Prices = new List<ProductPrice>{new ProductPrice{Price = 74}}};
+            var p1 = new Product { Id = ProductHelper.GenerateId(), Name = "Vesuvio", Prices = new List<ProductPrice> { new ProductPrice { Price = 74 } } };
             var p2 = new Product { Id = ProductHelper.GenerateId(), Name = "Oscar", Prices = new List<ProductPrice> { new ProductPrice { Price = 55 } } };
             pizzas.Add(p1.Id);
             pizzas.Add(p2.Id);
@@ -129,37 +129,45 @@ namespace iMenyn.Web.Controllers
 
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public void DemoMenu(CompleteEnterpriseViewModel prices )
-        {
-            
-        }
-
         // Detta gäller en NY enterprise. När man redigerar en nuvarande enterprise måste det sparas en TEMP-meny!
         [HttpPost]
-        public void AddOrEditNewProduct(Product product,string categoryId,string enterpriseId)
+        public int AddOrEditNewProduct(ProductViewModel product)
         {
-            if(product != null)
+            if (product != null)
             {
-                if (product.Id != null && Db.Products.GetProductById(product.Id) != null)
+                if (!string.IsNullOrEmpty(product.Name) && (product.Prices != null && product.Prices.Count > 0))
                 {
-                    Db.Products.UpdateProduct(product);
-                }
-                else
-                {
-                    Db.Products.AddProduct(product, categoryId,enterpriseId);
+                    var p = ProductHelper.ViewModelToModel(product);
+                    if (product.Id != null && Db.Products.GetProductById(product.Id) != null)
+                    {
+                        Db.Products.UpdateProduct(p);
+                        return 10;
+                    }
+
+                    Db.Products.AddProduct(p, product.CategoryId, product.EnterpriseId);
+                    return 20;
                 }
             }
+            return 30;
         }
 
         //Sparar ordningen på menyn. Kategori, produkt-placering 
         [HttpPost]
-        public void SaveMenuSetup(Menu menu,string enterpriseId)
+        public void SaveMenuSetup(Menu menu, string enterpriseId)
         {
-            Db.Enterprises.UpdateEnterprise(enterpriseId,menu);
+            //Kolla dubletter. Om kategorier är dublett: någon har antagligen ändrat DOM, generera nytt id o Varna!
+            //Radera produkter som fanns men inte längre finns med. 
+            Db.Enterprises.UpdateEnterprise(enterpriseId, menu);
         }
 
+        public ViewResult BlankCategory(string enterpriseId)
+        {
+            return View("_Category", new ViewModelCategory{Id=GeneralHelper.GetGuid(),Name = string.Empty,Products = new List<ProductViewModel>(),EnterpriseId = enterpriseId});
+        }
+        public ViewResult BlankProduct(string enterpriseId, string categoryId)
+        {
+            return View("_Product", new ProductViewModel { Id = ProductHelper.GetId(GeneralHelper.GetGuid()), EnterpriseId = enterpriseId, CategoryId = categoryId });
+        }
         public ViewResult BlankProductPrice()
         {
             return View("_ProductPrice", new ProductPrice());

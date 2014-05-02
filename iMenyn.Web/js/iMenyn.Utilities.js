@@ -35,66 +35,41 @@ iMenyn.Utilities = function () {
         });
     };
 
-    var dynamicFieldAdd = function () {
-        var $dynamicFields = $('.dynamic-fields');
-
-        $($dynamicFields).on('click', 'a', function () {
-            var $container = $(this).closest('.dynamic-fields');
-            var subNodes = $container.children('div');
-            var html = subNodes[0].outerHTML;
-            // Matchar: value="något"
-            var inputValues = html.match(/value="([^"]*")/g);
-            if (inputValues.length > 0) {
-                for (var i = 0; i < inputValues.length; i++) {
-                    html = html.replaceAll(inputValues[i], 'value=""');
-                }
+    var dynamicAdd = function (obj) {
+        if (obj.maxOccurs.length > 0) {
+            if (obj.maxParent.children(obj.maxType).length < obj.maxOccurs) {
+                doDynamicAdd(obj);
             }
-
-            html = reorganizeBracketNumbers(subNodes.length, html);
-            $(this).before(html);
-        });
-
-        $($dynamicFields).on('click', '.glyphicon-remove', function () {
-            var $container = $(this).closest('.dynamic-fields');
-            console.log("a: " + $container.children('div').length);
-            var containerChildCount = $container.children('div').length;
-            var parent = $(this).parent();
-            
-            while (!parent.parent().hasClass('dynamic-fields')) {
-                parent = parent.parent();
+            else {
+                //Max antal uppnått
+                return 1;
             }
-            parent.remove();
-            var html = $container.html();
-    
-            var a = containerChildCount-1;
-
-            html = reorganizeBracketNumbers(a, html);
-            
-            $container.html(html);
-        });
-
-
-        //Reorganize all bracket numbers
-
-    };
-    function reorganizeBracketNumbers(containerChildCount, html) {
-        // Matchar: [siffra]           
-        var numberBrackets = new RegExp(/\[\d\]/);
-
-        var result = numberBrackets.exec(html);
-        if (result) {
-            var matchedString = result[0].toString();
-            // Ersätt alla [siffra] mot rätt siffra
-            console.log(matchedString)
-            html = html.replaceAll(matchedString, '[' + containerChildCount + ']');   
         }
         else {
-            //TODO toastr
-            html = "<p>Något gick fel...</p>";
+            doDynamicAdd(obj);
         }
-        return html;
-    }
+        
+    };
 
+    function doDynamicAdd(obj) {
+        var before = obj.before && obj.before === true;
+        $.ajax({
+            url: obj.href,
+            cache: false,
+            success: function (html) {
+                if (before)
+                    obj.senderObj.before(html);
+                else
+                    obj.senderObj.after(html);
+            },
+            error: function () {
+                if (before)
+                    obj.senderObj.before("<p>Något gick fel...</p>");
+                else
+                    obj.senderObj.after("<p>Något gick fel...</p>");
+            }
+        });
+    }
 
     var showStep = function (step) {
         window.location.hash = step;
@@ -158,13 +133,13 @@ iMenyn.Utilities = function () {
         ShowStep: showStep,
         MyLocation: myLocation,
         Toast: toast,
-        DynamicFieldAdd: dynamicFieldAdd
+        DynamicAdd: dynamicAdd
     };
 }();
 
 
 // Replace ALL. 
-String.prototype.replaceAll = function (find, replace) {
-    var str = this;
-    return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
-};
+//String.prototype.replaceAll = function (find, replace) {
+//    var str = this;
+//    return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
+//};

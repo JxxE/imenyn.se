@@ -15,8 +15,12 @@ namespace iMenyn.Data.ViewModels
         public string Id { get; set; }
         public string Name { get; set; }
         public List<ProductViewModel> Products { get; set; }
+
+        public string EnterpriseId { get; set; }
     }
     public class ProductViewModel : Product
     {
+        public string EnterpriseId { get; set; }
+        public string CategoryId { get; set; }
     }
 }

@@ -13,6 +13,13 @@ $(function () {
             $(this).addClass('active');
         }
     });
+    $(document).on("click", "[data-action='toggleclass']", function () {
+        var $this = $(this);
+        $this.toggleClass('active');
+        var className = $this.data("class");
+        $('body').toggleClass(className);
+    });
+
     $(document).on("click", "[data-toggle='hide']", function () {
         var target = $(this).attr("data-target");
         $(target).toggleClass('hide');
@@ -191,16 +198,24 @@ iMenyn.Ajax = function () {
         $("#search-button-content").show();
     };
 
-    var saveProduct = function (product, categoryId, enterpriseId) {
-        var json = '{ "product":' + product + ', "categoryId":"' + categoryId + '", "enterpriseId": "' + enterpriseId + '" }';
+    var saveProduct = function (form,product) {
         $.ajax({
-            data: json,
+            data: product,
             url: '/Manage/AddOrEditNewProduct/',
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
             type: "POST",
             success: function (data) {
-                // $("#create-products").html($.render.product(data));
+                if (data == 10) {
+                    console.log("Produkten uppdaterades");
+                    form.removeClass("edit-mode");
+                }
+                if (data == 20) {
+                    console.log("Ny produkt skapat");
+                    form.removeClass("edit-mode");
+                    iMenyn.Utilities.DynamicAdd({ href: "/manage/BlankProduct?enterpriseId=enterprises-jessetinell&categoryId=hejhej", senderObj: form });
+                }
+                if(data == 30) {
+                    console.log("Ingen produkt tillagd");
+                }
             },
             error: function () {
                 console.error("Kunde inte skapa produkt");

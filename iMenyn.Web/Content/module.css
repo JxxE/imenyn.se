@@ -1,18 +1,82 @@
-﻿.vertical-bottom {
+﻿/* === Utility classes === */
+.vertical-bottom {
     vertical-align: bottom;
 }
+/* === End of Utility classes === */
 
-.error {
+
+/* === Menu === */
+.form-product .edit-form, .form-product.edit-mode .info, .category-sorter {
+    display: none;
+}
+
+/* Category */
+.sorting-categories .category-sorter {
+    display: block;
+}
+
+.sorting-categories .category {
+    height: 79px;
+    overflow: hidden;
+    padding-bottom: 0;
+}
+
+.category {
+    padding: 26px 0 40px;
+}
+
+.category-name {
+    margin: 0 0 15px;
+    font-size: 39px;
+}
+/* End of Category */
+
+
+
+/* Product */
+.form-product.edit-mode .edit-form {
+    display: block;
+}
+
+.form-product.edit-mode .product {
+    padding: 6px 0;
+}
+
+.product {
+    border-bottom: 1px solid #d5d5d5;
+    overflow: hidden;
+}
+
+    .product .product-name {
+        float: left;
+        font-size: 19px;
+    }
+
+    .product .product-prices {
+        float: right;
+        font-size: 19px;
+    }
+/* End of product */
+
+
+
+/* === End of Menu === */
+
+
+
+
+
+/* ===  === */
+
+/* === End of  === */
+
+/*.error {
     color: rgb(240, 67, 67);
     display: inline-block;
     *display: inline;
     zoom: 1;
     padding-left: 5px;
 }
-
-
-
-
 .row-result {
     background-color: white;
     width: 94%;
@@ -45,7 +109,7 @@
 
     .row-result:hover {
         background-color: rgb(241, 241, 241);
-    }
+    }*/
 
 
 
@@ -59,17 +123,19 @@
 
 
 
-/* ====== New and approved ======== */
 body {
     background-color: grey;
     color: #494949;
 }
+
 #main-container {
     background-color: white;
 }
+
 select#category-chooser {
     margin-bottom: 10px;
 }
+
 .tag {
     background-color: #007491;
     padding: 2px 8px;
@@ -80,12 +146,13 @@ select#category-chooser {
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
-.tag > span {
-    cursor: pointer;
-    margin: 0 0 0 5px;
-}
 
-a > span.glyphicon {
+    .tag > span {
+        cursor: pointer;
+        margin: 0 0 0 5px;
+    }
+
+button > span.glyphicon, a > span.glyphicon {
     margin-left: 5px;
 }
 

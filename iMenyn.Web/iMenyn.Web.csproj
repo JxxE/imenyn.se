@@ -321,6 +321,8 @@
     <Content Include="fonts\old\iMenyn.eot" />
     <Content Include="fonts\old\iMenyn.ttf" />
     <Content Include="fonts\old\iMenyn.woff" />
+    <Content Include="NLog.config" />
+    <Content Include="Config\appSettings.config" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Kanske ta bort.txt" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
@@ -372,6 +374,8 @@
     <Content Include="Views\Manage\DemoMenu.cshtml" />
     <Content Include="Views\Manage\_AddOrEditProduct.cshtml" />
     <Content Include="Views\Manage\_ProductPrice.cshtml" />
+    <Content Include="Views\Manage\_Product.cshtml" />
+    <Content Include="Views\Manage\_Category.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

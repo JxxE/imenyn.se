@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using iMenyn.Data.Abstract;
@@ -54,7 +55,7 @@ namespace iMenyn.Web
                     Email = "jessetinell@gmail.com",
                     IsAdmin = true,
                     Enabled = true,
-                    Enterprise = null
+                    Enterprises = new List<string>()
                 };
                 account.SetPassword("qwerty");
                 DependencyManager.Db.Accounts.AddAccount(account);

@@ -61,8 +61,7 @@
                         {
                                @Html.Partial("_ProductPrice",price)
                         }
-                         @Html.ActionLink("Add another...","BlankProductPrice",null,new{@class="add-product-price"})
-                        <a href="javascript:void(0)">Lägg till pris</a>
+                         @Html.ActionLink("Lägg till pris","BlankProductPrice",null,new{@class="dynamic-add"})
                     }
                 </div>
             </div>
@@ -77,6 +76,8 @@
                 </div>
             </div>
             @Html.HiddenFor(p => p.Id)
+            @Html.HiddenFor(p=>p.EnterpriseId)
+            @Html.HiddenFor(p=>p.CategoryId)
             <input type="submit" value="Spara" class="btn" />
         </div>
         <div class="edit-controls">

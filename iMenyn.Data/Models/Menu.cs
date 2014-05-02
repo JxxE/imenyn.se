@@ -5,9 +5,6 @@ namespace iMenyn.Data.Models
     public class Menu
     {
         public List<Category> Categories { get; set; }
-
-        //Redigerade menyer
-        public string TempMenuId { get; set; }
     }
 
     public class Category
@@ -15,5 +12,11 @@ namespace iMenyn.Data.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public List<string> Products { get; set; }
+    }
+
+    public class ModifiedMenu
+    {
+        public string Id { get; set; }
+        public Menu Menu { get; set; }
     }
 }
