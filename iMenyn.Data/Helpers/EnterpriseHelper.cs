@@ -17,18 +17,21 @@ namespace iMenyn.Data.Helpers
 
         public static bool ValidEditableEnterprise(Enterprise enterprise, Raven.Client.IDocumentSession session)
         {
-            if (enterprise.OwnedByAccount)
+            if(enterprise != null)
             {
-                //If enterprise is owned by an account, check if current account is the correct one
-                var account = session.Load<Account>(HttpContext.Current.User.Identity.Name);
-                return account.Enterprises.Contains(enterprise.Id) || account.IsAdmin;
+                if (enterprise.OwnedByAccount)
+                {
+                    //If enterprise is owned by an account, check if current account is the correct one
+                    var account = session.Load<Account>(HttpContext.Current.User.Identity.Name);
+                    return (account.Enterprises.Contains(enterprise.Id) || account.IsAdmin) && account.Enabled;
+                }
+                //Add product to a new enterprise
+                if (enterprise.IsNew)
+                    return true;
+                //Add product to an enterprise in edit-mode
+                if (!enterprise.LockedFromEdit)
+                    return true;
             }
-            //Add product to a new enterprise
-            if (enterprise.IsNew)
-                return true;
-            //Add product to an enterprise in edit-mode
-            if (!enterprise.LockedFromEdit)
-                return true;
 
             return false;
         }

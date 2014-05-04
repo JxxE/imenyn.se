@@ -22,9 +22,9 @@ namespace iMenyn.Data.Abstract.Db
         IEnumerable<Enterprise> GetNewEnterprises();
 
         Enterprise GetEnterpriseById(string enterpriseId);
-        CompleteEnterpriseViewModel GetCompleteEnterprise(string enterpriseId);
+        CompleteEnterpriseViewModel GetCompleteEnterprise(string enterpriseId,bool edit);
 
-        IEnumerable<string> GetModifiedMenus();
+        IEnumerable<Enterprise> GetModifiedEnterprises();
 
         Enterprise GetEnterpriseByUrlKey(string urlKey);
 

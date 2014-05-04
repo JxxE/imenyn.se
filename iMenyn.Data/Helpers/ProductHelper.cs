@@ -7,10 +7,9 @@ namespace iMenyn.Data.Helpers
 {
     public class ProductHelper
     {
-        [Obsolete("Only used for testing")]
         public static string GenerateId()
         {
-            return string.Format("products-{0}", Guid.NewGuid().ToString("N"));
+            return GetId(GeneralHelper.GetGuid());
         }
 
         public static Product ViewModelToModel(ProductViewModel viewmodel)

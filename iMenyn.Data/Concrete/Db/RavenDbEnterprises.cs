@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using AutoMapper;
 using Raven.Abstractions.Util;
 using Raven.Client;
@@ -39,18 +40,38 @@ namespace iMenyn.Data.Concrete.Db
             using (var session = _documentStore.OpenSession())
             {
                 var enterprise = session.Load<Enterprise>(enterpriseId);
-                if (enterprise != null)
+
+                if (EnterpriseHelper.ValidEditableEnterprise(enterprise, session))
                 {
-                    // TODO if is valid editable
-                    enterprise.Menu = menu;
-                    //Loopa igenom nuvarande meny o jämför om en produkt har tagits bort. Ta då bort den från databasen.
+                    MenuHelper.ValidateMenu(menu,enterpriseId,session, _logger);
+                    if(enterprise.IsNew || enterprise.OwnedByAccount)
+                    {
+                        enterprise.Menu = menu;
+                        enterprise.LastUpdated = DateTime.Now;
+                        DeleteOldProductsFromMenu(menu, enterprise.Menu);
+                    }
+                    else
+                    {
+                        var modifiedMenuInDb = session.Load<ModifiedMenu>(MenuHelper.GetModifiedMenuId(enterpriseId));
+
+                        if (modifiedMenuInDb != null)
+                        {
+                            modifiedMenuInDb.Menu = menu;
+                        }
+                        //enterprise.LockedFromEdit = true; TODO, turn this on!
+                    }
+
                     session.Store(enterprise);
 
                     session.SaveChanges();
-                    _logger.Info("Updated enterprise menu settings: " + enterprise.Name); 
+                    _logger.Info("Updated menu settings for enterprise: " + enterprise.Id);
                 }
-                
+
             }
+        }
+        private void DeleteOldProductsFromMenu(Menu newMenu, Menu oldMenu)
+        {
+            //Loopa igenom nuvarande meny o jämför om en produkt har tagits bort. Ta då bort den från databasen.
         }
 
         //TODO
@@ -216,18 +237,27 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        public CompleteEnterpriseViewModel GetCompleteEnterprise(string enterpriseId)
+        public CompleteEnterpriseViewModel GetCompleteEnterprise(string enterpriseId, bool edit = false)
         {
             using (var session = _documentStore.OpenSession())
             {
-                
+
                 var viewModel = new CompleteEnterpriseViewModel();
 
                 // Load enterprise, include products
                 var enterprise = session.Include<Enterprise>(e => e.Menu.Categories.Select(c => c.Products)).Load(enterpriseId);
-                
+                var menu = enterprise.Menu;
+
+                //Load the modified menu if: edit-mode, has a modified menu, is NOT new, is NOT owned by enterprise
+                if (edit && !string.IsNullOrEmpty(enterprise.ModifiedMenu) && !enterprise.IsNew && !enterprise.OwnedByAccount)
+                {
+                    //Get the modified menu instead
+                    var modifiedMenu = session.Include<Menu>(e => e.Categories.Select(c => c.Products)).Load<ModifiedMenu>(enterprise.ModifiedMenu);
+                    Mapper.CreateMap<ModifiedMenu, Menu>();
+                    menu = Mapper.Map(modifiedMenu.Menu, menu);
+                }
                 var products = new List<Product>();
-                foreach (var p in enterprise.Menu.Categories.Select(category => session.Load<Product>(category.Products)))
+                foreach (var p in menu.Categories.Select(category => session.Load<Product>(category.Products)))
                 {
                     products.AddRange(p);
                 }
@@ -235,18 +265,24 @@ namespace iMenyn.Data.Concrete.Db
                 // Create to viewmodel
                 var categoriesViewModel = new List<ViewModelCategory>();
                 Mapper.CreateMap<Product, ProductViewModel>();
-                foreach (var category in enterprise.Menu.Categories)
+                foreach (var category in menu.Categories)
                 {
                     var categoryViewModel = new ViewModelCategory
                                 {
                                     Name = category.Name,
-                                    Id= category.Id,
+                                    Id = category.Id,
                                     EnterpriseId = enterpriseId,
                                     Products = new List<ProductViewModel>()
                                 };
 
                     foreach (var product in category.Products.Select(productForCategory => products.FirstOrDefault(p => p.Id == productForCategory)))
                     {
+                        if (edit && product.UpdatedVersion != null)
+                        {
+                            Mapper.CreateMap<ProductUpdatedVersion, Product>();
+                            Mapper.Map(product.UpdatedVersion, product);
+
+                        }
                         var p = ProductHelper.ModelToViewModel(product);
                         p.EnterpriseId = enterpriseId;
                         p.CategoryId = category.Id;
@@ -265,13 +301,13 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        public IEnumerable<string> GetModifiedMenus()
+        public IEnumerable<Enterprise> GetModifiedEnterprises()
         {
             using (var session = _documentStore.OpenSession())
             {
-                var menus = session.Query<Menu>();
-                var enterpriseIds = menus.Where(m => !string.IsNullOrEmpty(m.TempMenuId));
-                return null;
+                var enterprises = session.Query<Enterprise>();
+                var enterpriseIds = enterprises.Where(e => !string.IsNullOrEmpty(e.ModifiedMenu));
+                return enterpriseIds;
             }
         }
 

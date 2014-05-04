@@ -1,5 +1,6 @@
 ﻿@model iMenyn.Data.ViewModels.CompleteEnterpriseViewModel
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+<script scr="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
 @{
     ViewBag.Title = "Demomeny";
 }
@@ -92,6 +93,7 @@
             }
             setup.Categories.push({ Id: category.id, Name: category.name, Products: category.products });
         }
+        console.log(setup)
         iMenyn.Ajax.SaveMenuSetup(JSON.stringify(setup), '@Model.Id');
     });
 

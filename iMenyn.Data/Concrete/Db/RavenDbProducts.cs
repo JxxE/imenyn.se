@@ -10,6 +10,7 @@ using iMenyn.Data.Abstract.Db;
 using iMenyn.Data.Helpers;
 using iMenyn.Data.Infrastructure.Index;
 using iMenyn.Data.Models;
+using AutoMapper;
 
 namespace iMenyn.Data.Concrete.Db
 {
@@ -31,46 +32,93 @@ namespace iMenyn.Data.Concrete.Db
             {
                 var enterprise = session.Load<Enterprise>(enterpriseId);
 
-                if (enterprise != null)
+                if (EnterpriseHelper.ValidEditableEnterprise(enterprise, session))
                 {
-                    if (EnterpriseHelper.ValidEditableEnterprise(enterprise, session))
+                    product.Enterprise = enterpriseId;
+
+                    //Om det är en ny enterprise eller en som är ägd, spara produkten direkt
+                    if (enterprise.IsNew || enterprise.OwnedByAccount)
                     {
-                        session.Store(product);
-
-                        var category = enterprise.Menu.Categories.FirstOrDefault(c => c.Id == categoryId);
-                        if (category == null)
-                        {
-                            category = new Category { Id = categoryId, Name = "Ny kategori", Products = new List<string>() };
-                            enterprise.Menu.Categories.Add(category);
-                        }
-
-                        //Om det är en ny enterprise eller en som är ägd, spara produkten direkt
-                        if (enterprise.IsNew || enterprise.OwnedByAccount)
-                        {
-                            category.Products.Add(product.Id);
-                            enterprise.LastUpdated = DateTime.Now;
-                            session.Store(enterprise);    
-                        }
-                        else
-                        {
-                            //If enterprise is existing, save/create a TEMP-menu for approvement 
-                            //TODO FIXA
-                            var modifiedMenu = new ModifiedMenu{Menu = enterprise.Menu};
-                            if(!string.IsNullOrEmpty(enterprise.ModifiedMenu))
-                            {
-                                var modifiedMenuInDb = session.Load<ModifiedMenu>(enterprise.ModifiedMenu);
-                                if (modifiedMenuInDb != null)
-                                    modifiedMenu = modifiedMenuInDb;
-                            }
-
-                        }
-                        session.SaveChanges();
-                        _logger.Info(string.Format("New product created with Id: {0} for enterprise: {1}", product.Id, enterpriseId));
+                        enterprise.Menu = MenuHelper.AddProductToMenu(enterprise.Menu, product, categoryId);
+                        _logger.Info(string.Format("New product ({0}) added to new enterprise: {1}, Code:[gPrsdfeas3]", product.Id, enterpriseId));
                     }
                     else
                     {
-                        _logger.Warn(string.Format("A product({0}) was about to be added to a non-valid enterprise with id: {1}, Code:[yTerdfds56]", product.Name, enterpriseId));
+                        //If enterprise is existing, save/create a TEMP-menu for approvement
+                        var modifiedMenuId = MenuHelper.GetModifiedMenuId(enterpriseId);
+                        var menuInDb = session.Load<ModifiedMenu>(modifiedMenuId);
+
+                        if (menuInDb == null)
+                        {
+                            //Copy the menu from the Enpterprise
+                            var menuCopy = new Menu
+                                        {
+                                            Categories = new List<Category>()
+                                        };
+                            foreach (var c in enterprise.Menu.Categories)
+                            {
+                                var category = new Category { Id = c.Id, Name = c.Name, Products = new List<string>() };
+                                foreach (var p in c.Products)
+                                {
+                                    category.Products.Add(p);
+                                }
+                                menuCopy.Categories.Add(category);
+                            }
+                            menuInDb = new ModifiedMenu { Id = modifiedMenuId, Menu = menuCopy };
+
+                            enterprise.ModifiedMenu = modifiedMenuId;
+                        }
+
+                        MenuHelper.AddProductToMenu(menuInDb.Menu, product, categoryId);
+                        session.Store(menuInDb);
+                        _logger.Info(string.Format("New product {0} added to modified menu:{1} Code:[g8iopgdfe]", product.Id, modifiedMenuId));
+
                     }
+                    session.Store(enterprise);
+                    session.Store(product);
+                    session.SaveChanges();
+
+                }
+                else
+                {
+                    var loggedInUser = !string.IsNullOrEmpty(HttpContext.Current.User.Identity.Name) ? string.Format(", logged in user: {0}", HttpContext.Current.User.Identity.Name) : string.Empty;
+                    _logger.Warn(string.Format("A product({0}) was about to be added to a non-valid enterprise with id: {1}{2}, Code:[yTerdfds56]", product.Name, enterpriseId, loggedInUser));
+                }
+
+            }
+        }
+
+        public void UpdateProduct(Product product, string enterpriseId)
+        {
+            using (var session = _documentStore.OpenSession())
+            {
+                var enterprise = session.Load<Enterprise>(enterpriseId);
+
+                if (EnterpriseHelper.ValidEditableEnterprise(enterprise, session))
+                {
+                    //Om det är en ny enterprise eller en som är ägd, spara produkten direkt
+                    if (enterprise.IsNew || enterprise.OwnedByAccount)
+                    {
+                        session.Store(product);
+                    }
+                    else
+                    {
+                        if (product.Enterprise == enterpriseId)
+                        {
+                            //If enterprise is existing, save an updated version of the product for approvement
+                            var productInDb = session.Load<Product>(product.Id);
+                            Mapper.CreateMap<Product, ProductUpdatedVersion>();
+                            var updatedProduct = new ProductUpdatedVersion();
+                            Mapper.Map(product, updatedProduct);
+                            productInDb.UpdatedVersion = updatedProduct;
+                        }
+                        else
+                        {
+                            _logger.Warn(string.Format("Product: {0} belongs to this enterprise: {1} and was about to be updated to {2} Code:[hT882v563]", product.Id, product.Enterprise, enterpriseId));
+                        }
+                    }
+                    _logger.Info(string.Format("Product:{0} was updated. Enterprise: {1}. Code:[poO0789b]",product.Id,enterpriseId));
+                    session.SaveChanges();
                 }
             }
         }
@@ -89,17 +137,6 @@ namespace iMenyn.Data.Concrete.Db
             using (var session = _documentStore.OpenSession())
             {
                 return session.Load<Product>(productId);
-            }
-        }
-
-        public void UpdateProduct(Product product)
-        {
-            using (var session = _documentStore.OpenSession())
-            {
-                //TODO, gör en koll om denna får redigeras och om den tillhör denna enterprise!
-                //is valid editable
-                session.Store(product);
-                session.SaveChanges();
             }
         }
 
@@ -128,15 +165,11 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        public void CreateProducts(IEnumerable<Product> products)
+        public IEnumerable<Product> GetAllProductsInDb()
         {
             using (var session = _documentStore.OpenSession())
             {
-                foreach (var product in products)
-                {
-                    session.Store(product);
-                }
-                session.SaveChanges();
+                return session.Query<Product>().ToArray();
             }
         }
     }

@@ -36,8 +36,6 @@ namespace iMenyn.Web.Controllers
                 var newEnterprises = Db.Enterprises.GetNewEnterprises();
                 model.NewEnterprises = newEnterprises.ToList();
 
-                var modifiedMenus = Db.Enterprises.GetModifiedMenus();
-                model.ModifiedMenus = modifiedMenus.ToList();
             }
             else
             {
@@ -113,8 +111,6 @@ namespace iMenyn.Web.Controllers
                 var newEnterprises = Db.Enterprises.GetNewEnterprises();
                 model.NewEnterprises = newEnterprises.ToList();
 
-                var modifiedMenus = Db.Enterprises.GetModifiedMenus();
-                model.ModifiedMenus = modifiedMenus.ToList();
             }
             else
             {

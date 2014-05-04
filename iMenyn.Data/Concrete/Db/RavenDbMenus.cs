@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Raven.Client;
 using iMenyn.Data.Abstract;
 using iMenyn.Data.Abstract.Db;
-using iMenyn.Data.Helpers;
 using iMenyn.Data.Models;
 using iMenyn.Data.ViewModels;
 
@@ -50,14 +48,6 @@ namespace iMenyn.Data.Concrete.Db
                 //};
 
                 return null;
-            }
-        }
-
-        public ModifiedMenu GetModifiedMenuByEnterpriseId(string enterpriseId)
-        {
-            using (var session = _documentStore.OpenSession())
-            {
-                return session.Query<ModifiedMenu>().FirstOrDefault(m => m.EnterpriseId == enterpriseId);
             }
         }
 

@@ -11,12 +11,12 @@ namespace iMenyn.Data.Abstract.Db
 
         Product GetProductById(string productId);
 
-        void UpdateProduct(Product product);
+        void UpdateProduct(Product product,string enterpriseId);
 
         void UpdateProducts(IEnumerable<Product> products);
 
         void DeleteProductsByIds(List<string> productIds);
 
-        void CreateProducts(IEnumerable<Product> products);
+        IEnumerable<Product> GetAllProductsInDb();
     }
 }

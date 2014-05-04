@@ -8,7 +8,6 @@ namespace iMenyn.Data.Abstract.Db
     {
         Menu GetMenuById(string menuId);
         CompleteEnterpriseViewModel GetMenuByEnterpriseKey(string enterpriseKey);
-        ModifiedMenu GetModifiedMenuByEnterpriseId(string enterpriseId);
         ModifiedMenu GetModifiedMenuById(string modifiedMenuId);
         void UpdateMenu(Menu menu);
         void DeleteMenuById(string menuId);

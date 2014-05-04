@@ -64,10 +64,16 @@ namespace iMenyn.Web.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult DemoMenu()
+        public ActionResult DemoMenu(bool edit=false)
         {
-            var viewModel = Db.Enterprises.GetCompleteEnterprise("enterprises-jessetinell");
-
+            var viewModel = Db.Enterprises.GetCompleteEnterprise("enterprises-jessetinell",edit);
+            //var p = Db.Products.GetAllProductsInDb();
+            //var enumerable = p as Product[] ?? p.ToArray();
+            //foreach (var product in enumerable)
+            //{
+            //    product.Enterprise = "enterprises-jessetinell";
+            //}
+            //Db.Products.UpdateProducts(enumerable);
             return View(viewModel);
         }
 
@@ -140,7 +146,7 @@ namespace iMenyn.Web.Controllers
                     var p = ProductHelper.ViewModelToModel(product);
                     if (product.Id != null && Db.Products.GetProductById(product.Id) != null)
                     {
-                        Db.Products.UpdateProduct(p);
+                        Db.Products.UpdateProduct(p,product.EnterpriseId);
                         return 10;
                     }
 
@@ -155,18 +161,16 @@ namespace iMenyn.Web.Controllers
         [HttpPost]
         public void SaveMenuSetup(Menu menu, string enterpriseId)
         {
-            //Kolla dubletter. Om kategorier är dublett: någon har antagligen ändrat DOM, generera nytt id o Varna!
-            //Radera produkter som fanns men inte längre finns med. 
             Db.Enterprises.UpdateEnterprise(enterpriseId, menu);
         }
 
         public ViewResult BlankCategory(string enterpriseId)
         {
-            return View("_Category", new ViewModelCategory{Id=GeneralHelper.GetGuid(),Name = string.Empty,Products = new List<ProductViewModel>(),EnterpriseId = enterpriseId});
+            return View("_Category", new ViewModelCategory{Id=GeneralHelper.GetGuid(),Name = string.Empty,Products = new List<ProductViewModel>{new ProductViewModel{Id = ProductHelper.GenerateId()}},EnterpriseId = enterpriseId});
         }
         public ViewResult BlankProduct(string enterpriseId, string categoryId)
         {
-            return View("_Product", new ProductViewModel { Id = ProductHelper.GetId(GeneralHelper.GetGuid()), EnterpriseId = enterpriseId, CategoryId = categoryId });
+            return View("_Product", new ProductViewModel { Id = ProductHelper.GenerateId(), EnterpriseId = enterpriseId, CategoryId = categoryId });
         }
         public ViewResult BlankProductPrice()
         {
