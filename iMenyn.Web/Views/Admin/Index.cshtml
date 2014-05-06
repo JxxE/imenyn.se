@@ -4,45 +4,61 @@
     ViewBag.Title = "Hantera";
 }
 
-<h2>Hantera</h2>
+<h2>Välkommen @Model.Account.Name</h2>
 
-@if (ViewBag.IsAdmin)
+@if (Model.Account.IsAdmin)
 {
-    <div class="row ">
-        <div class="col-sm-6 well">
+    <div class="row">
+        <div class="col-sm-12">
+        <a href="@Url.Action("CreateFakeEnterprise",new{modified=true})" class="btn btn-primary">Skapa fake-enterprise (ny)</a>
+        <a class="btn btn-primary">Skapa fake-enterprise (modifierad)</a>
+    </div>
+    </div>
+    <div class="col-sm-6 well">
+        <h4>Nya restauranger <span class="badge">@Model.NewEnterprises.Count</span></h4>
+        @if (Model.NewEnterprises.Count == 0)
+        {
+            <i>Inga...</i>
+        }
+        else
+        {
+            <ul class="list-group">
+                @foreach (var enterprise in Model.NewEnterprises.Take(5))
+                {
+                    <li class="list-group-item">
+                        <a href="@Url.Action("MenuApproval",new{enterpriseId=enterprise.Id})">
+                            <h3 class="list-group-item-heading">@enterprise.Name</h3>
+                            <p class="list-group-item-text">
+                                Produkter: @enterprise.Menu.Categories.SelectMany(c=>c.Products).Count()<br/>
+                                Inkommen: @enterprise.LastUpdated.ToShortDateString() (@enterprise.LastUpdated.ToShortTimeString())
+                            </p>
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+    <div class="col-sm-6 well">
+        <h4>Modifierade menyer <span class="badge">@Model.ModifiedEnterprises.Count</span></h4>
+        @if (Model.ModifiedEnterprises.Count == 0)
+        {
+            <i>Inga...</i>
+        }
+        else
+        {
+            <ul class="list-group">
+                @foreach (var enterprise in Model.ModifiedEnterprises.Take(5))
+                {
+                    <li class="list-group-item">
 
-            <h4>Nya restauranger<span class="badge">@Model.NewEnterprises.Count</span></h4>
-            <hr />
-            @if (Model.NewEnterprises.Count == 0)
-            {
-                <i>Inga...</i>
-            }
-            else
-            {
-                foreach (var newEnterprise in Model.NewEnterprises)
-                {
-                    <a href="/Admin/NewMenu?enterpriseId=@newEnterprise.Id">
-                        <h5>@newEnterprise.Name</h5>
-                        <hr />
-                    </a>
+                        <a href="@Url.Action("MenuApproval",new{enterpriseId=enterprise.Id})">
+                            
+                            <h4 class="list-group-item-heading">@enterprise.Name</h4>
+
+                        </a>
+                    </li>
                 }
-            }
-        </div>
-        <div class="col-sm-6 well">
-            <h4>Modifierade menyer <span class="badge">@Model.ModifiedMenus.Count</span></h4>
-            @if (Model.ModifiedMenus.Count == 0)
-            {
-                <i>Inga...</i>
-            }
-            else
-            {
-                foreach (var modifiedMenu in Model.ModifiedMenus)
-                {
-                    <a href="/Admin/ModifiedMenu?menu=@modifiedMenu">
-                        @modifiedMenu
-                    </a>
-                }
-            }
-        </div>
+            </ul>
+        }
     </div>
 }

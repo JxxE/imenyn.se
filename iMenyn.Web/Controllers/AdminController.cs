@@ -19,23 +19,28 @@ namespace iMenyn.Web.Controllers
     public class AdminController : BaseController
     {
         public AdminController(IDb db, ILogger logger)
-            : base(db,logger)
+            : base(db, logger)
         {
         }
 
         public ActionResult Index()
         {
-            var model = new DashboardViewModel
+            var viewModel = new DashboardViewModel
             {
                 NewEnterprises = new List<Enterprise>(),
-                ModifiedMenus = new List<string>()
+                ModifiedEnterprises = new List<Enterprise>(),
+                Account = AccountViewHelper.ModelToViewModel(CurrentAccount)
             };
 
             if (CurrentAccount.IsAdmin)
             {
-                var newEnterprises = Db.Enterprises.GetNewEnterprises();
-                model.NewEnterprises = newEnterprises.ToList();
+                var modifiedAndNewEnterprises = Db.Enterprises.GetModifiedAndNewEnterprises().ToList();
 
+                var newEnterprises = modifiedAndNewEnterprises.Where(e => e.IsNew);
+                var modifiedEnterprises = modifiedAndNewEnterprises.Where(e => e.LockedFromEdit);
+
+                viewModel.NewEnterprises = newEnterprises.ToList();
+                viewModel.ModifiedEnterprises = modifiedEnterprises.ToList();
             }
             else
             {
@@ -55,83 +60,7 @@ namespace iMenyn.Web.Controllers
                 //model.StandardViewModel = s;
                 //}
             }
-            return View(model);
-
-            //TODO
-            //var model = new DashboardViewModel
-            //{
-            //    NewEnterprises = new List<Enterprise>(),
-            //    EnterprisesWithModifiedMenus = new List<Enterprise>(),
-            //    //StandardViewModel = new StandardViewModel()
-            //};
-
-            //if (CurrentAccount.IsAdmin)
-            //{
-            //    var newEnterprises = Repository.GetNewEnterprises().Take(5);
-            //    //var modifiedMenus = Repository.GetAllModifiedMenus();
-
-            //    var enterprisesWithModifiedMenus = Repository.GetEnterprisesWithModifiedMenus();
-
-            //    model.NewEnterprises = newEnterprises.ToList();
-            //    model.EnterprisesWithModifiedMenus = enterprisesWithModifiedMenus.ToList();
-            //}
-            //else
-            //{
-            //    if(CurrentAccount.Enterprise == null)
-            //    {
-            //        return View(model);
-            //    }
-
-            //    var enterprise = Repository.GetEnterpriseById(CurrentAccount.Enterprise);
-
-            //    if(enterprise.Menu != null)
-            //    {
-            //        var menu = Repository.GetMenuById(enterprise.Menu);
-            //        var products = Repository.GetProducts(menu.Products.ToList());
-
-            //        //var s = ViewModelHelper.CreateStandardViewModel(enterprise, products);
-            //        //model.StandardViewModel = s;
-            //    }
-            //}
-            //return View(model);
-            //return View();
-            //return null;
-        }
-
-        public ActionResult Manage()
-        {
-            var model = new DashboardViewModel
-            {
-                NewEnterprises = new List<Enterprise>(),
-                ModifiedMenus = new List<string>()
-            };
-
-            if (CurrentAccount.IsAdmin)
-            {
-                var newEnterprises = Db.Enterprises.GetNewEnterprises();
-                model.NewEnterprises = newEnterprises.ToList();
-
-            }
-            else
-            {
-                //if (CurrentAccount.Enterprise == null)
-                //{
-                //    return View(model);
-                //}
-
-                //var enterprise = Repository.GetEnterpriseById(CurrentAccount.Enterprise);
-
-                //if (enterprise.Menu != null)
-                //{
-                //    var menu = Repository.GetMenuById(enterprise.Menu);
-                //    var products = Repository.GetProducts(menu.Products.ToList());
-
-                    //var s = ViewModelHelper.CreateStandardViewModel(enterprise, products);
-                    //model.StandardViewModel = s;
-                //}
-            }
-            return null;
-
+            return View(viewModel);
         }
 
         public ActionResult Accounts()
@@ -147,165 +76,55 @@ namespace iMenyn.Web.Controllers
             return null;
         }
 
-        #region Modified menus
-        //Show all enterprises with modified menus
-        public ActionResult ModifiedMenus()
-        {
-            //TODO
-            return null;
-            //var modifiedMenus = Repository.GetAllModifiedMenus();
-            //var enterprises = modifiedMenus.Select(modifiedMenu => Repository.GetEnterpriseById(modifiedMenu.EnterpriseId)).ToList();
-
-            //var model = new AllEnterprisesViewModel
-            //{
-            //    Enterprises = enterprises
-            //};
-            //return View(model);
-        }
-        public ActionResult ModifiedMenu(string enterpriseKey)
-        {
-            //var enterpriseId = EnterpriseHelper.GetId(enterpriseKey);
-
-            //var modifiedMenu = Repository.GetModifiedMenuByEnterpriseId(enterpriseId);
-
-            //var enterprise = Repository.GetEnterpriseById(enterpriseId);
-
-            //if (enterprise != null)
-            //{
-            //    var liveMenu = Repository.GetMenuById(enterprise.Menu);
-            //    if (liveMenu != null)
-            //    {
-            //        var modifiedProductsViewModel = new ProductListViewModel();
-            //        var modifiedMenuId = "";
-
-            //        if (modifiedMenu != null)
-            //        {
-            //            var modifiedMenuProducts = Repository.GetProducts(modifiedMenu.ProductIds).ToList();
-            //            modifiedProductsViewModel = ViewModelHelper.GetProductListViewModel(modifiedMenuProducts);
-            //            modifiedMenuId = modifiedMenu.Id;
-            //        }
-
-            //        var liveMenuProducts = Repository.GetProducts(liveMenu.Products.ToList()).ToList();
-            //        var liveMenuProductsViewModel = ViewModelHelper.GetProductListViewModel(liveMenuProducts);
-
-
-            //        var viewModel = new CompareModifiedMenuViewModel
-            //        {
-            //            Enterprise = enterprise,
-            //            ModifiedMenuProducts = modifiedProductsViewModel,
-            //            LiveMenuProducts = liveMenuProductsViewModel,
-            //            ModifiedMenuId = modifiedMenuId
-            //        };
-            //        return View(viewModel);
-            //    }
-            //}
-            return View();
-        }
-        #endregion
-
-        [HttpPost]
         public ActionResult CreateAllIndexes()
         {
             RavenContext.Instance.CreateAllIndexes();
-            ViewBag.Message = "Återskapade index";
-            return null;
+            return RedirectToAction("Index");
         }
 
 
         //Display the new temp-menu
-        public ActionResult NewMenu(string enterpriseId)
+        public ActionResult MenuApproval(string enterpriseId)
         {
-            //var enterprise = Repository.GetEnterpriseById(enterpriseId);
-            //var model = new StandardViewModel();
-
-            //if (enterprise.Menu != null)
-            //{
-            //    var menu = Repository.GetMenuById(enterprise.Menu);
-            //    var products = Repository.GetProducts(menu.Products.ToList());
-            //    //model = ViewModelHelper.CreateStandardViewModel(enterprise, products);
-            //}
-            //else
-            //{
-            //    var p = new List<Product>();
-            //   // model = ViewModelHelper.CreateStandardViewModel(enterprise, p);
-            //}
-
-            return null;
+            var enterpriseViewModel = Db.Enterprises.GetCompleteEnterprise(enterpriseId, true);
+            if (!enterpriseViewModel.Enterprise.IsNew)
+                return RedirectToAction("Index");
+            return View(enterpriseViewModel);
         }
 
-
-        public RedirectToRouteResult ApproveModifiedMenu(string enterpriseKey)
+        //TODO ONLY ADMINATTRIBUTE
+        public RedirectToRouteResult MenuApprovalFunction(string enterpriseId, bool approved)
         {
-            //TODO
-            //var modifiedMenuId = ModifiedMenuHelper.GetId(enterpriseKey);
-            //var modifiedMenu = Repository.GetModifiedMenuById(modifiedMenuId);
+            var enterprise = Db.Enterprises.GetEnterpriseById(enterpriseId);
 
-            //if (modifiedMenu == null) return RedirectToAction("Index");
+            //Approve new menu
+            if (approved && enterprise.IsNew)
+            {
+                enterprise.IsNew = false;
+                Db.Enterprises.UpdateEnterprise(enterprise);
+                Logger.Info("New enterprise approved: {0} ({1}), Code:[ccxcd77mnm]", enterprise.Name, enterpriseId);
+            }
 
-            //var liveMenuId = MenuHelper.GetId(enterpriseKey);
-            //var liveMenu = Repository.GetMenuById(liveMenuId);
+            //Disapprove new menu
+            if (!approved && enterprise.IsNew)
+            {
+                Db.Enterprises.DeleteEnterprise(enterprise);
+            }
 
-            //if (liveMenu == null) return RedirectToAction("Index");
+            //Approve modified menu
+            if (approved && enterprise.LockedFromEdit && !enterprise.IsNew)
+            {
+                Db.Enterprises.SetModifiedMenuAsDefault(enterpriseId);
+            }
+            //Disapprove modified menu
+            if (!approved && enterprise.LockedFromEdit && !enterprise.IsNew)
+            {
 
-            //var liveMenuProductList = liveMenu.Products.ToList();
-            //var oldProductIds = new List<string>();
+            }
 
-            //foreach (var productId in liveMenuProductList)
-            //{
-            //    oldProductIds.Add(productId);
-            //}
-
-            //liveMenuProductList.Clear();
-            //liveMenuProductList.AddRange(modifiedMenu.ProductIds);
-
-            //liveMenu.Products = liveMenuProductList;
-
-            ////Repository.UpdateMenu(liveMenu);
-            ////Repository.DeleteModifiedMenuById(modifiedMenuId);
-            ////Repository.DeleteProductsByIds(oldProductIds);
-            return null;
-            //return RedirectToAction("ModifiedMenu", "Admin", new { enterpriseKey });
-
-        }
-        public RedirectToRouteResult DisapproveModifiedMenu(string modifiedMenuId)
-        {
-            //TODO
-            //Repository.DeleteModifiedMenuById(modifiedMenuId);
-            return RedirectToAction("ModifiedMenus");
+            return RedirectToAction("Index");
         }
 
-
-        //Convert the temp to a real one.
-        public RedirectToRouteResult ApproveMenu(string enterpriseId)
-        {
-            //TODO
-            return null;
-            //var enterprise = Repository.GetEnterpriseById(enterpriseId);
-
-            //enterprise.IsTemp = false;
-
-            //Repository.UpdateEnterprise(enterprise);
-
-            //return RedirectToAction("NewEnterprises");
-        }
-
-        //Delete the temporary menu.
-        public RedirectToRouteResult DisapproveMenu(string enterpriseId)
-        {
-            //TODO
-            return null;
-            //var enterprise = Repository.GetEnterpriseById(enterpriseId);
-            //Repository.DeleteEnterpriseById(enterprise.Id);
-
-            //if (enterprise.Menu != null)
-            //{
-            //    var menu = Repository.GetMenuById(enterprise.Menu);
-            //    Repository.DeleteMenuById(menu.Id);
-            //    Repository.DeleteProductsByIds(menu.Products.ToList());
-            //}
-
-            //return RedirectToAction("NewEnterprises");
-        }
 
         [HttpPost]
         public ActionResult AddAccount(AccountViewData account)
@@ -318,7 +137,7 @@ namespace iMenyn.Web.Controllers
             {
                 var newAccount = new Account
                                   {
-                                      Id = Data.Helpers.AccountHelper.GetId(account.UserInput.Email),
+                                      Id = AccountHelper.GetId(account.UserInput.Email),
                                       Email = account.UserInput.Email,
                                       Enabled = true,
                                       IsAdmin = false,
@@ -334,5 +153,17 @@ namespace iMenyn.Web.Controllers
 
             return null;
         }
+
+        #region Create fake enterprise
+        public RedirectToRouteResult CreateFakeEnterprise(bool modified)
+        {
+
+            FakeDataHelper.CreateFakeEnterprise(Db, true);
+            //Db.Enterprises.UpdateEnterprise(enterprise,allProducts);
+            //Db.Menus.CreateMenu(enterprise, allProducts);
+            return RedirectToAction("Index");
+        }
+        #endregion
+
     }
 }

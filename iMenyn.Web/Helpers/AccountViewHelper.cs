@@ -1,10 +1,12 @@
 ﻿using System.Web;
 using iMenyn.Data.Infrastructure;
 using iMenyn.Data.Models;
+using iMenyn.Web.ViewModels;
+using AutoMapper;
 
 namespace iMenyn.Web.Helpers
 {
-    public class AccountHelper
+    public class AccountViewHelper
     {
         public static Account GetCurrentAccount()
         {
@@ -22,6 +24,14 @@ namespace iMenyn.Web.Helpers
             }
 
             return currentAccount;
+        }
+
+        public static AccountViewModel ModelToViewModel(Account account)
+        {
+            var accountViewModel = new AccountViewModel();
+            Mapper.CreateMap<Account, AccountViewModel>();
+            Mapper.Map(account, accountViewModel);
+            return accountViewModel;
         }
     }
 }

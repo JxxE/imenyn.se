@@ -7,7 +7,5 @@
         IDbEnterprises Enterprises { get; }
 
         IDbProducts Products { get; }
-
-        IDbMenus Menus { get; }
     }
 }

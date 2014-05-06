@@ -15,7 +15,7 @@ namespace iMenyn.Web.Areas.Admin.Controllers
 
         protected Account CurrentAccount
         {
-            get { return _currentAccount ?? (_currentAccount = AccountHelper.GetCurrentAccount()); }
+            get { return _currentAccount ?? (_currentAccount = AccountViewHelper.GetCurrentAccount()); }
         }
 
         private Account _currentAccount;
@@ -32,7 +32,7 @@ namespace iMenyn.Web.Areas.Admin.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                var currentAccount = AccountHelper.GetCurrentAccount();
+                var currentAccount = AccountViewHelper.GetCurrentAccount();
 
                 if (currentAccount == null || !currentAccount.Enabled)
                 {

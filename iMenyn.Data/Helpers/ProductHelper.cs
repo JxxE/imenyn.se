@@ -23,6 +23,12 @@ namespace iMenyn.Data.Helpers
             return Mapper.Map<Product, ProductViewModel>(model);
         }
 
+        public static Product UpdatedVersionToModel(ProductUpdatedVersion productUpdated)
+        {
+            Mapper.CreateMap<ProductUpdatedVersion, Product>();
+            return Mapper.Map<ProductUpdatedVersion, Product>(productUpdated);
+        }
+
         public static string GetId(string key)
         {
             return string.Format("products-{0}", key);

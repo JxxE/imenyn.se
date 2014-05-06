@@ -172,5 +172,17 @@ namespace iMenyn.Data.Concrete.Db
                 return session.Query<Product>().ToArray();
             }
         }
+
+        public void AddProductsToDb(List<Product> products)
+        {
+            using(var session = _documentStore.OpenSession())
+            {
+                foreach (var product in products)
+                {
+                    session.Store(product);
+                }
+                session.SaveChanges();
+            }
+        }
     }
 }

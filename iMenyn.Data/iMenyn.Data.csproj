@@ -244,12 +244,11 @@
     <Compile Include="Abstract\Db\IDb.cs" />
     <Compile Include="Abstract\Db\IDbAccounts.cs" />
     <Compile Include="Abstract\Db\IDbEnterprises.cs" />
-    <Compile Include="Abstract\Db\IDbMenus.cs" />
     <Compile Include="Abstract\Db\IDbProducts.cs" />
     <Compile Include="Abstract\IAuthentication.cs" />
     <Compile Include="Abstract\ILogger.cs" />
     <Compile Include="Abstract\IRavenDbContext.cs" />
-    <Compile Include="Concrete\Db\RavenDbMenus.cs" />
+    <Compile Include="Attributes\AdminOnlyAttribute.cs" />
     <Compile Include="Concrete\Db\RavenDbProducts.cs" />
     <Compile Include="Concrete\Db\RavenDb.cs" />
     <Compile Include="Concrete\Db\RavenDbAccounts.cs" />
@@ -259,6 +258,7 @@
     <Compile Include="Helpers\AccountHelper.cs" />
     <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\EnterpriseHelper.cs" />
+    <Compile Include="Helpers\FakeDataHelper.cs" />
     <Compile Include="Helpers\GeneralHelper.cs" />
     <Compile Include="Helpers\MenuHelper.cs" />
     <Compile Include="Helpers\ModifiedMenuHelper.cs" />

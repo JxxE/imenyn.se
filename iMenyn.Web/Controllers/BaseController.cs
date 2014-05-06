@@ -16,7 +16,7 @@ namespace iMenyn.Web.Controllers
 
         protected Account CurrentAccount
         {
-            get { return _currentAccount ?? (_currentAccount = AccountHelper.GetCurrentAccount()); }
+            get { return _currentAccount ?? (_currentAccount = AccountViewHelper.GetCurrentAccount()); }
         }
         private Account _currentAccount;
 
@@ -32,7 +32,7 @@ namespace iMenyn.Web.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                var currentAccount = AccountHelper.GetCurrentAccount();
+                var currentAccount = AccountViewHelper.GetCurrentAccount();
 
                 if (currentAccount == null || !currentAccount.Enabled)
                 {
@@ -40,14 +40,17 @@ namespace iMenyn.Web.Controllers
                     Authentication.SignOut();
                     filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary { { "controller", "Account" }, { "action", "Login" } });
                 }
-                else
+                else if(currentAccount.IsAdmin)
                 {
                     ViewBag.IsAdmin = currentAccount.IsAdmin;
                 }
+                else
+                {
+                    ViewBag.IsAdmin = false;
+                }
 
             }
-            ViewBag.IsAdmin = false;
-
+            
             base.OnActionExecuting(filterContext);
         }
 

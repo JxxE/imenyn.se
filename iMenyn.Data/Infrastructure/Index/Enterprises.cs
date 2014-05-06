@@ -13,13 +13,13 @@ namespace iMenyn.Data.Infrastructure.Index
                                  select new
                                             {
                                                 enterprise.Name,
-                                                enterprise.Key,
                                                 enterprise.PostalCode,
                                                 enterprise.Categories,
                                                 enterprise.Coordinates,
                                                 enterprise.CountryCode,
                                                 enterprise.Id,
                                                 enterprise.IsNew,
+                                                enterprise.LockedFromEdit,
                                                 enterprise.LastUpdated,
                                                 enterprise.Menu,
                                                 enterprise.Phone
@@ -50,9 +50,9 @@ namespace iMenyn.Data.Infrastructure.Index
 
 
             Indexes.Add(x => x.Name, FieldIndexing.Analyzed);
-            Indexes.Add(x => x.Key, FieldIndexing.Default);
             Indexes.Add(x=>x.PostalCode, FieldIndexing.Analyzed);
             Indexes.Add(x => x.IsNew, FieldIndexing.Default);
+            Indexes.Add(x => x.LockedFromEdit, FieldIndexing.Default);
             Indexes.Add(x=>x.Categories,FieldIndexing.Default);
         }
     }

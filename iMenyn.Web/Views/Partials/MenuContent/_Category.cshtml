@@ -1,0 +1,23 @@
+﻿@using iMenyn.Data.ViewModels
+@model ViewModelCategory
+@{
+    Layout = null;
+}
+
+<div class="category row" data-category="@Model.Id">
+    <div class="col-sm-1">
+        <span class="glyphicon glyphicon-resize-vertical btn btn-info category-sorter"></span>
+    </div>
+    <div class="col-sm-11">
+            <h3 class="category-name">@Model.Name</h3>
+    @foreach (var p in Model.Products)
+    {
+        @Html.Partial("~/Views/Partials/MenuContent/_Product.cshtml", p)
+    }
+    @if(Model.Products.Count == 0)
+    {
+        @Html.Partial("~/Views/Partials/MenuContent/_Product.cshtml", new ProductViewModel{EnterpriseId = Model.EnterpriseId,CategoryId = Model.Id})
+    }
+     @Html.ActionLink("Lägg till produkt", "BlankProduct","Manage", new { enterpriseId = Model.EnterpriseId, categoryId = Model.Id }, new { @class = "dynamic-add" })
+    </div>
+</div>

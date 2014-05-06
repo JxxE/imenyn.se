@@ -223,9 +223,7 @@ iMenyn.Ajax = function () {
         });
     };
 
-    //TODO, denna JSON är alltid null!!!!!!!!!!!!!!!!!!!!!!!!!!!
     var saveMenuSetup = function (setup, enterpriseId) {
-        console.log(setup)
         var json = '{ "menu": ' + setup + ', "enterpriseId":"' + enterpriseId + '"}';
         $.ajax({
             data: json,

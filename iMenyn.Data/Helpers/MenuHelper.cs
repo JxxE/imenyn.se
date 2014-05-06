@@ -28,7 +28,7 @@ namespace iMenyn.Data.Helpers
 
         public static void ValidateMenu(Menu menu, string enterpriseId, Raven.Client.IDocumentSession session, Abstract.ILogger _logger)
         {
-            //TODO future: product Load can fail if categories.Coung is greater than 30
+            //TODO future: product Load can fail if categories.Count is greater than 30
             foreach (var category in menu.Categories)
             {
                 foreach (var product in session.Load<Product>(category.Products))

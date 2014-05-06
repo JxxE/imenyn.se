@@ -1,0 +1,1 @@
+2014-05-05 20:40:00.9331|FATAL|iMenyn.Data.Concrete.Logger|ValidateMenu, duplicate check!

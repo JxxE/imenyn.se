@@ -38,7 +38,6 @@ namespace iMenyn.Data.Infrastructure
             _ninjectKernel.Bind<IDbAccounts>().To<RavenDbAccounts>();
             _ninjectKernel.Bind<IDbEnterprises>().To<RavenDbEnterprises>();
             _ninjectKernel.Bind<IDbProducts>().To<RavenDbProducts>();
-            _ninjectKernel.Bind<IDbMenus>().To<RavenDbMenus>();
         }
 
         private static IRavenDbContext _ravenDbContext;

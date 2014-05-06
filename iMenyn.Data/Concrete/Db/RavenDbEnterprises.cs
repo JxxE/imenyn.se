@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using AutoMapper;
 using Raven.Abstractions.Util;
 using Raven.Client;
@@ -43,12 +42,11 @@ namespace iMenyn.Data.Concrete.Db
 
                 if (EnterpriseHelper.ValidEditableEnterprise(enterprise, session))
                 {
-                    MenuHelper.ValidateMenu(menu,enterpriseId,session, _logger);
-                    if(enterprise.IsNew || enterprise.OwnedByAccount)
+                    MenuHelper.ValidateMenu(menu, enterpriseId, session, _logger);
+                    if (enterprise.IsNew || enterprise.OwnedByAccount)
                     {
                         enterprise.Menu = menu;
                         enterprise.LastUpdated = DateTime.Now;
-                        DeleteOldProductsFromMenu(menu, enterprise.Menu);
                     }
                     else
                     {
@@ -69,34 +67,40 @@ namespace iMenyn.Data.Concrete.Db
 
             }
         }
-        private void DeleteOldProductsFromMenu(Menu newMenu, Menu oldMenu)
-        {
-            //Loopa igenom nuvarande meny o jämför om en produkt har tagits bort. Ta då bort den från databasen.
-        }
 
-        //TODO
         public string CreateEnterprise(Enterprise enterprise)
         {
             using (var session = _documentStore.OpenSession())
             {
+                if (enterprise == null)
+                    return string.Empty;
+                if (!string.IsNullOrEmpty(enterprise.Id))
+                {
+                    if (session.Load<Enterprise>(enterprise.Id) != null)
+                        return string.Empty;
+                }
+
                 session.Store(enterprise);
                 session.SaveChanges();
-                _logger.Info("New enterprise created: " + enterprise.Name);
-                EmailHelper.NewEnterpriseNotification();
+                _logger.Info(string.Format("New enterprise created: {0} ({1}), Code:[nBNbn5fgaq]", enterprise.Name, enterprise.Id));
 
                 return enterprise.Id;
             }
         }
 
-        //TODO
-        public void DeleteEnterpriseById(string enterpriseId)
+        public void DeleteEnterprise(Enterprise enterprise)
         {
             using (var session = _documentStore.OpenSession())
             {
-                var enterprise = session.Load<Enterprise>(enterpriseId);
+                var enterpriseProductIds = enterprise.Menu.Categories.SelectMany(c => c.Products);
+                var productsInDb = session.Load<Product>(enterpriseProductIds);
+
+                var productsToRemove = (from productInDb in productsInDb where productInDb.Id == enterprise.Id select productInDb.Id).ToList();
+
+                session.Delete(productsToRemove);
                 session.Delete(enterprise);
                 session.SaveChanges();
-                _logger.Info("Enterprise deleted: " + enterprise.Name);
+                _logger.Info(string.Format("Enterprise ({0}, {1}) deleted with {2} products, Code:[45ouupl]", enterprise.Id, enterprise.Name, productsToRemove.Count));
             }
         }
 
@@ -203,7 +207,6 @@ namespace iMenyn.Data.Concrete.Db
                 var searchQuery = RavenQuery.Escape(key, true, false);
 
                 query = query.WhereEquals(x => x.PostalCode, postalCode).AndAlso();
-                query = query.WhereStartsWith(x => x.Key, searchQuery);
 
                 query = query.CloseSubclause();
                 return query;
@@ -219,12 +222,18 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        //TODO
-        public IEnumerable<Enterprise> GetNewEnterprises()
+        //DONE 
+        public IEnumerable<Enterprise> GetModifiedAndNewEnterprises()
         {
             using (var session = _documentStore.OpenSession())
             {
-                return session.Advanced.LuceneQuery<Enterprise, Enterprises>().WhereEquals(e => e.IsNew, true);
+                var query = session.Advanced.LuceneQuery<Enterprise, Enterprises>();
+
+                query.WhereEquals(e => e.IsNew, true);
+                query.OrElse();
+                query.WhereEquals(e => e.LockedFromEdit, true);
+
+                return query.OrderByDescending(e => e.LastUpdated);
             }
         }
 
@@ -293,9 +302,14 @@ namespace iMenyn.Data.Concrete.Db
                 }
 
                 // Add to viewmodel
-                viewModel.Name = enterprise.Name;
-                viewModel.Id = enterprise.Id;
                 viewModel.ViewModelCategories = categoriesViewModel;
+                viewModel.Enterprise = EnterpriseHelper.ModelToViewModel(enterprise);
+                viewModel.Enterprise.Address = string.Format("{0} {1}", enterprise.StreetRoute, enterprise.StreetNumber);
+
+                if (!edit)
+                {
+                    viewModel.Enterprise.ModifiedMenu = null;
+                }
 
                 return viewModel;
             }
@@ -339,6 +353,25 @@ namespace iMenyn.Data.Concrete.Db
 
 
                 return query.OrderBy(x => x.Name);
+            }
+        }
+
+
+        public void SetModifiedMenuAsDefault(string enterpriseId)
+        {
+            using (var session = _documentStore.OpenSession())
+            {
+                var enterprise = session.Load<Enterprise>(enterpriseId);
+                var modifiedMenu = session.Include<ModifiedMenu>(m => m.Menu.Categories.SelectMany(p => p.Products)).Load(enterprise.ModifiedMenu);
+
+                enterprise.Menu = modifiedMenu.Menu;
+
+                var products = session.Load<Product>(modifiedMenu.Menu.Categories.SelectMany(p => p.Products));
+                foreach (var p in products)
+                {
+                    var product = ProductHelper.UpdatedVersionToModel(p.UpdatedVersion);
+                    product.UpdatedVersion = null;
+                }
             }
         }
     }

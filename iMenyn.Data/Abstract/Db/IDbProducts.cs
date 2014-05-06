@@ -18,5 +18,8 @@ namespace iMenyn.Data.Abstract.Db
         void DeleteProductsByIds(List<string> productIds);
 
         IEnumerable<Product> GetAllProductsInDb();
+
+
+        void AddProductsToDb(List<Product> products);
     }
 }

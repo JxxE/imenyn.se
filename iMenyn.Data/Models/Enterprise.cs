@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace iMenyn.Data.Models
 {
-    public class Enterprise
+    public class Enterprise : IEnterprise
     {
         public string Id { get; set; }
-        public string Key { get; set; }
+        //public string Key { get; set; }
 
         public string Name { get; set; }
         public string Phone { get; set; }
@@ -47,21 +47,27 @@ namespace iMenyn.Data.Models
         public DateTime LastUpdated { get; set; }
 
         public Menu Menu { get; set; }
-
-
-        //[Obsolete]
-        //public string StateCode { get; set; }
-        //[Obsolete]
-        //public string City { get; set; }
-        //[Obsolete]
-        //public string YelpId { get; set; }
-        //[Obsolete]
-        //public string Address { get; set; }
     }
 
     public class Coordinates
     {
         public string Lng { get; set; }
         public string Lat { get; set; }
+    }
+
+    public interface IEnterprise
+    {
+        string Id { get; set; }
+        string Name { get; set; }
+        string Phone { get; set; }
+        int PostalCode { get; set; }
+        string PostalTown { get; set; }
+        string SubLocality { get; set; }
+        Coordinates Coordinates { get; set; }
+        List<string> Categories { get; set; }
+        DateTime LastUpdated { get; set; }
+        bool IsNew { get; set; }
+        bool LockedFromEdit { get; set; }
+        String ModifiedMenu { get; set; }
     }
 }

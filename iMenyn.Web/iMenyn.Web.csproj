@@ -40,6 +40,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4">
+      <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EcmaScript.NET">
       <HintPath>..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll</HintPath>
     </Reference>
@@ -256,7 +264,7 @@
     <Compile Include="Areas\AdminOLD\ViewModels\AccountViewModel.cs" />
     <Compile Include="Areas\AdminOLD\ViewModels\AllEnterprisesViewModel.cs" />
     <Compile Include="Areas\AdminOLD\ViewModels\CompareModifiedMenuViewModel.cs" />
-    <Compile Include="Areas\AdminOLD\ViewModels\DashboardViewModel.cs" />
+    <Compile Include="ViewModels\DashboardViewModel.cs" />
     <Compile Include="Areas\AdminOLD\ViewModels\UserInputViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -272,7 +280,7 @@
       <DependentUpon>CombinerHandler.ashx</DependentUpon>
     </Compile>
     <Compile Include="Handlers\CombinerRouteHandler.cs" />
-    <Compile Include="Helpers\AccountHelper.cs" />
+    <Compile Include="Helpers\AccountViewHelper.cs" />
     <Compile Include="Helpers\CombinerHelper.cs" />
     <Compile Include="Helpers\MvcHtmlHelpers.cs" />
     <Compile Include="Infrastructure\Authentication.cs" />
@@ -281,6 +289,7 @@
     <Compile Include="Infrastructure\OnlyAccountAdminAttribute.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\AccountViewModel.cs" />
     <Compile Include="ViewModels\BrowseViewModel.cs" />
     <Compile Include="ViewModels\EnterpriseViewModel.cs" />
     <Compile Include="ViewModels\LocationViewModel.cs" />
@@ -313,7 +322,7 @@
     <Content Include="Areas\AdminOLD\Views\Admin\Settings.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\ModifiedMenu.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\ModifiedMenus.cshtml" />
-    <Content Include="Areas\AdminOLD\Views\Admin\NewMenu.cshtml" />
+    <Content Include="Views\Admin\MenuApproval.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\NewEnterprises.cshtml" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -363,9 +372,7 @@
     <Content Include="Views\Cabaret\Index.cshtml" />
     <Content Include="Views\Manage\AddEnterprise.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Shared\_LayoutAdmin.cshtml" />
-    <Content Include="Views\Partials\_StandardMenu.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
-    <Content Include="Views\Partials\_StandardMenuProducts.cshtml" />
     <Content Include="Views\Cabaret\NoMenu.cshtml" />
     <Content Include="Views\Home\Info.cshtml" />
     <Content Include="Views\Home\Browse.cshtml" />
@@ -376,6 +383,11 @@
     <Content Include="Views\Manage\_ProductPrice.cshtml" />
     <Content Include="Views\Manage\_Product.cshtml" />
     <Content Include="Views\Manage\_Category.cshtml" />
+    <Content Include="Views\Partials\_Menu.cshtml" />
+    <Content Include="Views\Partials\MenuContent\_Category.cshtml" />
+    <Content Include="Views\Partials\MenuContent\_Product.cshtml" />
+    <Content Include="Views\Partials\MenuContent\_ProductPrice.cshtml" />
+    <Content Include="Views\Partials\_EnterpriseInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -422,6 +434,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
