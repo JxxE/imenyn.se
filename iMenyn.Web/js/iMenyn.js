@@ -244,13 +244,9 @@ iMenyn.Ajax = function () {
         $.ajax({
             type: 'POST',
             data: form,
-            url: '/Json/CreateTempEnterprise',
-            success: function (data) {
-                var key = iMenyn.Utilities.GetUrlParameter("key");
-                if (key === null)
-                    document.location = document.location + "?key=" + data + "#2";
-                else
-                    iMenyn.Utilities.ShowStep(2);
+            url: '/Manage/CreateTempEnterprise',
+            success: function (key) {
+                return key;
             },
             error: function () {
                 console.log("ERROR, createTempEnterprise");

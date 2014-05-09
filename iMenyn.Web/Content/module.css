@@ -1,6 +1,18 @@
 ﻿/* === Utility classes === */
+.error,#category-error {
+    color: #DB3333;
+}
 .vertical-bottom {
     vertical-align: bottom;
+}
+.mr5 {
+    margin-right: 5px;
+}
+.ml5 {
+    margin-left: 5px;
+}
+.mt50 {
+    margin-top: 50px;
 }
 /* === End of Utility classes === */
 

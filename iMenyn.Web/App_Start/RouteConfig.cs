@@ -13,18 +13,15 @@ namespace iMenyn.Web.App_Start
 
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            //routes.MapRoute(
-            //    name: "UrlKey",
-            //    url: "{urlKey}",
-            //    defaults: new { controller = "Home", action = "Index", id = @"^[a-zA-Z0-9]+$" });
-
+            //{controller}/{action}
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                "Default",
+                "{controller}/{action}",
+                new { controller = "Home", action = "Index" }
             );
 
 
+            //routes.MapRoute("Id", "{id}", new { controller = "Home", action = "Index" });
         }
     }
 }

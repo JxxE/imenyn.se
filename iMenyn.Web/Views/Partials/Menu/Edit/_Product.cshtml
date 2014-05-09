@@ -56,12 +56,12 @@
                             {
                                 foreach (var price in Model.Prices)
                                 {
-                                @Html.Partial("~/Views/Partials/MenuContent/_ProductPrice.cshtml", price)
+                                @Html.Partial("~/Views/Partials/Menu/Edit/_ProductPrice.cshtml", price)
                                 }
                             }
                             else
                             {
-                                @Html.Partial("~/Views/Partials/MenuContent/_ProductPrice.cshtml", new ProductPrice())
+                                @Html.Partial("~/Views/Partials/Menu/Edit/_ProductPrice.cshtml", new ProductPrice())
                             }
                             @Html.ActionLink("Lägg till pris", "BlankProductPrice","Manage", null, new { @class = "dynamic-add", data_max = 5 })
                         </div>

@@ -52,11 +52,19 @@ namespace iMenyn.Data.Concrete.Db
                     {
                         var modifiedMenuInDb = session.Load<ModifiedMenu>(MenuHelper.GetModifiedMenuId(enterpriseId));
 
-                        if (modifiedMenuInDb != null)
+                        if (modifiedMenuInDb == null)
                         {
-                            modifiedMenuInDb.Menu = menu;
+                            var modifiedMenu = new ModifiedMenu
+                                         {
+                                             Id = MenuHelper.GetModifiedMenuId(enterpriseId),
+                                             Menu = menu
+                                         };
+                            session.Store(modifiedMenu);
+
+                            enterprise.LockedFromEdit = true;
+                            enterprise.ModifiedMenu = modifiedMenu.Id;
                         }
-                        //enterprise.LockedFromEdit = true; TODO, turn this on!
+
                     }
 
                     session.Store(enterprise);
@@ -88,16 +96,20 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        public void DeleteEnterprise(Enterprise enterprise)
+        public void DeleteEnterprise(string enterpriseId)
         {
             using (var session = _documentStore.OpenSession())
             {
+                var enterprise = session.Include<Enterprise>(e => e.Menu.Categories.Select(c => c.Products)).Load(enterpriseId);
                 var enterpriseProductIds = enterprise.Menu.Categories.SelectMany(c => c.Products);
                 var productsInDb = session.Load<Product>(enterpriseProductIds);
 
                 var productsToRemove = (from productInDb in productsInDb where productInDb.Id == enterprise.Id select productInDb.Id).ToList();
 
-                session.Delete(productsToRemove);
+                foreach (var product in productsToRemove)
+                {
+                    session.Delete(product);
+                }
                 session.Delete(enterprise);
                 session.SaveChanges();
                 _logger.Info(string.Format("Enterprise ({0}, {1}) deleted with {2} products, Code:[45ouupl]", enterprise.Id, enterprise.Name, productsToRemove.Count));
@@ -250,8 +262,10 @@ namespace iMenyn.Data.Concrete.Db
         {
             using (var session = _documentStore.OpenSession())
             {
-
                 var viewModel = new CompleteEnterpriseViewModel();
+
+                if (string.IsNullOrEmpty(enterpriseId))
+                    return viewModel;
 
                 // Load enterprise, include products
                 var enterprise = session.Include<Enterprise>(e => e.Menu.Categories.Select(c => c.Products)).Load(enterpriseId);
@@ -266,41 +280,46 @@ namespace iMenyn.Data.Concrete.Db
                     menu = Mapper.Map(modifiedMenu.Menu, menu);
                 }
                 var products = new List<Product>();
-                foreach (var p in menu.Categories.Select(category => session.Load<Product>(category.Products)))
-                {
-                    products.AddRange(p);
-                }
-
                 // Create to viewmodel
                 var categoriesViewModel = new List<ViewModelCategory>();
-                Mapper.CreateMap<Product, ProductViewModel>();
-                foreach (var category in menu.Categories)
+                if(menu != null)
                 {
-                    var categoryViewModel = new ViewModelCategory
-                                {
-                                    Name = category.Name,
-                                    Id = category.Id,
-                                    EnterpriseId = enterpriseId,
-                                    Products = new List<ProductViewModel>()
-                                };
-
-                    foreach (var product in category.Products.Select(productForCategory => products.FirstOrDefault(p => p.Id == productForCategory)))
+                    if (menu.Categories != null)
                     {
-                        if (edit && product.UpdatedVersion != null)
+                        foreach (var p in menu.Categories.Select(category => session.Load<Product>(category.Products)))
                         {
-                            Mapper.CreateMap<ProductUpdatedVersion, Product>();
-                            Mapper.Map(product.UpdatedVersion, product);
-
+                            products.AddRange(p);
                         }
-                        var p = ProductHelper.ModelToViewModel(product);
-                        p.EnterpriseId = enterpriseId;
-                        p.CategoryId = category.Id;
-                        categoryViewModel.Products.Add(p);
+
+                        Mapper.CreateMap<Product, ProductViewModel>();
+                        foreach (var category in menu.Categories)
+                        {
+                            var categoryViewModel = new ViewModelCategory
+                            {
+                                Name = category.Name,
+                                Id = category.Id,
+                                EnterpriseId = enterpriseId,
+                                Products = new List<ProductViewModel>()
+                            };
+
+                            foreach (var product in category.Products.Select(productForCategory => products.FirstOrDefault(p => p.Id == productForCategory)))
+                            {
+                                if (edit && product.UpdatedVersion != null)
+                                {
+                                    Mapper.CreateMap<ProductUpdatedVersion, Product>();
+                                    Mapper.Map(product.UpdatedVersion, product);
+
+                                }
+                                var p = ProductHelper.ModelToViewModel(product);
+                                p.EnterpriseId = enterpriseId;
+                                p.CategoryId = category.Id;
+                                categoryViewModel.Products.Add(p);
+                            }
+
+                            categoriesViewModel.Add(categoryViewModel);
+                        }
                     }
-
-                    categoriesViewModel.Add(categoryViewModel);
                 }
-
                 // Add to viewmodel
                 viewModel.ViewModelCategories = categoriesViewModel;
                 viewModel.Enterprise = EnterpriseHelper.ModelToViewModel(enterprise);

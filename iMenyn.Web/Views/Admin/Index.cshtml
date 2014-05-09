@@ -10,12 +10,12 @@
 {
     <div class="row">
         <div class="col-sm-12">
-        <a href="@Url.Action("CreateFakeEnterprise",new{modified=true})" class="btn btn-primary">Skapa fake-enterprise (ny)</a>
-        <a class="btn btn-primary">Skapa fake-enterprise (modifierad)</a>
-    </div>
+            <a href="@Url.Action("CreateFakeEnterprise", new { modified = true })" class="btn btn-primary">Skapa fake-enterprise (ny)</a>
+            <a class="btn btn-primary">Skapa fake-enterprise (modifierad)</a>
+        </div>
     </div>
     <div class="col-sm-6 well">
-        <h4>Nya restauranger <span class="badge">@Model.NewEnterprises.Count</span></h4>
+        <h4>Nya restauranger <small>(@Model.NewEnterprises.Count)</small></h4>
         @if (Model.NewEnterprises.Count == 0)
         {
             <i>Inga...</i>
@@ -26,10 +26,17 @@
                 @foreach (var enterprise in Model.NewEnterprises.Take(5))
                 {
                     <li class="list-group-item">
-                        <a href="@Url.Action("MenuApproval",new{enterpriseId=enterprise.Id})">
+                        <a href="@Url.Action("MenuApproval", new { enterpriseId = enterprise.Id })">
                             <h3 class="list-group-item-heading">@enterprise.Name</h3>
                             <p class="list-group-item-text">
-                                Produkter: @enterprise.Menu.Categories.SelectMany(c=>c.Products).Count()<br/>
+                                Produkter: @if (enterprise.Menu != null)
+                                           {
+                                    @enterprise.Menu.Categories.SelectMany(c => c.Products).Count()
+                                           }
+                                           else
+                                           {
+                                    <span>Inga</span>
+                                           }<br />
                                 Inkommen: @enterprise.LastUpdated.ToShortDateString() (@enterprise.LastUpdated.ToShortTimeString())
                             </p>
                         </a>
@@ -39,7 +46,7 @@
         }
     </div>
     <div class="col-sm-6 well">
-        <h4>Modifierade menyer <span class="badge">@Model.ModifiedEnterprises.Count</span></h4>
+        <h4>Modifierade menyer <small>(@Model.ModifiedEnterprises.Count)</small></h4>
         @if (Model.ModifiedEnterprises.Count == 0)
         {
             <i>Inga...</i>
@@ -51,8 +58,8 @@
                 {
                     <li class="list-group-item">
 
-                        <a href="@Url.Action("MenuApproval",new{enterpriseId=enterprise.Id})">
-                            
+                        <a href="@Url.Action("MenuApproval", new { enterpriseId = enterprise.Id })">
+
                             <h4 class="list-group-item-heading">@enterprise.Name</h4>
 
                         </a>
@@ -60,5 +67,39 @@
                 }
             </ul>
         }
+    </div>
+    <div class="col-sm-12">
+        <h1>Restauranger <small>(@Model.AllEnterprises.Count())</small></h1>
+        <ul class="list-group">
+            @foreach (var e in Model.AllEnterprises)
+            {
+                <li class="list-group-item row">
+                    <a href="@Url.Action("Index", "Cabaret", new { q = e.Id })" target="_blank"><strong>@e.Name</strong></a>
+                    <span class="label label-info">
+                        @if (e.Menu != null)
+                        {
+                            @e.Menu.Categories.SelectMany(c => c.Products).Count()
+                        }
+                        else
+                        {
+                            <span>0</span>
+                        }
+                    </span>
+                    @if (e.IsNew)
+                    {
+                        <span class="label label-warning ml5">Ny!</span>
+                    }
+                    @if (e.LockedFromEdit)
+                    {
+                        <span class="label label-danger ml5">Låst</span>
+                    }
+                    @if (e.OwnedByAccount)
+                    {
+                        <span class="label label-primary ml5">Ägd</span>
+                    }
+                    <a class="btn btn-danger pull-right" href="@Url.Action("DeleteEnterprise", "Admin", new { enterpriseId = e.Id })" onclick="return confirm('Really?');" >Radera<span class="glyphicon glyphicon-trash"></span></a>
+                </li>   
+            }
+        </ul>
     </div>
 }

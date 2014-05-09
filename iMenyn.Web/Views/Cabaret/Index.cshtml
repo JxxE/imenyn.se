@@ -1,6 +1,6 @@
-﻿@model iMenyn.Data.ViewModels.MenuViewModel
+﻿@model iMenyn.Data.ViewModels.CompleteEnterpriseViewModel
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = Model.Enterprise.Name;
 }
 
-@Model.
+@Html.Partial("~/Views/Partials/Menu/Edit/_Menu.cshtml", Model)

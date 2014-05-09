@@ -1,10 +1,11 @@
 ﻿@using iMenyn.Data.Helpers
-@model iMenyn.Web.ViewModels.EnterpriseViewModel
+@using iMenyn.Data.ViewModels
+@model EnterpriseViewModel
 
 @{
     ViewBag.Title = "Bidra med en meny";
     var categories = GeneralHelper.GetCategories();
-    var hasCoordinates = Model.Coordinates != null;
+    var hasCoordinates = Model != null && Model.Coordinates != null;
 }
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
@@ -17,191 +18,189 @@
         position: relative;
     }
 </style>
-<h3>Skapa meny</h3>
-<p>Här kan du skapa en meny till en resturang. Innan den publiceras kommer den att godkännas av oss.</p>
 
-<div id="step-1">
-    <h3 class="grey"><span class="glyphicon glyphicon-info-sign"></span>Om restaurangen</h3>
-    @using (Html.BeginForm("Index", "Manage", FormMethod.Post, new { @class = "form-horizontal", id = "enterprise-form" }))
-    {
+<div id="create-enterprise-container" class="@(string.IsNullOrEmpty(Model.Name) ? "" : "model-from-db")">
+    <div id="confirm-content">
+        <h3>Skapa meny</h3>
+        <p>Här kan du skapa en meny till en resturang. Innan den publiceras kommer den att godkännas.</p>
+        <br />
+        <a id="confirm" href="javascript:void(0)" class="btn btn-success btn-lg">Jag förstår<span class="glyphicon glyphicon-ok"></span></a>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.Name, "Namn", new { @class = "col-sm-2 control-label" })
-            <div class="col-sm-4">
-                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
-            </div>
-        </div>
+    <div id="form-content">
+        <h3 class="grey"><span class="glyphicon glyphicon-info-sign mr5"></span>Om restaurangen</h3>
+        @using (Html.BeginForm("CreateTempEnterprise", "Manage", FormMethod.Post, new { @class = "form-horizontal", id = "enterprise-form" }))
+        {
 
-        <div class="form-group">
-            @Html.LabelFor(m => m.Phone, "Telefon", new { @class = "col-sm-2 control-label" })
-            <div class="col-sm-4">
-                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
-            </div>
-        </div>
-    
-
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Typ</label>
-            <div class="col-sm-4">
-                <select id="category-chooser" class="form-control@((Model.ChosenCategories != null && Model.ChosenCategories.Count > 4) ? " hide" : "")">
-                    <option></option>
-                    @foreach (var category in categories)
-                    {
-
-                        <option value="@category.Value">@category.Text</option>    
-                    }
-                </select>
-                <div id="chosen-categories" class="form-inline marginB20">
-                    @if (Model.ChosenCategories != null)
-                    {
-                        for (var i = 0; i < Model.ChosenCategories.Count; i++)
-                        {
-                        <div id="tag-@i" class="tag">@Model.ChosenCategories[i].Text
-                            @Html.HiddenFor(m => m.ChosenCategories[i].Value)
-                            <span class='glyphicon glyphicon-remove'></span>
-                        </div>
-                        }
-                    }
+            <div class="form-group">
+                @Html.LabelFor(m => m.Name, "Namn", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-4">
+                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control", autofocus = "" })
                 </div>
             </div>
-        </div>
-    
-        
-        <hr />
-        <h3 class="grey"><span class="glyphicon glyphicon-map-marker"></span>Plats</h3>
-        <div class="form-group">
-            <label for="address-search" class="col-sm-2 control-label">Sök</label>
-            <div class="col-sm-4">
-                <input type="text" name="address-search" id="address-search" placeholder="Adress" class="form-control">
-            </div>
-        </div>
 
-        <div class="form-group">
-            <label class="col-sm-2"></label>
-            <div class="col-sm-4">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Phone, "Telefon", new { @class = "col-sm-2 control-label" })
+                <div class="col-sm-4">
+                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                    <span class="help-block"><a href="javascript:void(0)" id="help-search"><small>Sök på Yelp</small></a></span>
+                </div>
+            </div>
+    
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Typ</label>
+                <div class="col-sm-4">
+                    <select id="category-chooser" class="form-control@((Model.DisplayCategories != null && Model.DisplayCategories.Count > 4) ? " hide" : "")">
+                        <option></option>
+                        @foreach (var category in categories)
+                        {
+                            <option value="@category.Value">@category.Text</option>    
+                        }
+                    </select>
+                    <div id="chosen-categories" class="form-inline marginB20">
+                        @if (Model.DisplayCategories != null)
+                        {
+                            for (var i = 0; i < Model.DisplayCategories.Count; i++)
+                            {
+                                <div id="tag-@i" class="tag">@Model.DisplayCategories[i].Text
+                                    @Html.HiddenFor(m => m.DisplayCategories[i].Value)
+                                    <span class='glyphicon glyphicon-remove'></span>
+                                </div>
+                            }
+                        }
+                    </div>
+                    <label id="category-error" class="hide">Välj minst 1 kategori!</label>
+                </div>
+            </div>
+            <hr />
+            <h3 class="grey"><span class="glyphicon glyphicon-map-marker mr5"></span>Plats</h3>
+            <div class="form-group">
+                <label for="address-search" class="col-sm-2 control-label">Sök</label>
+                <div class="col-sm-4">
+                    <input type="text" name="address-search" id="address-search" placeholder="Adress/plats" class="form-control">
+                </div>
                 <a id="my-location" href="javascript:void(0)" class="btn btn-info">Markera på karta<span class="glyphicon glyphicon-screenshot"></span></a>
             </div>
-        </div>
 
-        <div id="location-details" class="well @(string.IsNullOrEmpty(Model.Name) ? "hide" : "")">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        @* Gatuadress *@
-                        @Html.LabelFor(m => m.StreetRoute, "Gatuadress", new { @class = "col-sm-4 control-label" })
-                        <div class="col-sm-8">
-                            @Html.TextBoxFor(m => m.StreetRoute, new { @class = "form-control" })
+            <div id="location-details" class="well">
+                <div id="location-details-errorlist"></div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            @* Gatuadress *@
+                            @Html.LabelFor(m => m.StreetRoute, "Gatuadress", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(m => m.StreetRoute, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @* Gatunummer  *@
+                            @Html.LabelFor(m => m.StreetNumber, "Gatunummer ", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(m => m.StreetNumber, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @* Postnummer  *@
+                            @Html.LabelFor(m => m.PostalCode, "Postnummer ", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-4">
+                                @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @* Postort  *@
+                            @Html.LabelFor(m => m.PostalTown, "Postort ", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(m => m.PostalTown, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @* Kommun  *@
+                            @Html.LabelFor(m => m.Commune, "Kommun ", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(m => m.Commune, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @* Län  *@
+                            @Html.LabelFor(m => m.County, "Län ", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(m => m.County, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group mt50">
+                            <label class="col-sm-4"></label>
+                            <div class="col-sm-4">
+                                <button class="btn btn-success btn-lg">Till menyn <span class="glyphicon glyphicon-chevron-right"></span></button>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        @* Gatunummer  *@
-                        @Html.LabelFor(m => m.StreetNumber, "Gatunummer ", new { @class = "col-sm-4 control-label" })
-                        <div class="col-sm-3">
-                            @Html.TextBoxFor(m => m.StreetNumber, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @* Postnummer  *@
-                        @Html.LabelFor(m => m.PostalCode, "Postnummer ", new { @class = "col-sm-4 control-label" })
-                        <div class="col-sm-4">
-                            @Html.TextBoxFor(m => m.PostalCode, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @* Postort  *@
-                        @Html.LabelFor(m => m.PostalTown, "Postort ", new { @class = "col-sm-4 control-label" })
-                        <div class="col-sm-8">
-                            @Html.TextBoxFor(m => m.PostalTown, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @* Kommun  *@
-                        @Html.LabelFor(m => m.Commune, "Kommun ", new { @class = "col-sm-4 control-label" })
-                        <div class="col-sm-8">
-                            @Html.TextBoxFor(m => m.Commune, new { @class = "form-control" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @* Län  *@
-                        @Html.LabelFor(m => m.County, "Län ", new { @class = "col-sm-4 control-label" })
-                        <div class="col-sm-8">
-                            @Html.TextBoxFor(m => m.County, new { @class = "form-control" })
-                        </div>
+                    @Html.TextBoxFor(m => m.Nope, new { @class = "hide" })
+                    @Html.HiddenFor(m => m.CountryCode)
+                    @Html.HiddenFor(m => m.SubLocality)
+                    @Html.HiddenFor(m => m.Coordinates.Lat)
+                    @Html.HiddenFor(m => m.Coordinates.Lng)
+                    @Html.HiddenFor(m => m.EditKey)
+
+                    <div class="col-sm-8">
+                        <div id="map"></div>
                     </div>
                 </div>
-                @Html.TextBoxFor(m => m.Nope, new { @class = "hide" })
-                @Html.HiddenFor(m => m.CountryCode)
-                @Html.HiddenFor(m => m.SubLocality)
-                @Html.HiddenFor(m => m.Coordinates.Lat)
-                @Html.HiddenFor(m => m.Coordinates.Lng)
-                @Html.HiddenFor(m => m.EditKey)
 
-                <div class="col-sm-8">
-                    <div id="map"></div>
-                </div>
             </div>
+            
 
-        </div>
-    
-    }
-</div>
-
-<div id="step-2" class="hide">
-    <div class="well">
-        <h1>Här skapar man menyn</h1>
-    </div>
-</div>
-
-
-<div id="steps-navigation" data-length="2">
-    <small>Steg <span data-step="current"></span> av <span data-step="total"></span></small>
-    <div>
-        <a id="prev-step" href="javascript:void(0)" class="btn btn-info hide"><span class="glyphicon glyphicon-chevron-left"></span>Tillbaka</a>
-        <a id="next-step" href="javascript:void(0)" class="btn btn-success">Nästa <span class="glyphicon glyphicon-chevron-right"></span></a>
-    </div>
-</div>
-
-<script>
-    $(document).ready(function () {
-        if (window.location.hash) {
-            iMenyn.Utilities.ShowStep(window.location.hash.replace("#", ""));
+            
         }
+    </div>
+
+</div>
+<script>
+    //Serverside validation:http://www.dotnet-tricks.com/Tutorial/mvc/F16Q301112-Server-Side-Model-Validation-in-MVC-Razor.html
+    $(document).ready(function () {
         if ('@hasCoordinates' === 'True') {
             setMap('@(Model.Coordinates != null ? Model.Coordinates.Lat : null)', '@(Model.Coordinates != null ? Model.Coordinates.Lng : null)');
         }
     });
-    
+
     //Initiate category chooser
     iMenyn.Utilities.InitCategoryChooser();
 
-    $("#next-step").click(function () {
-        var enterpriseForm = $("#enterprise-form").serialize();
-        iMenyn.Ajax.CreateTempEnterprise(enterpriseForm);
-    });
-    
-    $("#prev-step").click(function () {
-        iMenyn.Utilities.ShowStep(1);
-    });
-
     $("#my-location").click(function () {
-        iMenyn.Utilities.MyLocation(function (data) {
-            var lat, lng;
-            if (data) {
-                //My location
-                lat = data.latitude;
-                lng = data.longitude;
-            }
-            else {
-                //Stockholm
-                lat = '59.332362';
-                lng = '18.065109';
-            }
-            setMap(lat, lng);
-            geocodePosition(lat, lng);
-        });
+        putMyLocationOnMap(false);
     });
 
+    $("#help-search").click(function () {
+        var company = $("input[name='Name']").val();
+        window.open("http://www.yelp.se/search?find_desc=" + company, "_blank");
+    });
+
+    function putMyLocationOnMap(useDefault) {
+        //Stockholm
+        var defaultLat = '59.332362';
+        var defaultLng = '18.065109';
+        if (!useDefault) {
+            iMenyn.Utilities.MyLocation(function (data) {
+                var lat, lng;
+                if (data) {
+                    //My location
+                    lat = data.latitude;
+                    lng = data.longitude;
+                }
+                else {
+                    //Default location
+                    lat = defaultLat;
+                    lng = defaultLng;
+                }
+                setMap(lat, lng);
+            });
+        }
+        else {
+            setMap(defaultLat, defaultLng);
+        }
+    }
 
     var componentForm = {
         street_number: 'StreetNumber', // Gatunummer: 2A
@@ -231,11 +230,44 @@
 
             //Visa karta
             setMap(place.geometry.location.k, place.geometry.location.A);
-
         });
 
     }
 
+    $("#confirm").click(function () {
+        $("#create-enterprise-container > #confirm-content").hide();
+        $("#create-enterprise-container > #form-content").show();
+    });
+
+    $("#enterprise-form").validate({
+        ignore: "",
+        rules: {
+            PostalCode: {
+                number: true,
+                required: true,
+                rangelength: [5, 5]
+            },
+            Name: { required: true }
+        },
+        messages: {
+            PostalCode: {
+                number: "Ej giltigt",
+                required: "*",
+                rangelength: "Ej giltigt"
+            },
+            Name: { required: "Ange restaurangens namn" }
+        },
+        submitHandler: function (form) {
+            var chosenCategoriesDiv = $("#chosen-categories");
+            var chosenCategoriesCount = chosenCategoriesDiv.children('div').size();
+            if (chosenCategoriesCount == 0) {
+                $("#category-error").removeClass('hide');
+            }
+            else {
+                form.Submit();
+            }
+        }
+    });
 
     function getAddressComponents(place) {
         for (var i = 0; i < place.address_components.length; i++) {
@@ -257,7 +289,7 @@
     var mapMarker;
     function setMap(lat, lng) {
         //Ta bort klassen "hide"
-        $("#location-details").removeClass("hide");
+        $("#location-details").show();
 
         var lngLat = new google.maps.LatLng(lat, lng);
         var mapOptions = {
@@ -274,6 +306,8 @@
             animation: google.maps.Animation.DROP
         });
         mapMarker.setMap(map);
+        var asd = mapMarker.getPosition();
+        geocodePosition(asd.k, asd.A);
 
         google.maps.event.addListener(mapMarker, 'dragend', function () {
             var pos = mapMarker.getPosition();
@@ -308,39 +342,13 @@
 
     google.maps.event.addDomListener(window, 'load', initialize);
 
-//TODO, validate
-    //$("#enterprise-form").validate({
-    //    rules: {
-    //        PostalCode: {
-    //            number: true,
-    //            required: true,
-    //            rangelength: [5, 5]
-    //        },
-    //        Name: { required: true }
-    //    },
-    //    messages: {
-    //        PostalCode: {
-    //            number: "Får endast innehålla siffor",
-    //            required: "Ange ett postnummer",
-    //            rangelength: "Postnummer ska vara femsiffrigt."
-    //        },
-    //        Name: { required: "Ange restaurangens namn" }
-    //    },
-    //    submitHandler: function (form) {
-    //        var chosenCategoriesCount = $("#chosen-categories").children('div').size();
-    //        if (chosenCategoriesCount == 0) {
-    //            $("<p class='error'>Välj minst 1 kategori!</p>").insertAfter("div[data-id='chosen-categories']");
-    //        }
-    //        else {
-    //            form.submit();
-    //        }
-    //    }
-    //});
 </script>
 
 <noscript>
     <style>
-        form {display: none;}
+        form {
+            display: none;
+        }
     </style>
     <h1>Aktivera JavaScript för att se sidan</h1>
 </noscript>

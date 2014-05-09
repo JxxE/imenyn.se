@@ -353,7 +353,7 @@
                 $("#create-products").hide();
                 $("#loading").show();
                 $.ajax({
-                    url: "/Manage/SaveProducts",
+                    url: "/Edit/SaveProducts",
                     data: ko.toJSON({ products: self.products, enterpriseId: '@ViewBag.EnterpriseId' }),
                     type: "post",
                     contentType: "application/json",

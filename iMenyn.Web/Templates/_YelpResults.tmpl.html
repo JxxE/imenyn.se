@@ -30,7 +30,7 @@
 
     {{/if}}
     <a href="javascript:void(0)" class="btn btn-success" data-toggle="hide" data-target="#{{:id}}">Välj<span data-icon="&#xe005;" class="marginL5"></span></a>
-    <form id="{{:id}}" method="POST" action="/Manage/CreateEnterprise" class="hide form-inline">
+    <form id="{{:id}}" method="POST" action="/Edit/CreateEnterprise" class="hide form-inline">
         <input type="hidden" name="name" value="{{:name}}" />
         <input type="hidden" name="phone" value="{{:display_phone}}" />
         <input type="hidden" name="address" value="{{:location.address[0]}}" />

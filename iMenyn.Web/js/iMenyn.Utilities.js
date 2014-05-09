@@ -8,6 +8,7 @@ iMenyn.Utilities = function () {
 
     var initCategoryChooser = function () {
         $("#category-chooser").on("change", function () {
+            $("#category-error").addClass('hide');
             var value = this.value;
             if (value != "") {
                 var text = $("option:selected", this).html();
@@ -21,7 +22,7 @@ iMenyn.Utilities = function () {
                         index++;
                         tagId = index;
                     }
-                    divChosenCategories.append("<div id='tag-" + tagId + "' class='tag'>" + text + "<input type='hidden' name='ChosenCategories[" + tagId + "].Value' value='" + value + "' />" +
+                    divChosenCategories.append("<div id='tag-" + tagId + "' class='tag'>" + text + "<input type='hidden' name='DisplayCategories[" + tagId + "].Value' value='" + value + "' />" +
                         "<span class='glyphicon glyphicon-remove'></span></div>");
                     if (count == 4) {
                         $("#category-chooser").addClass("hide");
@@ -71,31 +72,31 @@ iMenyn.Utilities = function () {
         });
     }
 
-    var showStep = function (step) {
-        window.location.hash = step;
-        //Hide all steps
-        $("div[id^=step-]").addClass("hide");
-        //Show current step
-        $("#step-" + step).removeClass("hide");
+    //var showStep = function (step) {
+    //    window.location.hash = step;
+    //    //Hide all steps
+    //    $("div[id^=step-]").addClass("hide");
+    //    //Show current step
+    //    $("#step-" + step).removeClass("hide");
 
-        //Navigation
-        var $stepNavigation = $("#steps-navigation");
-        var stepAmount = $stepNavigation.data('length');
-        $stepNavigation.find('span[data-step="current"]').html(step);
-        $stepNavigation.find('span[data-step="total"]').html(stepAmount);
-        if (step == stepAmount) {
-            $("#next-step").addClass('hide');
-        }
-        else {
-            $("#next-step").removeClass('hide');
-        }
-        if (step == 1) {
-            $("#prev-step").addClass('hide');
-        }
-        else {
-            $("#prev-step").removeClass('hide');
-        }
-    };
+    //    //Navigation
+    //    var $stepNavigation = $("#steps-navigation");
+    //    var stepAmount = $stepNavigation.data('length');
+    //    $stepNavigation.find('span[data-step="current"]').html(step);
+    //    $stepNavigation.find('span[data-step="total"]').html(stepAmount);
+    //    if (step == stepAmount) {
+    //        $("#next-step").addClass('hide');
+    //    }
+    //    else {
+    //        $("#next-step").removeClass('hide');
+    //    }
+    //    if (step == 1) {
+    //        $("#prev-step").addClass('hide');
+    //    }
+    //    else {
+    //        $("#prev-step").removeClass('hide');
+    //    }
+    //};
 
     var myLocation = function (callback) {
         if (navigator.geolocation) {
@@ -130,7 +131,6 @@ iMenyn.Utilities = function () {
     return {
         InitCategoryChooser: initCategoryChooser,
         GetUrlParameter: getUrlParameter,
-        ShowStep: showStep,
         MyLocation: myLocation,
         Toast: toast,
         DynamicAdd: dynamicAdd

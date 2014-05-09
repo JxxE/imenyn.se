@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace iMenyn.Data.Models
 {
-    public class Enterprise : IEnterprise
+    public class Enterprise
     {
         public string Id { get; set; }
         //public string Key { get; set; }
@@ -55,19 +55,19 @@ namespace iMenyn.Data.Models
         public string Lat { get; set; }
     }
 
-    public interface IEnterprise
-    {
-        string Id { get; set; }
-        string Name { get; set; }
-        string Phone { get; set; }
-        int PostalCode { get; set; }
-        string PostalTown { get; set; }
-        string SubLocality { get; set; }
-        Coordinates Coordinates { get; set; }
-        List<string> Categories { get; set; }
-        DateTime LastUpdated { get; set; }
-        bool IsNew { get; set; }
-        bool LockedFromEdit { get; set; }
-        String ModifiedMenu { get; set; }
-    }
+    //public interface IEnterprise
+    //{
+    //    string Id { get; set; }
+    //    string Name { get; set; }
+    //    string Phone { get; set; }
+    //    int PostalCode { get; set; }
+    //    string PostalTown { get; set; }
+    //    string SubLocality { get; set; }
+    //    Coordinates Coordinates { get; set; }
+    //    List<string> Categories { get; set; }
+    //    DateTime LastUpdated { get; set; }
+    //    bool IsNew { get; set; }
+    //    bool LockedFromEdit { get; set; }
+    //    String ModifiedMenu { get; set; }
+    //}
 }

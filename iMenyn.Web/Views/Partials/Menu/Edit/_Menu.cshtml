@@ -2,7 +2,10 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
 
-@Html.Partial("~/Views/Partials/_EnterpriseInfo.cshtml",Model.Enterprise)
+@if(Model.Enterprise != null)
+{
+    @Html.Partial("~/Views/Partials/_EnterpriseInfo.cshtml",Model.Enterprise)
+}
 
 <div class="row">
     <div class="col-sm-8 edit">
@@ -14,7 +17,7 @@
         </div>
         @foreach (var category in Model.ViewModelCategories)
         {
-            @Html.Partial("~/Views/Partials/MenuContent/_Category.cshtml", category)
+            @Html.Partial("~/Views/Partials/Menu/Edit/_Category.cshtml", category)
         }
     </div>
     <div class="row">

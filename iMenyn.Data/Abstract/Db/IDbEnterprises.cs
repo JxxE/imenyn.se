@@ -28,7 +28,7 @@ namespace iMenyn.Data.Abstract.Db
 
         IEnumerable<Enterprise> GetEnterprisesByLocation(string stateCode, string city);
 
-        void DeleteEnterprise(Enterprise enterprise);
+        void DeleteEnterprise(string enterpriseId);
 
         void SetModifiedMenuAsDefault(string enterpriseId);
     }

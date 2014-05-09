@@ -10,21 +10,18 @@ namespace iMenyn.Data.ViewModels
         public List<ViewModelCategory> ViewModelCategories { get; set; }
     }
 
-    public class EnterpriseViewModel : IEnterprise
+    public class EnterpriseViewModel : Enterprise
     {
-        public string Id { get; set; }
-        public string Name{ get; set; }
-        public int PostalCode { get; set; }
-        public string PostalTown { get; set; }
-        public string SubLocality { get; set; }
-        public Coordinates Coordinates { get; set; }
-        public List<string> Categories { get; set; }
-        public bool IsNew { get; set; }
-        public bool LockedFromEdit { get; set; }
-        public string Phone { get; set; }
         public string Address { get; set; }
-        public System.DateTime LastUpdated { get; set; }
-        public string ModifiedMenu { get; set; }
+        public double DistanceFromMyLocation { get; set; }
+
+        public List<ValueAndText> DisplayCategories { get; set; }
+
+        //Used when editing
+        public string EditKey { get; set; }
+
+        //Spam-check property
+        public string Nope { get; set; }
     }
 
     public class ViewModelCategory

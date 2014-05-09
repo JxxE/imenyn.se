@@ -41,6 +41,8 @@ namespace iMenyn.Web.Controllers
 
                 viewModel.NewEnterprises = newEnterprises.ToList();
                 viewModel.ModifiedEnterprises = modifiedEnterprises.ToList();
+                viewModel.AllEnterprises = Db.Enterprises.GetAllEnterprises().OrderBy(e=>e.Name);
+                
             }
             else
             {
@@ -108,7 +110,7 @@ namespace iMenyn.Web.Controllers
             //Disapprove new menu
             if (!approved && enterprise.IsNew)
             {
-                Db.Enterprises.DeleteEnterprise(enterprise);
+                Db.Enterprises.DeleteEnterprise(enterprise.Id);
             }
 
             //Approve modified menu
@@ -154,13 +156,16 @@ namespace iMenyn.Web.Controllers
             return null;
         }
 
+        public RedirectToRouteResult DeleteEnterprise(string enterpriseId)
+        {
+            Db.Enterprises.DeleteEnterprise(enterpriseId);
+            return RedirectToAction("Index");
+        }
+
         #region Create fake enterprise
         public RedirectToRouteResult CreateFakeEnterprise(bool modified)
         {
-
-            FakeDataHelper.CreateFakeEnterprise(Db, true);
-            //Db.Enterprises.UpdateEnterprise(enterprise,allProducts);
-            //Db.Menus.CreateMenu(enterprise, allProducts);
+            FakeDataHelper.CreateFakeEnterprise(Db, modified);
             return RedirectToAction("Index");
         }
         #endregion

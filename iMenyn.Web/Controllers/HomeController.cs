@@ -39,6 +39,10 @@ namespace iMenyn.Web.Controllers
             //{
 
             //}
+            if(!string.IsNullOrEmpty(q))
+            {
+                return RedirectToAction("Index", "Cabaret", new{q});
+            }
 
             return View();
         }
@@ -58,7 +62,7 @@ namespace iMenyn.Web.Controllers
             //var counties = GeneralHelper.GetCountyNameAndCodes();
 
             //var stateCodesAndNames = new List<ValueAndText>();
-            
+
             //foreach (var enterpriseStateCode in enterpriseStateCodes)
             //{
             //    var stateCodeAndName = new ValueAndText

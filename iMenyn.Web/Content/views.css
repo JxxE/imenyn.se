@@ -1,0 +1,8 @@
+﻿/* === Create enterprise === */
+#create-enterprise-container #form-content,#create-enterprise-container #form-content #location-details{
+    display: none;
+}
+#create-enterprise-container.model-from-db #confirm-content{
+    display: none;
+}
+/* === End of Create enterprise === */

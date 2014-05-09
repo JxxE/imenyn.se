@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    @Combiner.Css("/Content", "bootstrap.css,bootstrap-theme.css,module.css,media-queries.css")
+    @Combiner.Css("/Content", "bootstrap.css,bootstrap-theme.css,module.css,views.css,media-queries.css")
     <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-    @Combiner.Js("/Js", "modernizr-2.5.3.js,iMenyn.js,iMenyn.jsrender.js,iMenyn.Utilities.js")
+    @Combiner.Js("/Js", "modernizr-2.5.3.js,iMenyn.js,iMenyn.Utilities.js")
 </head>
     <body>
         @Raven.Client.MvcIntegration.RavenProfiler.CurrentRequestSessions()

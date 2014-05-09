@@ -7,7 +7,7 @@
     <strong>IsNew</strong>: @Model.Enterprise.IsNew<br/>
     <strong>ModifiedMenu</strong>: @Model.Enterprise.ModifiedMenu
 </div>
-@Html.Partial("~/Views/Partials/_Menu.cshtml", Model)
+@Html.Partial("~/Views/Partials/Menu/Edit/_Menu.cshtml", Model)
 
 @Html.ActionLink("Godkänn", "MenuApprovalFunction", "Admin", new { enterpriseId = Model.Enterprise.Id, approved = true }, new { @class = "btn btn-success" })
 @Html.ActionLink("Godkänn ej", "MenuApprovalFunction", "Admin", new { enterpriseId = Model.Enterprise.Id, approved = false }, new { @class = "btn btn-danger", onclick = "return confirm('Vill du verkligen ta bort detta bidrag?');" })

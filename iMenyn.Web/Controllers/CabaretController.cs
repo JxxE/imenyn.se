@@ -9,15 +9,15 @@ namespace iMenyn.Web.Controllers
         public CabaretController(IDb db, ILogger logger)
             : base(db, logger) { }
 
-        public ActionResult Index(string c)
+        public ActionResult Index(string q)
         {
-            if (!string.IsNullOrEmpty(c))
+            if (!string.IsNullOrEmpty(q))
             {
-                //TODO
-                //var viewModel = Repository.GetMenu(c);
-                //return View(viewModel);
+                var enterprise = Db.Enterprises.GetCompleteEnterprise(q);
+                if(enterprise != null)
+                    return View(enterprise);
             }
-            return View();
+            return RedirectToAction("Index","Home");
         }
 
         public ActionResult Product(string id)

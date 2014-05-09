@@ -11,6 +11,7 @@ using iMenyn.Data.Abstract;
 using iMenyn.Data.Abstract.Db;
 using iMenyn.Data.Helpers;
 using iMenyn.Data.Models;
+using iMenyn.Data.ViewModels;
 using iMenyn.Web.ViewModels;
 using iMenyn.Yelp.Data;
 
@@ -301,76 +302,7 @@ namespace iMenyn.Web.Controllers
         //    return null;
         //}
 
-        public string CreateTempEnterprise(EnterpriseViewModel viewModel)
-        {
-            if (!string.IsNullOrEmpty(viewModel.Nope) && string.IsNullOrEmpty(viewModel.Name))
-                return string.Empty;
 
-            //var name = form["name"];
-            //var phone = form["phone"];
-
-            //var key = EnterpriseHelper.GenerateEnterpriseKey(name, Db.Enterprises);
-            //var id = EnterpriseHelper.GetId(key);
-
-            ////Gatuadress
-            //var streetNumber = form["street_number"];
-            //var streetRoute = form["street_route"];
-
-            ////Postnummer
-            //int postalCode = 0;
-            //if (!string.IsNullOrEmpty(viewModel.PostalCode))
-            //{
-            //    var postalCodeString = form["postal_code"].Replace(" ", string.Empty);
-            //    int.TryParse(postalCodeString, out postalCode);
-            //}
-            
-            var categoryList = new List<string>();
-            categoryList.AddRange(viewModel.ChosenCategories.Take(6).Select(catgory => catgory.Value));
-
-            //TODO generate search-tags
-
-            var enterprise = new Enterprise
-            {
-                Name = viewModel.Name,
-                Phone = viewModel.Phone,
-                StreetNumber = viewModel.StreetNumber,
-                StreetRoute = viewModel.StreetRoute,
-                PostalCode = viewModel.PostalCode,
-                PostalTown = viewModel.PostalTown,
-                Commune = viewModel.Commune,
-                County = viewModel.County,
-                SubLocality = viewModel.SubLocality,
-                CountryCode = viewModel.CountryCode ?? "SE",
-
-                Coordinates = new Coordinates { Lat = viewModel.Coordinates.Lat, Lng = viewModel.Coordinates.Lng },
-                Categories = categoryList,
-
-                IsNew = true,
-                OwnedByAccount = false,
-                LockedFromEdit = false,
-                
-                LastUpdated = DateTime.Now
-            };
-            
-            var key = viewModel.EditKey;
-            if(!string.IsNullOrEmpty(key))
-            {
-                var enterpriseInDb = Db.Enterprises.GetEnterpriseById(EnterpriseHelper.GetId(key));
-                //if(enterpriseInDb != null && enterpriseInDb.IsNew)
-                //{
-                //    enterprise.Id = enterpriseInDb.Id;
-                //    Db.Enterprises.UpdateEnterprise(enterprise);
-                //    return key;
-                //}
-            }
-            else
-            {
-                var enterpriseId = Db.Enterprises.CreateEnterprise(enterprise);
-                return EnterpriseHelper.GetKey(enterpriseId);
-            }
-
-            return string.Empty;
-        }
 
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Web;
 using iMenyn.Data.Models;
 
@@ -13,7 +14,13 @@ namespace iMenyn.Data.Helpers
 
         public static Enterprise CreateFakeEnterprise(Abstract.Db.IDb Db,bool modified)
         {
-            var enterprise = new Enterprise();
+            var enterprise = new Enterprise
+                                 {
+                                     Id = EnterpriseHelper.GetId(GeneralHelper.GetGuid()),
+                                     Name = RandomString(),
+                                     Categories = RandomListString(),
+                                     LastUpdated = DateTime.Now
+                                 };
             var menu = new Menu();
             var categories = new List<Category>();
 
@@ -32,6 +39,7 @@ namespace iMenyn.Data.Helpers
                     var product = new Product
                                       {
                                           Id = ProductHelper.GenerateId(),
+                                          Enterprise = enterprise.Id,
                                           Name = RandomString(),
                                           Prices = new List<ProductPrice>()
                                       };
@@ -44,6 +52,13 @@ namespace iMenyn.Data.Helpers
 
                         productPrices.Add(productPrice);
                     }
+                    if(modified)
+                    {
+                        if (RandomBool())
+                        {
+                            product.UpdatedVersion = new ProductUpdatedVersion {Description = RandomString()};
+                        }
+                    }
                     product.Prices = productPrices;
                     products.Add(product);
                     category.Products.Add(product.Id);
@@ -54,16 +69,22 @@ namespace iMenyn.Data.Helpers
 
             menu.Categories = categories;
 
+
+            if(!modified)
+            {
+                enterprise.IsNew = true; 
+            }
+
             enterprise.Menu = menu;
-            enterprise.IsNew = true;
-
-            //TODO
-            enterprise.Categories = RandomListString();
-
+            
             Db.Enterprises.CreateEnterprise(enterprise);
-            //enterprise.ModifiedMenu = modified
             Db.Products.AddProductsToDb(products);
 
+            if(modified)
+            {
+                Thread.Sleep(1000);
+                Db.Enterprises.UpdateEnterprise(enterprise.Id, enterprise.Menu);
+            }
 
             return enterprise;
         }
@@ -84,8 +105,7 @@ namespace iMenyn.Data.Helpers
         }
         private static bool RandomBool()
         {
-
-            return false;
+            return _random.Next(3) == 1;
         }
         private static List<string> RandomListString(int maxLength = 5)
         {
@@ -95,6 +115,6 @@ namespace iMenyn.Data.Helpers
                 list.Add(RandomString());
             }
             return list;
-        } 
+        }
     }
 }

@@ -11,6 +11,8 @@ namespace iMenyn.Web.ViewModels
 
         public AccountViewModel Account { get; set; }
 
+        public IEnumerable<Enterprise> AllEnterprises { get; set; }
+
         //Accounts, not admin.
        // public StandardViewModel StandardViewModel { get; set; }
     }
