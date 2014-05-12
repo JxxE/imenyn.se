@@ -29,7 +29,7 @@
                         <a href="@Url.Action("MenuApproval", new { enterpriseId = enterprise.Id })">
                             <h3 class="list-group-item-heading">@enterprise.Name</h3>
                             <p class="list-group-item-text">
-                                Produkter: @if (enterprise.Menu != null)
+                                Produkter: @if (enterprise.Menu != null && enterprise.Menu.Categories != null)
                                            {
                                     @enterprise.Menu.Categories.SelectMany(c => c.Products).Count()
                                            }
@@ -69,6 +69,11 @@
         }
     </div>
     <div class="col-sm-12">
+        <h1>Produkter</h1>
+        <p>Totalt: @Model.ProductCount</p>
+        <p>Snitt per restaurang: @(Model.ProductCount / Model.AllEnterprises.Count())</p>
+    </div>
+    <div class="col-sm-12">
         <h1>Restauranger <small>(@Model.AllEnterprises.Count())</small></h1>
         <ul class="list-group">
             @foreach (var e in Model.AllEnterprises)
@@ -76,7 +81,7 @@
                 <li class="list-group-item row">
                     <a href="@Url.Action("Index", "Cabaret", new { q = e.Id })" target="_blank"><strong>@e.Name</strong></a>
                     <span class="label label-info">
-                        @if (e.Menu != null)
+                        @if (e.Menu != null && e.Menu.Categories != null)
                         {
                             @e.Menu.Categories.SelectMany(c => c.Products).Count()
                         }

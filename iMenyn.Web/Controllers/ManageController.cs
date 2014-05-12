@@ -20,19 +20,45 @@ namespace iMenyn.Web.Controllers
         public ActionResult Index(string key)
         {
             var viewModel = new EnterpriseViewModel();
+            if (!string.IsNullOrEmpty(key))
+            {
+                var enterprise = Db.Enterprises.GetCompleteEnterprise(EnterpriseHelper.GetId(key)).Enterprise;
+                if (enterprise.IsNew && !enterprise.LockedFromEdit)
+                    viewModel = enterprise;
+            }
             return View(viewModel);
         }
 
-        public ActionResult Edit(string id)
+        public ActionResult Edit(string key)
         {
-            var viewModel = Db.Enterprises.GetCompleteEnterprise(EnterpriseHelper.GetId(id), true);
-            return View(viewModel);
+            if(!string.IsNullOrEmpty(key))
+            {
+                var viewModel = Db.Enterprises.GetCompleteEnterprise(EnterpriseHelper.GetId(key), true);
+
+                if (viewModel.Enterprise.IsNew || viewModel.Enterprise.OwnedByAccount)
+                {
+                    if(viewModel.Enterprise.OwnedByAccount)
+                    {
+                        var account = Db.Accounts.GetAccount(HttpContext.User.Identity.Name);
+                        if (account.Enabled && account.Enterprises.Contains(EnterpriseHelper.GetId(key)))
+                        {
+                            //If account is enabled and contains this enterprise
+                            return View(viewModel);
+                        }
+                    }
+                    else
+                    {
+                        return View(viewModel);
+                    }
+                }
+            }
+            return RedirectToAction("Index");
         }
 
         [AllowAnonymous]
-        public ActionResult DemoMenu(bool edit=false)
+        public ActionResult DemoMenu(bool edit = false)
         {
-            var viewModel = Db.Enterprises.GetCompleteEnterprise("enterprises-jessetinell",edit);
+            var viewModel = Db.Enterprises.GetCompleteEnterprise("enterprises-jessetinell", edit);
             return View(viewModel);
         }
 
@@ -48,7 +74,7 @@ namespace iMenyn.Web.Controllers
                     var p = ProductHelper.ViewModelToModel(product);
                     if (product.Id != null && Db.Products.GetProductById(product.Id) != null)
                     {
-                        Db.Products.UpdateProduct(p,product.EnterpriseId);
+                        Db.Products.UpdateProduct(p, product.EnterpriseId);
                         return 10;
                     }
 
@@ -60,77 +86,71 @@ namespace iMenyn.Web.Controllers
         }
 
         [HttpPost]
-        public string CreateTempEnterprise(EnterpriseViewModel viewModel)
+        public ActionResult Index(EnterpriseViewModel viewModel)
         {
-            if (!string.IsNullOrEmpty(viewModel.Nope) && string.IsNullOrEmpty(viewModel.Name))
-                return string.Empty;
+            if (!string.IsNullOrEmpty(viewModel.Nope))
+                return RedirectToAction("Index","Home");
 
-            //var name = form["name"];
-            //var phone = form["phone"];
+            if (string.IsNullOrEmpty(viewModel.Name))
+                ModelState.AddModelError("Name", "Ange restaurangens namn");
 
-            //var key = EnterpriseHelper.GenerateEnterpriseKey(name, Db.Enterprises);
-            //var id = EnterpriseHelper.GetId(key);
+            if (viewModel.DisplayCategories == null || viewModel.DisplayCategories.Count < 1)
+                ModelState.AddModelError("DisplayCategories", "Välj minst en kategori");
 
-            ////Gatuadress
-            //var streetNumber = form["street_number"];
-            //var streetRoute = form["street_route"];
+            if (viewModel.Coordinates.Lat == null || viewModel.Coordinates.Lng == null)
+                ModelState.AddModelError("Coordinates","Du måste ange någon platsinfo");
 
-            ////Postnummer
-            //int postalCode = 0;
-            //if (!string.IsNullOrEmpty(viewModel.PostalCode))
-            //{
-            //    var postalCodeString = form["postal_code"].Replace(" ", string.Empty);
-            //    int.TryParse(postalCodeString, out postalCode);
-            //}
-
-            var categoryList = new List<string>();
-            categoryList.AddRange(viewModel.DisplayCategories.Take(6).Select(catgory => catgory.Value));
-
-            //TODO generate search-tags
-
-            var enterprise = new Enterprise
+            if (ModelState.IsValid)
             {
-                Name = viewModel.Name,
-                Phone = viewModel.Phone,
-                StreetNumber = viewModel.StreetNumber,
-                StreetRoute = viewModel.StreetRoute,
-                PostalCode = viewModel.PostalCode,
-                PostalTown = viewModel.PostalTown,
-                Commune = viewModel.Commune,
-                County = viewModel.County,
-                SubLocality = viewModel.SubLocality,
-                CountryCode = viewModel.CountryCode ?? "SE",
+                var categoryList = new List<string>();
+                categoryList.AddRange(viewModel.DisplayCategories.Take(6).Select(catgory => catgory.Value));
 
-                Coordinates = new Coordinates { Lat = viewModel.Coordinates.Lat, Lng = viewModel.Coordinates.Lng },
-                Categories = categoryList,
+                var enterprise = new Enterprise
+                {
+                    Name = viewModel.Name,
+                    Phone = viewModel.Phone,
+                    StreetNumber = viewModel.StreetNumber,
+                    StreetRoute = viewModel.StreetRoute,
+                    PostalCode = viewModel.PostalCode,
+                    PostalTown = viewModel.PostalTown,
+                    Commune = viewModel.Commune,
+                    County = viewModel.County,
+                    SubLocality = viewModel.SubLocality,
+                    CountryCode = viewModel.CountryCode ?? "SE",
 
-                IsNew = true,
-                OwnedByAccount = false,
-                LockedFromEdit = false,
+                    SearchTags = EnterpriseHelper.GenerateSearchTags(viewModel.Name),
 
-                LastUpdated = DateTime.Now,
+                    Coordinates = new Coordinates { Lat = viewModel.Coordinates.Lat, Lng = viewModel.Coordinates.Lng },
+                    Categories = categoryList,
 
-                Menu = new Menu()
-            };
+                    IsNew = true,
+                    OwnedByAccount = false,
+                    LockedFromEdit = false,
 
-            var key = viewModel.EditKey;
-            if (!string.IsNullOrEmpty(key))
-            {
-                var enterpriseInDb = Db.Enterprises.GetEnterpriseById(EnterpriseHelper.GetId(key));
-                //if(enterpriseInDb != null && enterpriseInDb.IsNew)
-                //{
-                //    enterprise.Id = enterpriseInDb.Id;
-                //    Db.Enterprises.UpdateEnterprise(enterprise);
-                //    return key;
-                //}
-            }
-            else
-            {
-                //var enterpriseId = Db.Enterprises.CreateEnterprise(enterprise);
-                return EnterpriseHelper.GetKey("asd");
+                    LastUpdated = DateTime.Now,
+
+                    Menu = new Menu()
+                };
+
+                if (string.IsNullOrEmpty(viewModel.Id))
+                {
+                    enterprise.Id = EnterpriseHelper.GetId(GeneralHelper.GetGuid());
+                    Db.Enterprises.CreateEnterprise(enterprise);
+                }
+                else
+                {
+                    var enterpriseInDb = Db.Enterprises.GetEnterpriseById(enterprise.Id);
+                    if (enterpriseInDb != null)
+                    {
+                        Db.Enterprises.UpdateEnterprise(enterprise);
+                    }
+                }
+                return RedirectToAction("Edit", new { key = EnterpriseHelper.GetKey(enterprise.Id) });
             }
 
-            return string.Empty;
+            viewModel.DisplayCategories = EnterpriseHelper.GetDisplayCategories(viewModel.DisplayCategories);
+
+            return View(viewModel);
         }
 
         //Sparar ordningen på menyn. Kategori, produkt-placering 
@@ -142,7 +162,7 @@ namespace iMenyn.Web.Controllers
 
         public PartialViewResult BlankCategory(string enterpriseId)
         {
-            return PartialView("~/Views/Partials/Menu/Edit/_Category.cshtml", new ViewModelCategory{Id=GeneralHelper.GetGuid(),Name = string.Empty,Products = new List<ProductViewModel>{new ProductViewModel{Id = ProductHelper.GenerateId()}},EnterpriseId = enterpriseId});
+            return PartialView("~/Views/Partials/Menu/Edit/_Category.cshtml", new ViewModelCategory { Id = GeneralHelper.GetGuid(), Name = string.Empty, Products = new List<ProductViewModel> { new ProductViewModel { Id = ProductHelper.GenerateId() } }, EnterpriseId = enterpriseId });
         }
         public PartialViewResult BlankProduct(string enterpriseId, string categoryId)
         {

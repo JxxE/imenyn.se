@@ -184,5 +184,16 @@ namespace iMenyn.Data.Concrete.Db
                 session.SaveChanges();
             }
         }
+
+
+        public int ProductTotalCount()
+        {
+            using(var session = _documentStore.OpenSession())
+            {
+                RavenQueryStatistics stats;
+                session.Query<Product>().Statistics(out stats).ToList();
+                return stats.TotalResults;
+            }
+        }
     }
 }

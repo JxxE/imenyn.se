@@ -18,7 +18,7 @@ namespace iMenyn.Data.ViewModels
         public List<ValueAndText> DisplayCategories { get; set; }
 
         //Used when editing
-        public string EditKey { get; set; }
+        //public string EditKey { get; set; }
 
         //Spam-check property
         public string Nope { get; set; }

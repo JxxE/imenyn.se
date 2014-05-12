@@ -21,5 +21,7 @@ namespace iMenyn.Data.Abstract.Db
 
 
         void AddProductsToDb(List<Product> products);
+
+        int ProductTotalCount();
     }
 }

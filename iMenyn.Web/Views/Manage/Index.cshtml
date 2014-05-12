@@ -4,8 +4,7 @@
 
 @{
     ViewBag.Title = "Bidra med en meny";
-    var categories = GeneralHelper.GetCategories();
-    var hasCoordinates = Model != null && Model.Coordinates != null;
+    var hasCoordinates = Model != null && Model.Coordinates != null && Model.Coordinates.Lat != null;
 }
 
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
@@ -29,13 +28,13 @@
 
     <div id="form-content">
         <h3 class="grey"><span class="glyphicon glyphicon-info-sign mr5"></span>Om restaurangen</h3>
-        @using (Html.BeginForm("CreateTempEnterprise", "Manage", FormMethod.Post, new { @class = "form-horizontal", id = "enterprise-form" }))
+        @using (Html.BeginForm("Index", "Manage", FormMethod.Post, new { @class = "form-horizontal", id = "enterprise-form" }))
         {
-
             <div class="form-group">
                 @Html.LabelFor(m => m.Name, "Namn", new { @class = "col-sm-2 control-label" })
                 <div class="col-sm-4">
                     @Html.TextBoxFor(m => m.Name, new { @class = "form-control", autofocus = "" })
+                    @Html.ValidationMessageFor(m => m.Name)
                 </div>
             </div>
 
@@ -54,7 +53,7 @@
                 <div class="col-sm-4">
                     <select id="category-chooser" class="form-control@((Model.DisplayCategories != null && Model.DisplayCategories.Count > 4) ? " hide" : "")">
                         <option></option>
-                        @foreach (var category in categories)
+                        @foreach (var category in GeneralHelper.GetCategories())
                         {
                             <option value="@category.Value">@category.Text</option>    
                         }
@@ -64,13 +63,14 @@
                         {
                             for (var i = 0; i < Model.DisplayCategories.Count; i++)
                             {
-                                <div id="tag-@i" class="tag">@Model.DisplayCategories[i].Text
-                                    @Html.HiddenFor(m => m.DisplayCategories[i].Value)
-                                    <span class='glyphicon glyphicon-remove'></span>
-                                </div>
+                            <div id="tag-@i" class="tag">@Model.DisplayCategories[i].Text
+                                @Html.HiddenFor(m => m.DisplayCategories[i].Value)
+                                <span class='glyphicon glyphicon-remove'></span>
+                            </div>
                             }
                         }
                     </div>
+                    @Html.ValidationMessageFor(m => m.DisplayCategories)
                     <label id="category-error" class="hide">Välj minst 1 kategori!</label>
                 </div>
             </div>
@@ -82,6 +82,7 @@
                     <input type="text" name="address-search" id="address-search" placeholder="Adress/plats" class="form-control">
                 </div>
                 <a id="my-location" href="javascript:void(0)" class="btn btn-info">Markera på karta<span class="glyphicon glyphicon-screenshot"></span></a>
+                @Html.ValidationMessageFor(m => m.Coordinates)
             </div>
 
             <div id="location-details" class="well">
@@ -142,23 +143,19 @@
                     @Html.HiddenFor(m => m.SubLocality)
                     @Html.HiddenFor(m => m.Coordinates.Lat)
                     @Html.HiddenFor(m => m.Coordinates.Lng)
-                    @Html.HiddenFor(m => m.EditKey)
+                    @Html.HiddenFor(m => m.Id)
 
                     <div class="col-sm-8">
                         <div id="map"></div>
                     </div>
                 </div>
 
-            </div>
-            
-
-            
+            </div>  
         }
     </div>
 
 </div>
 <script>
-    //Serverside validation:http://www.dotnet-tricks.com/Tutorial/mvc/F16Q301112-Server-Side-Model-Validation-in-MVC-Razor.html
     $(document).ready(function () {
         if ('@hasCoordinates' === 'True') {
             setMap('@(Model.Coordinates != null ? Model.Coordinates.Lat : null)', '@(Model.Coordinates != null ? Model.Coordinates.Lng : null)');
@@ -169,7 +166,7 @@
     iMenyn.Utilities.InitCategoryChooser();
 
     $("#my-location").click(function () {
-        putMyLocationOnMap(false);
+        putMyLocationOnMap();
     });
 
     $("#help-search").click(function () {
@@ -177,29 +174,21 @@
         window.open("http://www.yelp.se/search?find_desc=" + company, "_blank");
     });
 
-    function putMyLocationOnMap(useDefault) {
-        //Stockholm
-        var defaultLat = '59.332362';
-        var defaultLng = '18.065109';
-        if (!useDefault) {
-            iMenyn.Utilities.MyLocation(function (data) {
-                var lat, lng;
-                if (data) {
-                    //My location
-                    lat = data.latitude;
-                    lng = data.longitude;
-                }
-                else {
-                    //Default location
-                    lat = defaultLat;
-                    lng = defaultLng;
-                }
-                setMap(lat, lng);
-            });
-        }
-        else {
-            setMap(defaultLat, defaultLng);
-        }
+    function putMyLocationOnMap() {
+        iMenyn.Utilities.MyLocation(function (data) {
+            var lat, lng;
+            if (data) {
+                //My location
+                lat = data.latitude;
+                lng = data.longitude;
+            }
+            else {
+                //Stockholm
+                lat = '59.332362';
+                lng = '18.065109';
+            }
+            setMap(lat, lng);
+        });
     }
 
     var componentForm = {
@@ -242,30 +231,13 @@
     $("#enterprise-form").validate({
         ignore: "",
         rules: {
-            PostalCode: {
-                number: true,
-                required: true,
-                rangelength: [5, 5]
-            },
             Name: { required: true }
         },
         messages: {
-            PostalCode: {
-                number: "Ej giltigt",
-                required: "*",
-                rangelength: "Ej giltigt"
-            },
             Name: { required: "Ange restaurangens namn" }
         },
         submitHandler: function (form) {
-            var chosenCategoriesDiv = $("#chosen-categories");
-            var chosenCategoriesCount = chosenCategoriesDiv.children('div').size();
-            if (chosenCategoriesCount == 0) {
-                $("#category-error").removeClass('hide');
-            }
-            else {
-                form.Submit();
-            }
+            form.Submit();
         }
     });
 
@@ -280,7 +252,7 @@
             }
         }
 
-        //Lägg ut koordinaterna o dolda textboxarna
+        //Lägg ut koordinaterna i dolda textboxarna
         document.getElementById('Coordinates_Lat').value = place.geometry.location.k;
         document.getElementById('Coordinates_Lng').value = place.geometry.location.A;
 
@@ -321,8 +293,8 @@
 
         geocoder.geocode
         ({
-                latLng: new google.maps.LatLng(lat, lng)
-            },
+            latLng: new google.maps.LatLng(lat, lng)
+        },
             function (results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     getAddressComponents(results[0]);

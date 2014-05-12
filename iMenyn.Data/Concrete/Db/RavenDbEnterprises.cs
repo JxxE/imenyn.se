@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.Security.Application;
 using Raven.Abstractions.Util;
 using Raven.Client;
 using iMenyn.Data.Abstract;
@@ -101,7 +102,9 @@ namespace iMenyn.Data.Concrete.Db
             using (var session = _documentStore.OpenSession())
             {
                 var enterprise = session.Include<Enterprise>(e => e.Menu.Categories.Select(c => c.Products)).Load(enterpriseId);
-                var enterpriseProductIds = enterprise.Menu.Categories.SelectMany(c => c.Products);
+                var enterpriseProductIds = new List<string>();
+                if (enterprise.Menu != null && enterprise.Menu.Categories != null)
+                    enterpriseProductIds = enterprise.Menu.Categories.SelectMany(c => c.Products).ToList();
                 var productsInDb = session.Load<Product>(enterpriseProductIds);
 
                 var productsToRemove = (from productInDb in productsInDb where productInDb.Id == enterprise.Id select productInDb.Id).ToList();
@@ -322,7 +325,9 @@ namespace iMenyn.Data.Concrete.Db
                 }
                 // Add to viewmodel
                 viewModel.ViewModelCategories = categoriesViewModel;
+                
                 viewModel.Enterprise = EnterpriseHelper.ModelToViewModel(enterprise);
+                viewModel.Enterprise.DisplayCategories = EnterpriseHelper.GetDisplayCategories(enterprise.Categories);
                 viewModel.Enterprise.Address = string.Format("{0} {1}", enterprise.StreetRoute, enterprise.StreetNumber);
 
                 if (!edit)
@@ -376,6 +381,7 @@ namespace iMenyn.Data.Concrete.Db
         }
 
 
+        //TODO
         public void SetModifiedMenuAsDefault(string enterpriseId)
         {
             using (var session = _documentStore.OpenSession())
@@ -383,6 +389,7 @@ namespace iMenyn.Data.Concrete.Db
                 var enterprise = session.Load<Enterprise>(enterpriseId);
                 var modifiedMenu = session.Include<ModifiedMenu>(m => m.Menu.Categories.SelectMany(p => p.Products)).Load(enterprise.ModifiedMenu);
 
+                //Should be set to null???
                 enterprise.Menu = modifiedMenu.Menu;
 
                 var products = session.Load<Product>(modifiedMenu.Menu.Categories.SelectMany(p => p.Products));

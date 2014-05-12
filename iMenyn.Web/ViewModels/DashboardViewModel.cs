@@ -13,6 +13,8 @@ namespace iMenyn.Web.ViewModels
 
         public IEnumerable<Enterprise> AllEnterprises { get; set; }
 
+        public int ProductCount { get; set; }
+
         //Accounts, not admin.
        // public StandardViewModel StandardViewModel { get; set; }
     }

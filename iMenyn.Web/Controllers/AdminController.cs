@@ -41,8 +41,9 @@ namespace iMenyn.Web.Controllers
 
                 viewModel.NewEnterprises = newEnterprises.ToList();
                 viewModel.ModifiedEnterprises = modifiedEnterprises.ToList();
-                viewModel.AllEnterprises = Db.Enterprises.GetAllEnterprises().OrderBy(e=>e.Name);
-                
+                viewModel.AllEnterprises = Db.Enterprises.GetAllEnterprises().OrderBy(e => e.Name);
+
+                viewModel.ProductCount = Db.Products.ProductTotalCount();
             }
             else
             {
@@ -89,9 +90,10 @@ namespace iMenyn.Web.Controllers
         public ActionResult MenuApproval(string enterpriseId)
         {
             var enterpriseViewModel = Db.Enterprises.GetCompleteEnterprise(enterpriseId, true);
-            if (!enterpriseViewModel.Enterprise.IsNew)
-                return RedirectToAction("Index");
-            return View(enterpriseViewModel);
+            if (enterpriseViewModel.Enterprise.IsNew || enterpriseViewModel.Enterprise.LockedFromEdit)
+                return View(enterpriseViewModel);
+
+            return RedirectToAction("Index");
         }
 
         //TODO ONLY ADMINATTRIBUTE
@@ -121,7 +123,11 @@ namespace iMenyn.Web.Controllers
             //Disapprove modified menu
             if (!approved && enterprise.LockedFromEdit && !enterprise.IsNew)
             {
+                //Set locked to false
+                //Remove modified-menu ID from enterprise
+                //Delete modified-menu
 
+                //Loop igenom varje produkt o ta bort updated..kanske inte beöhvs.
             }
 
             return RedirectToAction("Index");

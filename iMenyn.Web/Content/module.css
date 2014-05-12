@@ -1,6 +1,7 @@
 ﻿/* === Utility classes === */
-.error,#category-error {
+.error,#category-error,.field-validation-error {
     color: #DB3333;
+    font-weight: bold;
 }
 .vertical-bottom {
     vertical-align: bottom;

@@ -1,4 +1,7 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Web;
 using iMenyn.Data.Models;
 using iMenyn.Data.ViewModels;
 using AutoMapper;
@@ -42,6 +45,43 @@ namespace iMenyn.Data.Helpers
         {
             Mapper.CreateMap<Enterprise, EnterpriseViewModel>();
             return Mapper.Map<Enterprise, EnterpriseViewModel>(model);
+        }
+
+        public static List<string> GenerateSearchTags(string enterpriseName)
+        {
+            var tags = new List<string>();
+            var cleanEnterpriseName = RemoveSpecialCharacters(enterpriseName).ToLower();
+
+            var enterpriseNames = cleanEnterpriseName.Split(' ');
+            tags.AddRange(enterpriseNames);
+
+            return tags;
+        }
+
+        private static string RemoveSpecialCharacters(string str)
+        {
+            var sb = new StringBuilder();
+            foreach (var c in str)
+            {
+                if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Ö') || (c >= 'a' && c <= 'ö'))
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static List<ValueAndText> GetDisplayCategories(List<string> categoryIds)
+        {
+            return (from categoryId in categoryIds
+                    from systemCategory in GeneralHelper.GetCategories()
+                    where categoryId == systemCategory.Value
+                    select systemCategory).ToList();
+        }
+
+        public static List<ValueAndText> GetDisplayCategories(List<ValueAndText> list)
+        {
+            return GetDisplayCategories(list.Select(p => p.Value).ToList());
         }
     }
 }
