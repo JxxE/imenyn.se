@@ -52,5 +52,6 @@ namespace iMenyn.Data.Models
         public List<ProductPrice> Prices { get; set; }
         public string Image { get; set; }
         public float Abv { get; set; }
+
     }
 }

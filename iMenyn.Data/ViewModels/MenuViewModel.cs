@@ -34,7 +34,11 @@ namespace iMenyn.Data.ViewModels
     }
     public class ProductViewModel : Product
     {
-        public string EnterpriseId { get; set; }
+        //public string EnterpriseId { get; set; }
         public string CategoryId { get; set; }
+
+        public bool Updated { get; set; }
+        public bool New { get; set; }
+        public Product OriginalProduct { get; set; }
     }
 }

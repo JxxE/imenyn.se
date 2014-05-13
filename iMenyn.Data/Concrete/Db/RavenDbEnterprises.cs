@@ -105,17 +105,25 @@ namespace iMenyn.Data.Concrete.Db
                 var enterpriseProductIds = new List<string>();
                 if (enterprise.Menu != null && enterprise.Menu.Categories != null)
                     enterpriseProductIds = enterprise.Menu.Categories.SelectMany(c => c.Products).ToList();
-                var productsInDb = session.Load<Product>(enterpriseProductIds);
+                //Get products that belongs to this enterprise
+                var productsInDb = session.Load<Product>(enterpriseProductIds).Where(p => p.Enterprise == enterpriseId);
 
-                var productsToRemove = (from productInDb in productsInDb where productInDb.Id == enterprise.Id select productInDb.Id).ToList();
-
-                foreach (var product in productsToRemove)
+                //Delete products
+                foreach (var product in productsInDb)
                 {
                     session.Delete(product);
                 }
+
+                //Delete modified menu
+                if (enterprise.ModifiedMenu != null)
+                {
+                    var modifiedMenu = session.Load<ModifiedMenu>(enterprise.ModifiedMenu);
+                    session.Delete(modifiedMenu);
+                }
+
                 session.Delete(enterprise);
                 session.SaveChanges();
-                _logger.Info(string.Format("Enterprise ({0}, {1}) deleted with {2} products, Code:[45ouupl]", enterprise.Id, enterprise.Name, productsToRemove.Count));
+                _logger.Info(string.Format("Enterprise ({0}, {1}) was deleted with {2} products, Code:[45ouupl]", enterprise.Id, enterprise.Name, productsInDb.ToList().Count()));
             }
         }
 
@@ -274,18 +282,25 @@ namespace iMenyn.Data.Concrete.Db
                 var enterprise = session.Include<Enterprise>(e => e.Menu.Categories.Select(c => c.Products)).Load(enterpriseId);
                 var menu = enterprise.Menu;
 
+                var newProducts = new List<string>();
+
                 //Load the modified menu if: edit-mode, has a modified menu, is NOT new, is NOT owned by enterprise
                 if (edit && !string.IsNullOrEmpty(enterprise.ModifiedMenu) && !enterprise.IsNew && !enterprise.OwnedByAccount)
                 {
                     //Get the modified menu instead
                     var modifiedMenu = session.Include<Menu>(e => e.Categories.Select(c => c.Products)).Load<ModifiedMenu>(enterprise.ModifiedMenu);
+
+                    //Get ids of all new products in modified menu
+                    newProducts = modifiedMenu.Menu.Categories.SelectMany(c => c.Products).Where(p => !enterprise.Menu.Categories.SelectMany(c => c.Products).Select(p1 => p1).Contains(p)).ToList();
+
+                    //Set modifiedMenu to menu
                     Mapper.CreateMap<ModifiedMenu, Menu>();
                     menu = Mapper.Map(modifiedMenu.Menu, menu);
                 }
                 var products = new List<Product>();
                 // Create to viewmodel
                 var categoriesViewModel = new List<ViewModelCategory>();
-                if(menu != null)
+                if (menu != null)
                 {
                     if (menu.Categories != null)
                     {
@@ -307,14 +322,24 @@ namespace iMenyn.Data.Concrete.Db
 
                             foreach (var product in category.Products.Select(productForCategory => products.FirstOrDefault(p => p.Id == productForCategory)))
                             {
-                                if (edit && product.UpdatedVersion != null)
-                                {
-                                    Mapper.CreateMap<ProductUpdatedVersion, Product>();
-                                    Mapper.Map(product.UpdatedVersion, product);
 
-                                }
                                 var p = ProductHelper.ModelToViewModel(product);
-                                p.EnterpriseId = enterpriseId;
+                                if (edit && p.UpdatedVersion != null)
+                                {
+                                    p.Updated = true;
+                                    p.OriginalProduct = product;
+                                    //p.UpdatedVersion = product.UpdatedVersion;
+                                    Mapper.CreateMap<ProductUpdatedVersion, ProductViewModel>();
+                                    Mapper.Map(product.UpdatedVersion, p);
+                                }
+                                if(edit)
+                                {
+                                    if (newProducts.Contains(p.Id))
+                                    {
+                                        p.New = true;
+                                    }
+                                }
+                                p.Enterprise = enterpriseId;
                                 p.CategoryId = category.Id;
                                 categoryViewModel.Products.Add(p);
                             }
@@ -325,7 +350,7 @@ namespace iMenyn.Data.Concrete.Db
                 }
                 // Add to viewmodel
                 viewModel.ViewModelCategories = categoriesViewModel;
-                
+
                 viewModel.Enterprise = EnterpriseHelper.ModelToViewModel(enterprise);
                 viewModel.Enterprise.DisplayCategories = EnterpriseHelper.GetDisplayCategories(enterprise.Categories);
                 viewModel.Enterprise.Address = string.Format("{0} {1}", enterprise.StreetRoute, enterprise.StreetNumber);
@@ -389,15 +414,67 @@ namespace iMenyn.Data.Concrete.Db
                 var enterprise = session.Load<Enterprise>(enterpriseId);
                 var modifiedMenu = session.Include<ModifiedMenu>(m => m.Menu.Categories.SelectMany(p => p.Products)).Load(enterprise.ModifiedMenu);
 
-                //Should be set to null???
                 enterprise.Menu = modifiedMenu.Menu;
+                enterprise.ModifiedMenu = null;
 
+                session.Delete(modifiedMenu);
+
+                //DELETE produkter som inte r med i modified men som finns i orginal
+
+                //Set all updated versions to be the real versions
                 var products = session.Load<Product>(modifiedMenu.Menu.Categories.SelectMany(p => p.Products));
-                foreach (var p in products)
+                foreach (var p in products.Where(p => p.UpdatedVersion != null))
                 {
-                    var product = ProductHelper.UpdatedVersionToModel(p.UpdatedVersion);
+                    var product = ProductHelper.AddUpdatedInfoToProduct(p);
                     product.UpdatedVersion = null;
                 }
+
+                session.SaveChanges();
+            }
+        }
+
+
+        public void DisapproveModifiedMenu(string enterpriseId)
+        {
+            using (var session = _documentStore.OpenSession())
+            {
+                var enterprise = session.Load<Enterprise>(enterpriseId);
+
+                var productsInOrginalMenu = enterprise.Menu.Categories.SelectMany(c => c.Products);
+
+                if (enterprise.ModifiedMenu != null)
+                {
+                    var modifiedMenu = session.Include<ModifiedMenu>(m => m.Menu.Categories.SelectMany(p => p.Products)).Load(enterprise.ModifiedMenu);
+
+                    var productsInModifiedMenu = modifiedMenu.Menu.Categories.SelectMany(c => c.Products);
+
+                    //Get ids for new products in this modified menu
+                    var IdsForNewProductsInModifiedMenu = productsInModifiedMenu.Where(p => !productsInOrginalMenu.Select(p1 => p1).Contains(p));
+                    var newProductsToDelete = session.Load<Product>(IdsForNewProductsInModifiedMenu);
+                    foreach (var newProduct in newProductsToDelete)
+                    {
+                        //Delete all new products for this modified menu
+                        if (newProduct.Enterprise == enterpriseId)
+                        {
+                            session.Delete(newProduct);
+                            _logger.Info(string.Format("Deleted new product ({0}) for modified menu",newProduct.Id));
+                        }
+                        else
+                            _logger.Warn(string.Format("Product ({0}) does not belong to {1}. Code:[iplikhff]",newProduct.Id,enterpriseId));
+                    }
+                    session.Delete(modifiedMenu);
+                }
+
+                enterprise.ModifiedMenu = null;
+                enterprise.LockedFromEdit = false;
+
+                var products = session.Load<Product>(enterprise.Menu.Categories.SelectMany(p => p.Products));
+                foreach (var p in products.Where(p => p.UpdatedVersion != null))
+                {
+                    p.UpdatedVersion = null;
+                }
+
+                session.SaveChanges();
             }
         }
     }

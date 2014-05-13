@@ -6,3 +6,12 @@
     display: none;
 }
 /* === End of Create enterprise === */
+
+
+/* === Menu approval / Edit menu == */
+.row.updated-product {
+    background-color: #FFF9B5;
+}
+.row.new-product {
+    background-color: #96FFAF;
+}

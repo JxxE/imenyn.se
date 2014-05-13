@@ -123,11 +123,7 @@ namespace iMenyn.Web.Controllers
             //Disapprove modified menu
             if (!approved && enterprise.LockedFromEdit && !enterprise.IsNew)
             {
-                //Set locked to false
-                //Remove modified-menu ID from enterprise
-                //Delete modified-menu
-
-                //Loop igenom varje produkt o ta bort updated..kanske inte beöhvs.
+               Db.Enterprises.DisapproveModifiedMenu(enterpriseId);
             }
 
             return RedirectToAction("Index");

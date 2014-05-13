@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using iMenyn.Data.Models;
+using AutoMapper;
 
 namespace iMenyn.Data.Helpers
 {
@@ -36,30 +37,9 @@ namespace iMenyn.Data.Helpers
                                       };
                 for (var j = 0; j < _random.Next(6, 40); j++)
                 {
-                    var product = new Product
-                                      {
-                                          Id = ProductHelper.GenerateId(),
-                                          Enterprise = enterprise.Id,
-                                          Name = RandomString(),
-                                          Prices = new List<ProductPrice>()
-                                      };
-                    var productPrices = new List<ProductPrice>();
-                    for (var k = 0; k < _random.Next(1,4); k++)
-                    {
-                        var productPrice = new ProductPrice {Price = RandomNumber()};
-                        if(RandomBool())
-                            productPrice.Description = RandomString();
+                    var product = NewProduct(enterprise.Id,modified);
 
-                        productPrices.Add(productPrice);
-                    }
-                    if(modified)
-                    {
-                        if (RandomBool())
-                        {
-                            product.UpdatedVersion = new ProductUpdatedVersion {Description = RandomString()};
-                        }
-                    }
-                    product.Prices = productPrices;
+
                     products.Add(product);
                     category.Products.Add(product.Id);
                 }
@@ -83,10 +63,53 @@ namespace iMenyn.Data.Helpers
             if(modified)
             {
                 Thread.Sleep(1000);
+                var newProductToModifiedMenu = NewProduct(enterprise.Id, true);
+                enterprise.Menu.Categories.First().Products.Add(newProductToModifiedMenu.Id);
+
+                Db.Products.AddProductsToDb(new List<Product> { newProductToModifiedMenu });
+                Thread.Sleep(1000);
                 Db.Enterprises.UpdateEnterprise(enterprise.Id, enterprise.Menu);
             }
 
             return enterprise;
+        }
+
+        private static Product NewProduct(string enterpriseId,bool modified)
+        {
+            var product = new Product
+            {
+                Id = ProductHelper.GenerateId(),
+                Enterprise = enterpriseId,
+                Name = RandomString(),
+                Prices = new List<ProductPrice>()
+            };
+
+            if (RandomBool())
+                product.Description = RandomString();
+
+            var productPrices = new List<ProductPrice>();
+            for (var k = 0; k < _random.Next(1, 4); k++)
+            {
+                var productPrice = new ProductPrice { Price = RandomNumber() };
+                if (RandomBool())
+                    productPrice.Description = RandomString();
+
+                productPrices.Add(productPrice);
+            }
+            if (modified)
+            {
+                if (RandomBool())
+                {
+                    Mapper.CreateMap<Product, ProductUpdatedVersion>();
+                    var updatedProduct = new ProductUpdatedVersion();
+                    Mapper.Map(product, updatedProduct);
+                    updatedProduct.Description = RandomString();
+                    product.UpdatedVersion = updatedProduct;
+                }
+            }
+            product.Prices = productPrices;
+
+            return product;
         }
 
         private static string RandomString()

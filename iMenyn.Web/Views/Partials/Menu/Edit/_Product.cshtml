@@ -6,8 +6,8 @@
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-product form-horizontal" + editModeClass }))
 {
-    <div class="row">
-        <div class="col-sm-10">
+    <div class="row@(Model.Updated ? " updated-product" : string.Empty)@(Model.New ? " new-product" : string.Empty)">
+        <div class="col-sm-10"> 
             <div class="product">
                 <div class="info">
                     <p class="product-name">@Model.Name</p>
@@ -23,7 +23,6 @@
                     @if (!string.IsNullOrEmpty(Model.Description))
                     {
                         <div class="row">
-
                             <p class="product-description col-sm-12">@Model.Description</p>
                         </div>
                
@@ -63,7 +62,7 @@
                             {
                                 @Html.Partial("~/Views/Partials/Menu/Edit/_ProductPrice.cshtml", new ProductPrice())
                             }
-                            @Html.ActionLink("Lägg till pris", "BlankProductPrice","Manage", null, new { @class = "dynamic-add", data_max = 5 })
+                            @Html.ActionLink("Lägg till pris", "BlankProductPrice", "Manage", null, new { @class = "dynamic-add", data_max = 5 })
                         </div>
                     </div>
 
@@ -77,7 +76,7 @@
                         </div>
                     </div>
                     @Html.HiddenFor(p => p.Id)
-                    @Html.HiddenFor(p => p.EnterpriseId)
+                    @Html.HiddenFor(p => p.Enterprise)
                     @Html.HiddenFor(p => p.CategoryId)
                     <div class="form-group">
                         <label class="col-sm-2 control-label"></label>
@@ -88,6 +87,13 @@
                             <a href="javascript:void(0)" class="btn btn-danger delete-product pull-right">Ta bort<span class="glyphicon glyphicon-trash"></span></a>
                         </div>
                     </div>
+                    @if (Model.Updated)
+                    {
+                        <hr/>
+                        <h2>Orginalprodukt:</h2>
+                        <p>Namn: @Model.OriginalProduct.Name</p>
+                        <p>Beskrivning: @Model.OriginalProduct.Description</p>
+                    }
                 </div>
 
             </div>

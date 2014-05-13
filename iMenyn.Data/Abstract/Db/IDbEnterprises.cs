@@ -31,5 +31,7 @@ namespace iMenyn.Data.Abstract.Db
         void DeleteEnterprise(string enterpriseId);
 
         void SetModifiedMenuAsDefault(string enterpriseId);
+
+        void DisapproveModifiedMenu(string enterpriseId);
     }
 }

@@ -74,11 +74,11 @@ namespace iMenyn.Web.Controllers
                     var p = ProductHelper.ViewModelToModel(product);
                     if (product.Id != null && Db.Products.GetProductById(product.Id) != null)
                     {
-                        Db.Products.UpdateProduct(p, product.EnterpriseId);
+                        Db.Products.UpdateProduct(p, product.Enterprise);
                         return 10;
                     }
 
-                    Db.Products.AddProduct(p, product.CategoryId, product.EnterpriseId);
+                    Db.Products.AddProduct(p, product.CategoryId, product.Enterprise);
                     return 20;
                 }
             }
@@ -166,7 +166,7 @@ namespace iMenyn.Web.Controllers
         }
         public PartialViewResult BlankProduct(string enterpriseId, string categoryId)
         {
-            return PartialView("~/Views/Partials/Menu/Edit/_Product.cshtml", new ProductViewModel { Id = ProductHelper.GenerateId(), EnterpriseId = enterpriseId, CategoryId = categoryId });
+            return PartialView("~/Views/Partials/Menu/Edit/_Product.cshtml", new ProductViewModel { Id = ProductHelper.GenerateId(), Enterprise = enterpriseId, CategoryId = categoryId });
         }
         public ViewResult BlankProductPrice()
         {
