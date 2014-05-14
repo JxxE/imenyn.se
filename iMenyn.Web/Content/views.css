@@ -15,3 +15,6 @@
 .row.new-product {
     background-color: #96FFAF;
 }
+.row.deleted-product {
+    background-color: #FF6F6F;
+}

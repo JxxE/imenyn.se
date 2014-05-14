@@ -298,12 +298,11 @@
     <Compile Include="YelpConfig.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\admin.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\views.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="fonts\old\iMenyn.dev.svg" />
-    <Content Include="fonts\old\iMenyn.svg" />
     <Content Include="Content\img\ajax-load.gif" />
     <Content Include="Content\img\bg.jpg" />
     <Content Include="Content\img\logo.png" />
@@ -322,14 +321,12 @@
     <Content Include="Areas\AdminOLD\Views\Admin\Settings.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\ModifiedMenu.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\ModifiedMenus.cshtml" />
+    <Content Include="Templates\_adminLogList.tmpl.html" />
     <Content Include="Views\Admin\MenuApproval.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\NewEnterprises.cshtml" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\old\iMenyn.eot" />
-    <Content Include="fonts\old\iMenyn.ttf" />
-    <Content Include="fonts\old\iMenyn.woff" />
     <Content Include="NLog.config" />
     <Content Include="Config\appSettings.config" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -341,7 +338,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\json2.js" />
-    <Content Include="Scripts\jsrender.js" />
+    <Content Include="js\jsrender.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
     <Content Include="js\modernizr-2.5.3.js" />
     <Content Include="Templates\_EditableProduct.tmpl.html" />
@@ -383,6 +380,7 @@
     <Content Include="Views\Partials\Menu\Edit\_ProductPrice.cshtml" />
     <Content Include="Views\Partials\_EnterpriseInfo.cshtml" />
     <Content Include="Views\Manage\Edit.cshtml" />
+    <Content Include="Views\Admin\Log.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

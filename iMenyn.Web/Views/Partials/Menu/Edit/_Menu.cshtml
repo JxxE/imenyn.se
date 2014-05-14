@@ -2,22 +2,27 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
 
-@if(Model.Enterprise != null)
+@if (Model.Enterprise != null)
 {
-    @Html.Partial("~/Views/Partials/_EnterpriseInfo.cshtml",Model.Enterprise)
+    @Html.Partial("~/Views/Partials/_EnterpriseInfo.cshtml", Model.Enterprise)
 }
 
 <div class="row">
     <div class="col-sm-8 edit">
         <div class="row">
             <div class="col-sm-12">
-                <a class="dynamic-add btn btn-info" data-before="false" href="@Url.Action("BlankCategory","Manage",new{enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus"></span></a>
+                <a class="dynamic-add btn btn-info" data-before="false" href="@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus"></span></a>
                 <a href="javascript:void(0)" data-action="toggleclass" data-class="sorting-categories" class="btn btn-warning">Sortera kategorier<span class="glyphicon glyphicon-sort"></span></a>
             </div>
         </div>
         @foreach (var category in Model.ViewModelCategories)
         {
             @Html.Partial("~/Views/Partials/Menu/Edit/_Category.cshtml", category)
+        }
+
+        @foreach (var deletedProduct in Model.DeletedProducts)
+        {
+            @Html.Partial("~/Views/Partials/Menu/Edit/_Product.cshtml", deletedProduct)
         }
     </div>
     <div class="row">
@@ -27,18 +32,18 @@
     </div>
 </div>
 
-<script>   
+<script>
     $(document).on('click', '.product-prices-edit .glyphicon', (function () {
         $(this).closest('.form-group').remove();
     }));
-    
+
     $(document).on('click', '.dynamic-add', (function () {
         var $this = $(this);
         var before = true;
         var maxOccurs = 0;
         var maxType = undefined;
         var maxParent = undefined;
-        
+
         if ($this.data('before') != undefined && $this.data('before').toString() == "false") {
             before = false;
         }
@@ -48,7 +53,7 @@
             maxType = 'div';
         }
         var status = iMenyn.Utilities.DynamicAdd({ href: this.href, senderObj: $this, before: before, maxOccurs: maxOccurs, maxParent: maxParent, maxType: maxType });
-            
+
         return false;
     }));
 
@@ -66,13 +71,13 @@
         editForm.toggleClass(editModeClass);
         $this.toggleClass(removeClass);
     }));
-    
+
     $(document).on('click', '.delete-product', (function () {
         var editForm = $(this).closest('form');
         editForm.remove();
     }));
-    
-    $(".category").sortable({ items: "form", handle: ".glyphicon-resize-vertical", connectWith:".category" });
+
+    $(".category").sortable({ items: "form", handle: ".glyphicon-resize-vertical", connectWith: ".category" });
     $("#main-container").sortable({ items: ".category", handle: ".glyphicon-resize-vertical" });
 
     $("#save-menu-setup").click(function () {

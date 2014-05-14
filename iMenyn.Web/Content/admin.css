@@ -1,0 +1,29 @@
+﻿td[class^=system-log] {
+    position: relative;
+}
+
+    td[class^=system-log]:before {
+        content: '';
+        border-width: 3px;
+        border-style: solid;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+    }
+
+td.system-log-Info:before {
+    border-color: green;
+}
+td.system-log-Warn:before {
+    border-color: yellow;
+}
+td.system-log-Error:before {
+    border-color: orange;
+}
+td.system-log-Fatal:before {
+    border-color: red;
+}
+td.system-log-Debug:before {
+    border-color: turquoise;
+}

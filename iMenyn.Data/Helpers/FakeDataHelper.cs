@@ -63,10 +63,32 @@ namespace iMenyn.Data.Helpers
             if(modified)
             {
                 Thread.Sleep(1000);
-                var newProductToModifiedMenu = NewProduct(enterprise.Id, true);
-                enterprise.Menu.Categories.First().Products.Add(newProductToModifiedMenu.Id);
+                var categoryCount = enterprise.Menu.Categories.Count;
 
-                Db.Products.AddProductsToDb(new List<Product> { newProductToModifiedMenu });
+                //Remove random products
+                for (var i = 0; i < _random.Next(1, 4); i++)
+                {
+                    var randomCategory = enterprise.Menu.Categories[_random.Next(categoryCount)];
+                    var productCountForCategory = randomCategory.Products.Count;
+                    enterprise.Menu.Categories[_random.Next(categoryCount)].Products.RemoveAt(_random.Next(productCountForCategory));
+                }
+
+                //Create new products
+                var newProducts = new List<Product>();
+                for (var i = 0; i < _random.Next(1, 8);i++ )
+                {
+                    newProducts.Add(NewProduct(enterprise.Id,false));
+                }
+
+                //Add the new products to random categories in random places
+                foreach (var newProduct in newProducts)
+                {
+                    var randomCategory = enterprise.Menu.Categories[_random.Next(categoryCount)];
+                    var productCountForCategory = randomCategory.Products.Count;
+                    randomCategory.Products.Insert(_random.Next(productCountForCategory),newProduct.Id);
+                }
+
+                Db.Products.AddProductsToDb(newProducts);
                 Thread.Sleep(1000);
                 Db.Enterprises.UpdateEnterprise(enterprise.Id, enterprise.Menu);
             }
@@ -96,6 +118,9 @@ namespace iMenyn.Data.Helpers
 
                 productPrices.Add(productPrice);
             }
+
+            product.Prices = productPrices;
+
             if (modified)
             {
                 if (RandomBool())
@@ -107,7 +132,6 @@ namespace iMenyn.Data.Helpers
                     product.UpdatedVersion = updatedProduct;
                 }
             }
-            product.Prices = productPrices;
 
             return product;
         }

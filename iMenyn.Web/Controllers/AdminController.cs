@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using iMenyn.Data.Abstract;
 using iMenyn.Data.Abstract.Db;
+using iMenyn.Data.Attributes;
 using iMenyn.Data.Concrete;
 using iMenyn.Data.Helpers;
 using iMenyn.Data.Models;
@@ -66,6 +67,7 @@ namespace iMenyn.Web.Controllers
             return View(viewModel);
         }
 
+        [AdminOnly]
         public ActionResult Accounts()
         {
             //TODO
@@ -74,11 +76,18 @@ namespace iMenyn.Web.Controllers
             return null;
         }
 
+        public ActionResult Log()
+        {
+            return View();
+        }
+
+        [AdminOnly]
         public ActionResult Settings()
         {
             return null;
         }
 
+        [AdminOnly]
         public ActionResult CreateAllIndexes()
         {
             RavenContext.Instance.CreateAllIndexes();
@@ -86,7 +95,7 @@ namespace iMenyn.Web.Controllers
         }
 
 
-        //Display the new temp-menu
+        [AdminOnly]
         public ActionResult MenuApproval(string enterpriseId)
         {
             var enterpriseViewModel = Db.Enterprises.GetCompleteEnterprise(enterpriseId, true);
@@ -96,7 +105,7 @@ namespace iMenyn.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        //TODO ONLY ADMINATTRIBUTE
+        [AdminOnly]
         public RedirectToRouteResult MenuApprovalFunction(string enterpriseId, bool approved)
         {
             var enterprise = Db.Enterprises.GetEnterpriseById(enterpriseId);
@@ -129,7 +138,7 @@ namespace iMenyn.Web.Controllers
             return RedirectToAction("Index");
         }
 
-
+        [AdminOnly]
         [HttpPost]
         public ActionResult AddAccount(AccountViewData account)
         {
@@ -158,6 +167,7 @@ namespace iMenyn.Web.Controllers
             return null;
         }
 
+        [AdminOnly]
         public RedirectToRouteResult DeleteEnterprise(string enterpriseId)
         {
             Db.Enterprises.DeleteEnterprise(enterpriseId);
@@ -165,12 +175,20 @@ namespace iMenyn.Web.Controllers
         }
 
         #region Create fake enterprise
+        [AdminOnly]
         public RedirectToRouteResult CreateFakeEnterprise(bool modified)
         {
             FakeDataHelper.CreateFakeEnterprise(Db, modified);
             return RedirectToAction("Index");
         }
         #endregion
+
+        [AdminOnly]
+        public JsonResult GetLogList(string query, bool info, bool debug, bool error, bool fatal, bool warn)
+        {
+            var loglist = Logger.GetLogList(query, info, debug, error, fatal, warn);
+            return Json(loglist);
+        }
 
     }
 }

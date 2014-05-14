@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using iMenyn.Data.Models;
 using iMenyn.Data.ViewModels;
@@ -17,6 +19,12 @@ namespace iMenyn.Data.Helpers
             Mapper.CreateMap<ProductViewModel, Product>();
             return Mapper.Map<ProductViewModel, Product>(viewmodel);
         }
+
+        public static List<ProductViewModel> ModelToViewModel(List<Product> models)
+        {
+            return models.Select(ModelToViewModel).ToList();
+        }
+
         public static ProductViewModel ModelToViewModel(Product model)
         {
             Mapper.CreateMap<Product, ProductViewModel>();

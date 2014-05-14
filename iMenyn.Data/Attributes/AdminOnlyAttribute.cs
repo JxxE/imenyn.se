@@ -1,16 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using iMenyn.Data.Infrastructure;
+using iMenyn.Data.Models;
 
 namespace iMenyn.Data.Attributes
 {
-    public class AdminOnlyAttribute:ActionFilterAttribute, IActionFilter
+    public class AdminOnlyAttribute : AuthorizeAttribute
     {
-        void IActionFilter.OnActionExecuting(ActionExecutingContext filterContext)
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-            
+            using (var session = DependencyManager.DocumentStore.OpenSession())
+            {
+                try
+                {
+                    return session.Load<Account>(String.Format("{0}", HttpContext.Current.User.Identity.Name)).IsAdmin;
+                }
+                catch (NullReferenceException)
+                {
+                    return false;
+                }
+            }
         }
     }
 }

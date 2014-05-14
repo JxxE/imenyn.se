@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Logg";
+}
+
+<h1>Logg</h1>
+
+<div class="mt50">
+    Sök:<input id="tb-query" type="text"/>
+</div>                      
+
+<div class="btn-group" data-toggle="buttons-checkbox">
+    <button id="cb-info" class="btn active">Info</button>
+    <button id="cb-debug" class="btn active">Debug</button>
+    <button id="cb-warn" class="btn active">Warn</button>
+    <button id="cb-error" class="btn active">Error</button>
+    <button id="cb-fatal" class="btn active">Fatal</button>
+</div>
+
+<table class="table table-striped table-bordered margin-top">
+    <thead>
+        <tr>
+            <th>Tidpunkt</th>
+            <th>Meddelande</th>
+            <th>Nivå</th>
+        </tr>
+    </thead>
+    <tbody id="table-log-list">
+        
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    RenderLog();
+
+    function RenderLog() {
+        iMenyn.Admin.RenderLog('#table-log-list', $('#tb-query').val(), $('#cb-info').hasClass('active'), $('#cb-debug').hasClass('active'), $('#cb-error').hasClass('active'), $('#cb-fatal').hasClass('active'), $('#cb-warn').hasClass('active'));
+    }
+</script>

@@ -61,7 +61,7 @@
                         <a href="@Url.Action("MenuApproval", new { enterpriseId = enterprise.Id })">
 
                             <h4 class="list-group-item-heading">@enterprise.Name</h4>
-
+                            Uppdaterad: @enterprise.LastUpdated.ToShortDateString() (@enterprise.LastUpdated.ToShortTimeString())
                         </a>
                     </li>
                 }

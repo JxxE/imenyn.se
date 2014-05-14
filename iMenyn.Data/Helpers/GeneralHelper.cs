@@ -102,5 +102,17 @@ namespace iMenyn.Data.Helpers
                                  };
             return categories.OrderBy(c => c.Text).ToList();
         }
+
+        /// <summary>
+        /// Get objects that exist in list1 but not list2
+        /// </summary>
+        /// <param name="list1">List 1</param>
+        /// <param name="list2">List 2</param>
+        /// <returns>Objects that exist in list1 but not list2</returns>
+        public static List<T> CompareLists<T>(List<T> list1, List<T> list2)
+        {
+            return list1.Where(p => !list2.Select(p1 => p1).Contains(p)).ToList();
+        } 
+
     }
 }

@@ -8,6 +8,9 @@ namespace iMenyn.Data.ViewModels
         //public bool RecentlyModified { get; set; }
         public EnterpriseViewModel Enterprise { get; set; }
         public List<ViewModelCategory> ViewModelCategories { get; set; }
+
+        //Only visible for Admin when approving menu
+        public List<ProductViewModel> DeletedProducts { get; set; }
     }
 
     public class EnterpriseViewModel : Enterprise
@@ -39,6 +42,7 @@ namespace iMenyn.Data.ViewModels
 
         public bool Updated { get; set; }
         public bool New { get; set; }
+        public bool Deleted { get; set; }
         public Product OriginalProduct { get; set; }
     }
 }
