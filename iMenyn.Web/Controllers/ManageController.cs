@@ -162,7 +162,8 @@ namespace iMenyn.Web.Controllers
 
         public PartialViewResult BlankCategory(string enterpriseId)
         {
-            return PartialView("~/Views/Partials/Menu/Edit/_Category.cshtml", new ViewModelCategory { Id = GeneralHelper.GetGuid(), Name = string.Empty, Products = new List<ProductViewModel> { new ProductViewModel { Id = ProductHelper.GenerateId() } }, EnterpriseId = enterpriseId });
+            var categoryId = GeneralHelper.GetGuid();
+            return PartialView("~/Views/Partials/Menu/Edit/_Category.cshtml", new ViewModelCategory { Id = categoryId, Name = string.Empty, Products = new List<ProductViewModel> { new ProductViewModel { Id = ProductHelper.GenerateId(), Enterprise = enterpriseId, CategoryId = categoryId } }, EnterpriseId = enterpriseId });
         }
         public PartialViewResult BlankProduct(string enterpriseId, string categoryId)
         {

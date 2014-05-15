@@ -37,7 +37,8 @@ iMenyn.Utilities = function () {
     };
 
     var dynamicAdd = function (obj) {
-        if (obj.maxOccurs.length > 0) {
+        console.log(obj)
+        if (obj.maxOccurs && obj.maxOccurs.length > 0) {
             if (obj.maxParent.children(obj.maxType).length < obj.maxOccurs) {
                 doDynamicAdd(obj);
             }
@@ -49,25 +50,36 @@ iMenyn.Utilities = function () {
         else {
             doDynamicAdd(obj);
         }
-        
+
     };
 
     function doDynamicAdd(obj) {
-        var before = obj.before && obj.before === true;
+        var position = "after";
+        if (obj.position)
+            position = obj.position;
         $.ajax({
             url: obj.href,
             cache: false,
             success: function (html) {
-                if (before)
-                    obj.senderObj.before(html);
-                else
-                    obj.senderObj.after(html);
+                var target;
+                if (obj.target) {
+                    target = $("#" + obj.target);
+                }
+                if (target) {
+                    if (position === "before")
+                        target.prepend(html);
+                    else
+                        target.append(html);
+                }
+                else {
+                    if (position === "before")
+                        obj.senderObj.before(html);
+                    else
+                        obj.senderObj.after(html);
+                }
             },
             error: function () {
-                if (before)
-                    obj.senderObj.before("<p>Något gick fel...</p>");
-                else
-                    obj.senderObj.after("<p>Något gick fel...</p>");
+                 obj.senderObj.after("<p>Något gick fel...</p>");
             }
         });
     }

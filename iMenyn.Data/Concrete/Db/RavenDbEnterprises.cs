@@ -439,15 +439,12 @@ namespace iMenyn.Data.Concrete.Db
                 {
                     //Delete products
                     if (productToDelete.Id == enterpriseId)
-                    {
                         session.Delete(productToDelete);
-                        _logger.Info(string.Format("Deleted product ({0}) for approved modified menu", productToDelete.Id));
-                    }
                     else
-                        _logger.Warn(string.Format("Was about to delete product ({0}) that not belongs to enterprise ({1}) Code:[bvfgttls]",productToDelete.Id,enterpriseId));
+                        _logger.Warn(string.Format("Was about to delete product ({0}) that not belongs to enterprise ({1}) Code:[bvfgttls]", productToDelete.Id, enterpriseId));
                 }
                 if (productsToDelete.Any())
-                    _logger.Info(string.Format("Deleted {0} products when approved modified menu", productsToDelete.Count()));
+                    _logger.Info(string.Format("{0} products deleted for approved modified menu. Enterprise: {1}", productsToDelete.Count(), enterpriseId));
 
                 //Set all updated versions to be the real versions
                 var products = session.Load<Product>(modifiedMenu.Menu.Categories.SelectMany(p => p.Products));
@@ -457,7 +454,7 @@ namespace iMenyn.Data.Concrete.Db
                     product.UpdatedVersion = null;
                 }
                 if (products.Any())
-                    _logger.Info(string.Format("Updated {0} products", products.Count()));
+                    _logger.Info(string.Format("Updated {0} products for approved modified menu. Enterprise: {1}", products.Count(),enterpriseId));
 
                 enterprise.Menu = modifiedMenu.Menu;
                 enterprise.ModifiedMenu = null;
@@ -468,7 +465,7 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        
+
         public void DisapproveModifiedMenu(string enterpriseId)
         {
             using (var session = _documentStore.OpenSession())
@@ -490,11 +487,14 @@ namespace iMenyn.Data.Concrete.Db
                     if (newProduct.Enterprise == enterpriseId)
                     {
                         session.Delete(newProduct);
-                        _logger.Info(string.Format("Deleted product ({0}) for disapproved modified menu", newProduct.Id));
                     }
                     else
                         _logger.Warn(string.Format("Was about to delete product ({0}) that not belongs to enterprise ({1}). Code:[iplikhff]", newProduct.Id, enterpriseId));
                 }
+
+                if (newProductsToDelete.Any())
+                    _logger.Info(string.Format("{0} products deleted for disapproved modified menu. Enterprise: {1}", newProductsToDelete.Count(), enterpriseId));
+
                 session.Delete(modifiedMenu);
 
                 enterprise.ModifiedMenu = null;
@@ -506,7 +506,7 @@ namespace iMenyn.Data.Concrete.Db
                     p.UpdatedVersion = null;
                 }
 
-                //session.SaveChanges();
+                session.SaveChanges();
             }
         }
     }

@@ -8,68 +8,77 @@
 }
 
 <div class="row">
-    <div class="col-sm-8 edit">
+    <div class="col-sm-8">
         <div class="row">
             <div class="col-sm-12">
-                <a class="dynamic-add btn btn-info" data-before="false" href="@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus"></span></a>
+                <a class="dynamic-add btn btn-info" data-position="before" data-target="categories" href="@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus"></span></a>
                 <a href="javascript:void(0)" data-action="toggleclass" data-class="sorting-categories" class="btn btn-warning">Sortera kategorier<span class="glyphicon glyphicon-sort"></span></a>
             </div>
         </div>
-        @foreach (var category in Model.ViewModelCategories)
+        <div id="categories" class="edit">
+            @foreach (var category in Model.ViewModelCategories)
+            {
+                @Html.Partial("~/Views/Partials/Menu/Edit/_Category.cshtml", category)
+            }
+            @if (Model.ViewModelCategories.Count == 0)
+            {
+                <script>
+                    iMenyn.Utilities.DynamicAdd({ href: '@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })', position: 'before', target: 'categories' })
+                </script>
+            }
+        </div>
+        @if (Model.DeletedProducts != null)
         {
-            @Html.Partial("~/Views/Partials/Menu/Edit/_Category.cshtml", category)
-        }
-
-        @foreach (var deletedProduct in Model.DeletedProducts)
-        {
+            foreach (var deletedProduct in Model.DeletedProducts)
+            {
             @Html.Partial("~/Views/Partials/Menu/Edit/_Product.cshtml", deletedProduct)
+            }
         }
     </div>
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1">
-            <a id="save-menu-setup" href="javascript:void(0)" class="btn btn-success">Spara & avsluta<span class="glyphicon glyphicon-ok"></span></a>
+            <a id="save-menu-setup" href="javascript:void(0)" class="btn btn-success hide">Spara & avsluta<span class="glyphicon glyphicon-ok"></span></a>
         </div>
     </div>
 </div>
 
 <script>
+    $(document).ready(function() {
+        saveButtonVisibility();
+    });
     $(document).on('click', '.product-prices-edit .glyphicon', (function () {
         $(this).closest('.form-group').remove();
     }));
 
     $(document).on('click', '.dynamic-add', (function () {
         var $this = $(this);
-        var before = true;
+        var position = $this.data('position');
         var maxOccurs = 0;
         var maxType = undefined;
         var maxParent = undefined;
+        var target = $this.data('target');
 
-        if ($this.data('before') != undefined && $this.data('before').toString() == "false") {
-            before = false;
-        }
+
         if ($this.data('max') != undefined) {
             maxOccurs = $this.data('max');
             maxParent = $(this).parent();
             maxType = 'div';
         }
-        var status = iMenyn.Utilities.DynamicAdd({ href: this.href, senderObj: $this, before: before, maxOccurs: maxOccurs, maxParent: maxParent, maxType: maxType });
+        var status = iMenyn.Utilities.DynamicAdd({ href: this.href, senderObj: $this, position: position, maxOccurs: maxOccurs, maxParent: maxParent, maxType: maxType, target: target });
 
         return false;
     }));
 
-    $(document).on('click', '.glyphicon-pencil', (function () {
+    $(document).on('click', '.toggle-edit', (function () {
         var $this = $(this);
-        var editForm = $this.closest('form');
+        var editForm = $this.closest('.form-product');
         var editModeClass = 'edit-mode';
-        var removeClass = 'glyphicon-remove';
 
         //Hide all opened edit-forms
         $('.form-product.edit-mode').not(editForm).removeClass(editModeClass);
-        $('.glyphicon-pencil.glyphicon-remove').not($this).removeClass(removeClass);
 
         //Toggle active classes
         editForm.toggleClass(editModeClass);
-        $this.toggleClass(removeClass);
     }));
 
     $(document).on('click', '.delete-product', (function () {
@@ -101,9 +110,62 @@
         iMenyn.Ajax.SaveMenuSetup(JSON.stringify(setup), '@Model.Enterprise.Id');
     });
 
-    $(document).on('submit', '.form-product', (function () {
-        var formData = $(this).serialize();
-        iMenyn.Ajax.SaveProduct($(this), formData);
+    $(document).on('submit', '.form-product', (function (e) {
+        e.preventDefault();
+        
+        var $this = $(this);
+        
+        updateProductDisplayValues($this);
+        
+        if (!saveButtonIsVisible)
+            saveButtonVisibility();
+
+        var formData = $this.serialize();
+
+
+        scrollToAnchor($this.attr('id'));
+
+        $this.removeClass('edit-mode');
+
+        //iMenyn.Ajax.SaveProduct($this, formData);
+        if ($this.hasClass('nonexistent')) {
+            //Add new form after this if it's a new product
+            iMenyn.Utilities.DynamicAdd({ href: '@Url.Action("BlankProduct", "Manage", new { enterpriseId = Model.Enterprise.Id })', position: 'after', senderObj: $this });
+            $this.removeClass('nonexistent');
+        }
+
         return false;
     }));
+
+    var saveButtonIsVisible = false;
+    function saveButtonVisibility() {
+        saveButtonIsVisible = $(".form-product").length > 3;
+
+        if (saveButtonIsVisible)
+            $("#save-menu-setup").removeClass('hide');
+    }
+    
+    function scrollToAnchor(aid) {
+        $('html,body').animate({ scrollTop: $("#" + aid).offset().top }, 'slow');
+    }
+
+    function updateProductDisplayValues(form) {
+        var formFields = form.find('input,textarea').not("input[type='hidden']");
+
+        for (var i = 0; i < formFields.length; i++) {
+            var inputId = $(formFields[i])[0].id;
+            var inputValue = $(formFields[i]).first().val();
+            form.find("[data-id=" + inputId + "]").html(inputValue);
+            
+            // Show and hide ABV 
+            if (inputId === "Abv" && (inputValue != 0 && $.isNumeric(inputValue)))
+                // Show ABV if input is not 0 and is numeric
+                form.find('.abv').removeClass("hide");
+            else if (inputId === "Abv" && !form.find('.abv').hasClass("hide")) {
+                //Hide abv if it does not have the class
+                form.find('.abv').addClass("hide");
+            }  
+        }
+    }
+
 </script>

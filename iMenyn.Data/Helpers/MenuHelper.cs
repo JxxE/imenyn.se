@@ -14,6 +14,10 @@ namespace iMenyn.Data.Helpers
 
         public static Menu AddProductToMenu(Menu menu, Product product, string categoryId)
         {
+            if(menu.Categories == null)
+            {
+                menu.Categories = new List<Category> { new Category { Id = categoryId, Products = new List<string>() } };
+            }
             var category = menu.Categories.FirstOrDefault(c => c.Id == categoryId);
             if (category == null)
             {

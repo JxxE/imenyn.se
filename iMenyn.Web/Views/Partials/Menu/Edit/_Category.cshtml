@@ -18,6 +18,6 @@
     {
         @Html.Partial("~/Views/Partials/Menu/Edit/_Product.cshtml", new ProductViewModel{Enterprise = Model.EnterpriseId,CategoryId = Model.Id})
     }
-     @Html.ActionLink("Lägg till produkt", "BlankProduct","Manage", new { enterpriseId = Model.EnterpriseId, categoryId = Model.Id }, new { @class = "dynamic-add" })
+     @Html.ActionLink("Lägg till produkt", "BlankProduct","Manage", new { enterpriseId = Model.EnterpriseId, categoryId = Model.Id }, new { @class = "dynamic-add",data_position="before" })
     </div>
 </div>

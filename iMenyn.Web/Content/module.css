@@ -69,6 +69,14 @@
         float: right;
         font-size: 19px;
     }
+
+.form-product .glyphicon.toggle-edit:before {
+content: "\270f";
+}
+.form-product.edit-mode .glyphicon.toggle-edit:before {
+content: "\e014";
+}
+
 /* End of product */
 
 
