@@ -1,17 +1,17 @@
 ﻿@model iMenyn.Data.ViewModels.CompleteEnterpriseViewModel
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
-
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js"></script>
 @if (Model.Enterprise != null)
 {
     @Html.Partial("~/Views/Partials/_EnterpriseInfo.cshtml", Model.Enterprise)
 }
 
 <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-9">
         <div class="row">
             <div class="col-sm-12">
-                <a class="dynamic-add btn btn-info" data-position="before" data-target="categories" href="@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus"></span></a>
+                <a class="dynamic-add btn btn-info" data-position="before" data-target="#categories" href="@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus"></span></a>
                 <a href="javascript:void(0)" data-action="toggleclass" data-class="sorting-categories" class="btn btn-warning">Sortera kategorier<span class="glyphicon glyphicon-sort"></span></a>
             </div>
         </div>
@@ -23,7 +23,7 @@
             @if (Model.ViewModelCategories.Count == 0)
             {
                 <script>
-                    iMenyn.Utilities.DynamicAdd({ href: '@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })', position: 'before', target: 'categories' })
+                    iMenyn.Utilities.DynamicAdd({ href: '@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })', position: 'before', target: '#categories' })
                 </script>
             }
         </div>
@@ -43,10 +43,11 @@
 </div>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         saveButtonVisibility();
     });
-    $(document).on('click', '.product-prices-edit .glyphicon', (function () {
+    $(document).on('click', '.product-price-edit .glyphicon', (function () {
+        //Remove a product-price
         $(this).closest('.form-group').remove();
     }));
 
@@ -64,8 +65,7 @@
             maxParent = $(this).parent();
             maxType = 'div';
         }
-        var status = iMenyn.Utilities.DynamicAdd({ href: this.href, senderObj: $this, position: position, maxOccurs: maxOccurs, maxParent: maxParent, maxType: maxType, target: target });
-
+        iMenyn.Utilities.DynamicAdd({ href: this.href, senderObj: $this, position: position, maxOccurs: maxOccurs, maxParent: maxParent, maxType: maxType, target: target});
         return false;
     }));
 
@@ -81,8 +81,9 @@
         editForm.toggleClass(editModeClass);
     }));
 
-    $(document).on('click', '.delete-product', (function () {
-        var editForm = $(this).closest('form');
+    $(document).on('click', 'a[data-remove]', (function () {
+        var itemToDelete = $(this).data('remove');
+        var editForm = $(this).closest('.' + itemToDelete);
         editForm.remove();
     }));
 
@@ -110,32 +111,7 @@
         iMenyn.Ajax.SaveMenuSetup(JSON.stringify(setup), '@Model.Enterprise.Id');
     });
 
-    $(document).on('submit', '.form-product', (function (e) {
-        e.preventDefault();
-        
-        var $this = $(this);
-        
-        updateProductDisplayValues($this);
-        
-        if (!saveButtonIsVisible)
-            saveButtonVisibility();
 
-        var formData = $this.serialize();
-
-
-        scrollToAnchor($this.attr('id'));
-
-        $this.removeClass('edit-mode');
-
-        //iMenyn.Ajax.SaveProduct($this, formData);
-        if ($this.hasClass('nonexistent')) {
-            //Add new form after this if it's a new product
-            iMenyn.Utilities.DynamicAdd({ href: '@Url.Action("BlankProduct", "Manage", new { enterpriseId = Model.Enterprise.Id })', position: 'after', senderObj: $this });
-            $this.removeClass('nonexistent');
-        }
-
-        return false;
-    }));
 
     var saveButtonIsVisible = false;
     function saveButtonVisibility() {
@@ -144,28 +120,74 @@
         if (saveButtonIsVisible)
             $("#save-menu-setup").removeClass('hide');
     }
-    
+
     function scrollToAnchor(aid) {
         $('html,body').animate({ scrollTop: $("#" + aid).offset().top }, 'slow');
     }
 
-    function updateProductDisplayValues(form) {
-        var formFields = form.find('input,textarea').not("input[type='hidden']");
 
-        for (var i = 0; i < formFields.length; i++) {
-            var inputId = $(formFields[i])[0].id;
-            var inputValue = $(formFields[i]).first().val();
-            form.find("[data-id=" + inputId + "]").html(inputValue);
+
+    $(document).on("submit", '.form-product', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        iMenyn.Ajax.SaveProduct($this, function () {
+            iMenyn.Utilities.DynamicAdd({ href: '@Url.Action("BlankProduct", "Manage", new { enterpriseId = Model.Enterprise.Id })', position: 'after', senderObj: $this });
+            scrollToAnchor($this.attr('id'));
+        });
+        return false;
+    });
+
+@*    $(".form-productASDASD").validate({
+        rules: {
+            Name: {
+                required: true,
+            }
+        },
+        messages: {
+            Name: {
+                required: "Ange ett namn",
+            }
+        },
+        submitHandler: function (form) {
+            var $this = $(form);
+            console.log("submithandler")
+            updateProductDisplayValues($this);
+
+            if (!saveButtonIsVisible)
+                saveButtonVisibility();
+
+            // var status = iMenyn.Ajax.SaveProduct($this.serialize());
+            var status = "KOMMER INTE FUNGERA! AJAX ÄR ASYNC";
+            /*Satus:
+            10 = updated
+            20 = new added
+            30 = no added
+            */
             
-            // Show and hide ABV 
-            if (inputId === "Abv" && (inputValue != 0 && $.isNumeric(inputValue)))
-                // Show ABV if input is not 0 and is numeric
-                form.find('.abv').removeClass("hide");
-            else if (inputId === "Abv" && !form.find('.abv').hasClass("hide")) {
-                //Hide abv if it does not have the class
-                form.find('.abv').addClass("hide");
-            }  
+            if (status !== 30)
+                $this.removeClass('edit-mode');
+            if (status === 20) {
+                //Add new form after this if it's a new product
+                scrollToAnchor($this.attr('id'));
+                var addedForm  = iMenyn.Utilities.DynamicAdd({ href: '@Url.Action("BlankProduct", "Manage", new { enterpriseId = Model.Enterprise.Id })', position: 'after', senderObj: $this });
+                validationToNewProductForm(addedForm);
+            }
         }
-    }
+    });*@
 
+    //function validationToNewProductForm(addedForm) {
+    //    var form;
+    //    $.each($(addedForm), function (index, value) {
+    //        if($(this).is('form')) {
+    //            form = $(this);
+    //        }
+    //    });
+  
+    //   $(form).validate();
+    //    var nameInput = $(form).find('input[name="Name"]').first();
+    //   /* VALIDERA ELEMENT!!!!!!!!!!!*/
+    //    $('input[name="Name"]').rules("add", {
+    //            required: true
+    //        });
+    //}
 </script>

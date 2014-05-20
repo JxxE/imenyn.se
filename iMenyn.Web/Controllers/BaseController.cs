@@ -50,7 +50,10 @@ namespace iMenyn.Web.Controllers
                 }
 
             }
-            
+            else
+            {
+                ViewBag.IsAdmin = false;
+            }
             base.OnActionExecuting(filterContext);
         }
 

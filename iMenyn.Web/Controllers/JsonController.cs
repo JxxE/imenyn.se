@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Web.Mvc;
 using Newtonsoft.Json.Linq;
 using iMenyn.Data.Abstract;
@@ -74,6 +75,12 @@ namespace iMenyn.Web.Controllers
 
         //    return Json(viewModel);
         //}
+
+        public string Wait()
+        {
+            Thread.Sleep(1000);
+            return "HEH";
+        }
 
         public JsonResult SearchEnterprises(string searchTerm)
         {

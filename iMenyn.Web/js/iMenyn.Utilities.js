@@ -37,7 +37,6 @@ iMenyn.Utilities = function () {
     };
 
     var dynamicAdd = function (obj) {
-        console.log(obj)
         if (obj.maxOccurs && obj.maxOccurs.length > 0) {
             if (obj.maxParent.children(obj.maxType).length < obj.maxOccurs) {
                 doDynamicAdd(obj);
@@ -50,7 +49,6 @@ iMenyn.Utilities = function () {
         else {
             doDynamicAdd(obj);
         }
-
     };
 
     function doDynamicAdd(obj) {
@@ -63,13 +61,13 @@ iMenyn.Utilities = function () {
             success: function (html) {
                 var target;
                 if (obj.target) {
-                    target = $("#" + obj.target);
+                    target = $(obj.target);
                 }
                 if (target) {
                     if (position === "before")
                         target.prepend(html);
                     else
-                        target.append(html);
+                        target.after(html);
                 }
                 else {
                     if (position === "before")
@@ -83,6 +81,50 @@ iMenyn.Utilities = function () {
             }
         });
     }
+
+    /* Save product-form, update display-values */
+    var updateProductDisplayValues = function(form) {
+        var formFields = form.find('input,textarea').not("input[type='hidden']");
+
+        var priceContainer = form.find('.product-prices').first();
+        priceContainer.html("");
+        var prices = { };
+
+        for (var i = 0; i < formFields.length; i++) {
+            var inputId = $(formFields[i])[0].id;
+            var inputName = $(formFields[i])[0].name;
+            var inputValue = $(formFields[i]).first().val();
+            form.find("[data-id=" + inputId + "]").html(inputValue);
+
+            // Show and hide ABV 
+            if (inputId === "Abv" && (inputValue != 0 && $.isNumeric(inputValue)))
+                // Show ABV if input is not 0 and is numeric
+                form.find('.abv').removeClass("hide");
+            else if (inputId === "Abv" && !form.find('.abv').hasClass("hide")) {
+                //Hide abv if it does not have the class
+                form.find('.abv').addClass("hide");
+            }
+   
+            //If input is Price!
+            if (inputName.indexOf("Prices") == 0) {
+                var id = inputName.substring(0, inputName.indexOf('.'));
+                
+                if(prices[id] === undefined) {
+                    prices[id] = {};
+                }
+
+                //type == "Price" or "Description"
+                var type = inputName.substring((inputName.indexOf('.') +1), inputName.length);
+                prices[id][type] = inputValue;
+            }
+        }
+
+        //Set prices to price-container
+        $.each(prices, function(index) {
+            priceContainer.append("<span>" + prices[index].Price + "kr" + " " + prices[index].Description + "</span>");
+        });
+
+    };
 
     //var showStep = function (step) {
     //    window.location.hash = step;
@@ -145,7 +187,8 @@ iMenyn.Utilities = function () {
         GetUrlParameter: getUrlParameter,
         MyLocation: myLocation,
         Toast: toast,
-        DynamicAdd: dynamicAdd
+        DynamicAdd: dynamicAdd,
+        UpdateProductDisplayValues: updateProductDisplayValues
     };
 }();
 

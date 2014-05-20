@@ -2,100 +2,97 @@
 @model iMenyn.Data.ViewModels.ProductViewModel
 @{
     Layout = null;
-    var isEditMode = string.IsNullOrEmpty(Model.Name) ? " edit-mode" : string.Empty;
-    var existsInDb = string.IsNullOrEmpty(Model.Name) ? " nonexistent" : string.Empty;
+    var isEditMode = string.IsNullOrEmpty(Model.Name) || !ViewData.ModelState.IsValid ? " edit-mode" : string.Empty;
+    //var existsInDb = string.IsNullOrEmpty(Model.Name) ? " nonexistent" : string.Empty;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = Model.Id, @class = "form-product form-horizontal" + isEditMode + existsInDb }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = Model.Id, @class = "form-product form-horizontal" + isEditMode }))
 {
-    <div class="row@(Model.Updated ? " updated-product" : string.Empty)@(Model.New ? " new-product" : string.Empty)@(Model.Deleted ? " deleted-product" : string.Empty)">
+    <div class="product row@(Model.Updated ? " updated-product" : string.Empty)@(Model.New ? " new-product" : string.Empty)@(Model.Deleted ? " deleted-product" : string.Empty)">
         <div class="col-sm-10">
-            <div class="product">
-                <div class="info">
-                    <p class="product-name" data-id="Name">@Model.Name</p>
-                    <div class="product-prices">
-                        @if (Model.Prices != null)
-                        {
-                            foreach (var price in Model.Prices)
-                            {
-                            <span>@string.Format("{0}kr", price.Price) @price.Description</span>
-                            }
-                        }
-                    </div>
-                  
-                        <div class="row">
-                            <p class="product-description col-sm-12" data-id="Description">@Model.Description</p>
-                        </div>
-                
 
-                    <p class="abv@(Model.Abv < 1 ? " hide" : string.Empty)">Alkoholhalt:<span data-id="Abv">@Model.Abv</span>%</p>
-
-                </div>
-
-                <div class="edit-form col-sm-12">
-                    <div class="form-group">
-                        @Html.LabelFor(p => p.Name, new { @class = "col-sm-2 control-label" })
-                        <div class="col-sm-10">
-                            @Html.TextBoxFor(p => p.Name, new { @class = "form-control", autofocus = "",tabindex="1" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(p => p.Prices, new { @class = "col-sm-2 control-label" })
-                        <div class="col-sm-10">
-
-                            @if (Model.Prices != null && Model.Prices.Count > 0)
-                            {
-                                foreach (var price in Model.Prices)
-                                {
-                                @Html.Partial("~/Views/Partials/Menu/Edit/_ProductPrice.cshtml", price)
-                                }
-                            }
-                            else
-                            {
-                                @Html.Partial("~/Views/Partials/Menu/Edit/_ProductPrice.cshtml", new ProductPrice())
-                            }
-
-                            @Html.ActionLink("Lägg till pris", "BlankProductPrice", "Manage", null, new { @class = "dynamic-add", data_maxOccurs = 5, data_position = "before" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(p => p.Description, new { @class = "col-sm-2 control-label" })
-                        <div class="col-sm-10">
-                            @Html.TextAreaFor(p => p.Description, new { @class = "form-control",tabindex="3" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(p => p.Abv, new { @class = "col-sm-2 control-label" })
-                        <div class="col-sm-3">
-                            <div class="input-group">
-                                @Html.TextBoxFor(p => p.Abv, new { @class = "form-control",tabindex="4" })
-                                <span class="input-group-addon">%</span>
-                            </div>
-                        </div>
-                    </div>
-                    @Html.HiddenFor(p => p.Id)
-                    @Html.HiddenFor(p => p.Enterprise)
-                    @Html.HiddenFor(p => p.CategoryId)
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label"></label>
-                        <div class="col-sm-8">
-                            <button type="submit" class="btn btn-info" tabindex="5">
-                                Spara produkt<span class="glyphicon glyphicon-ok"></span>
-                            </button>
-                            <a href="javascript:void(0)" class="btn btn-danger delete-product pull-right">Ta bort produkt<span class="glyphicon glyphicon-trash"></span></a>
-                        </div>
-                    </div>
-                    @if (Model.Updated)
+            <div class="info">
+                <p class="product-name" data-id="Name">@Model.Name</p>
+                <div class="product-prices">
+                    @if (Model.Prices != null)
                     {
-                        <hr />
-                        <h2>Orginalprodukt:</h2>
-                        <p>Namn: @Model.OriginalProduct.Name</p>
-                        <p>Beskrivning: @Model.OriginalProduct.Description</p>
+                        foreach (var price in Model.Prices)
+                        {
+                        <span>@string.Format("{0}kr", price.Price) @price.Description</span>
+                        }
                     }
                 </div>
 
+                <div class="row">
+                    <p class="product-description col-sm-12" data-id="Description">@Model.Description</p>
+                </div>
+
+
+                <p class="abv@(Model.Abv < 1 ? " hide" : string.Empty)">Alkoholhalt:<span data-id="Abv">@Model.Abv</span>%</p>
+
+            </div>
+
+            <div class="edit-form col-sm-12">
+                <div class="form-group">
+                    @Html.LabelFor(p => p.Name, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(p => p.Name, new { @class = "form-control", autofocus = "", tabindex = "1" })
+                        @Html.ValidationMessageFor(p => p.Name)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(p => p.Prices, new { @class = "col-sm-2 control-label" })
+                    <div class="product-prices-edit col-sm-10">
+
+                        @if (Model.Prices != null && Model.Prices.Count > 0)
+                        {
+                            foreach (var price in Model.Prices)
+                            {
+                            @Html.Partial("~/Views/Partials/Menu/Edit/_ProductPrice.cshtml", price)
+                            }
+                        }
+                        else
+                        {
+                            @Html.Partial("~/Views/Partials/Menu/Edit/_ProductPrice.cshtml", new ProductPrice())
+                        }
+                        @Html.ValidationMessageFor(p => p.Prices)
+                         @Html.ActionLink("Lägg till pris", "BlankProductPrice", "Manage", null, new { @class = "dynamic-add", data_maxOccurs = 5, data_position="before"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(p => p.Description, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-10">
+                        @Html.TextAreaFor(p => p.Description, new { @class = "form-control", tabindex = "3" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(p => p.Abv, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            @Html.TextBoxFor(p => p.Abv, new { @class = "form-control", tabindex = "4" })
+                            <span class="input-group-addon">%</span>
+                        </div>
+                    </div>
+                </div>
+                @Html.HiddenFor(p => p.Id)
+                @Html.HiddenFor(p => p.Enterprise)
+                @Html.HiddenFor(p => p.CategoryId)
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-8">
+                        <button class="btn btn-info save-product" tabindex="5">Spara produkt<span class="glyphicon glyphicon-ok"></span></button>
+                        <a href="javascript:void(0)" class="btn btn-danger pull-right" data-remove="product">Ta bort produkt<span class="glyphicon glyphicon-trash"></span></a>
+                    </div>
+                </div>
+                @if (Model.Updated)
+                {
+                    <hr />
+                    <h2>Orginalprodukt:</h2>
+                    <p>Namn: @Model.OriginalProduct.Name</p>
+                    <p>Beskrivning: @Model.OriginalProduct.Description</p>
+                }
             </div>
 
         </div>

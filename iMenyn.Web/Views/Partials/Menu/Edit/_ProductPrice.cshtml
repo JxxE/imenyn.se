@@ -5,15 +5,15 @@
 }
 @using (Html.BeginCollectionItem("Prices"))
 {
-    <div class="form-group product-prices-edit">
-        <div class="col-sm-3">
+    <div class="form-group product-price-edit">
+        <div class="col-sm-4">
             <div class="input-group">
-                @Html.TextBoxFor(p => p.Price, new { @class = "form-control",tabindex="2" })
+                @Html.TextBoxFor(p => p.Price, new { @class = "form-control", tabindex = "2", type = "number" })
                 <span class="input-group-addon">kr</span>
             </div>
         </div>
-        <div class="col-sm-8">
-            @Html.TextBoxFor(p => p.Description, new { @class = "form-control", placeholder = "Ex. 4cl, glas, medium..." })            
+        <div class="col-sm-7">
+            @Html.TextBoxFor(p => p.Description, new { @class = "form-control", placeholder = "Ex. 4cl, glas, medium..." })
         </div>
         <span class="glyphicon glyphicon-trash vertical-bottom"></span>
     </div>

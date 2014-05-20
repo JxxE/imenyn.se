@@ -8,16 +8,20 @@
     <div class="col-sm-1">
         <span class="glyphicon glyphicon-resize-vertical btn btn-info category-sorter"></span>
     </div>
-    <div class="col-sm-11">
-            <h3 class="category-name">@Model.Name</h3>
-    @foreach (var p in Model.Products)
-    {
-        @Html.Partial("~/Views/Partials/Menu/Edit/_Product.cshtml", p)
-    }
-    @if(Model.Products.Count == 0)
-    {
-        @Html.Partial("~/Views/Partials/Menu/Edit/_Product.cshtml", new ProductViewModel{Enterprise = Model.EnterpriseId,CategoryId = Model.Id})
-    }
-     @Html.ActionLink("Lägg till produkt", "BlankProduct","Manage", new { enterpriseId = Model.EnterpriseId, categoryId = Model.Id }, new { @class = "dynamic-add",data_position="before" })
+    <div class="col-sm-10">
+        <h3 class="category-name">@Model.Name</h3>
+        @foreach (var p in Model.Products)
+        {
+            @Html.Partial("~/Views/Partials/Menu/Edit/_Product.cshtml", p)
+        }
+        @if(Model.Products.Count == 0)
+        {
+            @Html.Partial("~/Views/Partials/Menu/Edit/_Product.cshtml", new ProductViewModel{Enterprise = Model.EnterpriseId,CategoryId = Model.Id})
+        }
+        @Html.ActionLink("Lägg till produkt", "BlankProduct","Manage", new { enterpriseId = Model.EnterpriseId, categoryId = Model.Id }, new { @class = "dynamic-add",data_position="before" })
     </div>
+        <div class="col-sm-1">
+        <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-remove="category">Ta bort kategori<span class="glyphicon glyphicon-trash"></span></a>
+    </div>
+     
 </div>

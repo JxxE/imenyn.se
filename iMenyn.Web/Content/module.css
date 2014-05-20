@@ -37,7 +37,13 @@
 .category {
     padding: 26px 0 40px;
 }
-
+.category a[data-remove="category"] {
+    opacity: 0;
+}
+.category:hover a[data-remove="category"] {
+    opacity: 1;
+    -webkit-animation: fadeIn 0.5s linear;
+}
 .category-name {
     margin: 0 0 15px;
     font-size: 39px;
@@ -45,8 +51,13 @@
 /* End of Category */
 
 
+@-webkit-keyframes fadeIn {
+   from {opacity: 0;}
+   to {opacity: 1;}
+}
 
-/* Product */
+
+/* Product Edit-mode */
 .form-product.edit-mode .edit-form {
     display: block;
 }
@@ -77,13 +88,42 @@ content: "\270f";
 content: "\e014";
 }
 
-/* End of product */
+/* Hide first trashcan in priduct-prices*/
+.product-price-edit:first-of-type .glyphicon-trash {
+    display: none;
+}
+.product-prices-edit .field-validation-error {
+    display: block;
+    margin: -10px 0 10px;
+}
+
+/* End of product edit-mode*/
 
 
 
 /* === End of Menu === */
 
 
+
+/* == Loading == */
+@-webkit-keyframes loading {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 0; }
+}
+
+.button-loading {
+    opacity: .8;
+    cursor: default;
+    background-image: linear-gradient(to left top,
+    rgba(255, 255,255,0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255,255,0.2) 50%,
+    rgba(255, 255,255,0.2) 75%,
+    transparent 75%,transparent);
+    background-size: 50px 50px;
+   -webkit-animation: loading 0.5s linear infinite;
+}
 
 
 

@@ -31,13 +31,13 @@ namespace iMenyn.Web.Controllers
 
         public ActionResult Edit(string key)
         {
-            if(!string.IsNullOrEmpty(key))
+            if (!string.IsNullOrEmpty(key))
             {
                 var viewModel = Db.Enterprises.GetCompleteEnterprise(EnterpriseHelper.GetId(key), true);
 
                 if (viewModel.Enterprise.IsNew || viewModel.Enterprise.OwnedByAccount)
                 {
-                    if(viewModel.Enterprise.OwnedByAccount)
+                    if (viewModel.Enterprise.OwnedByAccount)
                     {
                         var account = Db.Accounts.GetAccount(HttpContext.User.Identity.Name);
                         if (account.Enabled && account.Enterprises.Contains(EnterpriseHelper.GetId(key)))
@@ -65,31 +65,39 @@ namespace iMenyn.Web.Controllers
 
         // Detta gäller en NY enterprise. När man redigerar en nuvarande enterprise måste det sparas en TEMP-meny!
         [HttpPost]
-        public int AddOrEditNewProduct(ProductViewModel product)
+        public ActionResult AddOrEditNewProduct(ProductViewModel product)
         {
-            if (product != null)
-            {
-                if (!string.IsNullOrEmpty(product.Name) && (product.Prices != null && product.Prices.Count > 0))
-                {
-                    var p = ProductHelper.ViewModelToModel(product);
-                    if (product.Id != null && Db.Products.GetProductById(product.Id) != null)
-                    {
-                        Db.Products.UpdateProduct(p, product.Enterprise);
-                        return 10;
-                    }
+            if (string.IsNullOrEmpty(product.Name))
+                ModelState.AddModelError("Name","Ange produktens namn");
 
-                    Db.Products.AddProduct(p, product.CategoryId, product.Enterprise);
-                    return 20;
+            if ((product.Prices == null || product.Prices.Count < 1) || product.Prices.First().Price == 0)
+                ModelState.AddModelError("Prices", "Ange ett pris");
+
+            if (ModelState.IsValid)
+            {
+                var p = ProductHelper.ViewModelToModel(product);
+
+                //Take a maximum of 5 prices
+                p.Prices = p.Prices.Where(pr => pr.Price > 0).Take(5).ToList();
+
+                if (product.Id != null && Db.Products.GetProductById(product.Id) != null)
+                {
+                    Db.Products.UpdateProduct(p, product.Enterprise);
+                    return Json(new { success = true,method="update" });
                 }
+
+                //Db.Products.AddProduct(p, product.CategoryId, product.Enterprise);
+                return Json(new { success = true, method = "add" });
             }
-            return 30;
+
+            return PartialView("~/Views/Partials/Menu/Edit/_Product.cshtml",product);
         }
 
         [HttpPost]
         public ActionResult Index(EnterpriseViewModel viewModel)
         {
             if (!string.IsNullOrEmpty(viewModel.Nope))
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
 
             if (string.IsNullOrEmpty(viewModel.Name))
                 ModelState.AddModelError("Name", "Ange restaurangens namn");
@@ -98,7 +106,7 @@ namespace iMenyn.Web.Controllers
                 ModelState.AddModelError("DisplayCategories", "Välj minst en kategori");
 
             if (viewModel.Coordinates.Lat == null || viewModel.Coordinates.Lng == null)
-                ModelState.AddModelError("Coordinates","Du måste ange någon platsinfo");
+                ModelState.AddModelError("Coordinates", "Du måste ange någon platsinfo");
 
             if (ModelState.IsValid)
             {

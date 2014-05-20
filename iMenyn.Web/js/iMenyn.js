@@ -198,27 +198,25 @@ iMenyn.Ajax = function () {
         $("#search-button-content").show();
     };
 
-    var saveProduct = function (form,product) {
+    var saveProduct = function (form, callback) {
         $.ajax({
-            data: product,
+            data: form.serialize(),
             url: '/Manage/AddOrEditNewProduct/',
             type: "POST",
             success: function (data) {
-                if (data == 10) {
-                    console.log("Produkten uppdaterades");
+                if (data.success) {
+                    if(data.method === "add") {
+                        callback();
+                    }
+                    iMenyn.Utilities.UpdateProductDisplayValues(form);
                     form.removeClass("edit-mode");
                 }
-                if (data == 20) {
-                    console.log("Ny produkt skapat");
-                    form.removeClass("edit-mode");
-                    iMenyn.Utilities.DynamicAdd({ href: "/manage/BlankProduct?enterpriseId=enterprises-jessetinell&categoryId=hejhej", senderObj: form });
-                }
-                if(data == 30) {
-                    console.log("Ingen produkt tillagd");
+                else {
+                    form.replaceWith(data);
                 }
             },
             error: function () {
-                console.error("Kunde inte skapa produkt");
+                console.error("Något gick fel...");
             }
         });
     };
@@ -255,6 +253,44 @@ iMenyn.Ajax = function () {
     };
 
 
+    //TO TEST AJAX-LOADER
+    var wait = function (button) {
+        hj.ajax({
+            url: '/Json/Wait',
+            success: function (data) {
+                console.log(data)
+            },
+            error: function () {
+                console.log("ERROR")
+            }
+
+        }, button, options.success, options.error);
+
+    };
+
+    var hj = {};
+    hj.ajax = function(options, button, successCallback,errorCallback) {
+        var defaults = {
+            type:"POST",
+            beforeSend:function () {
+                button.addClass("button-loading");
+            },
+            success: function(data) { //hijack the success handler
+                button.removeClass("button-loading");
+                successCallback(data);
+            },
+            error:function (data) {
+                button.removeClass("button-loading");
+                if (errorCallback)
+                    errorCallback(data);
+            }
+        };
+        $.extend(options, defaults); 
+        return $.ajax(options); 
+    };
+
+
+
     //function showGeoError(error) {
     //    var el = document.getElementById("error");
     //    switch (error.code) {
@@ -281,6 +317,8 @@ iMenyn.Ajax = function () {
         SaveProduct: saveProduct,
         SaveMenuSetup: saveMenuSetup,
 
-        CreateTempEnterprise: createTempEnterprise
+        CreateTempEnterprise: createTempEnterprise,
+        
+        Wait:wait
     };
 }();
