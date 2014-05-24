@@ -6,6 +6,9 @@
 .vertical-bottom {
     vertical-align: bottom;
 }
+.nom {
+    margin: 0;
+}
 .mr5 {
     margin-right: 5px;
 }
@@ -15,6 +18,12 @@
 .mt50 {
     margin-top: 50px;
 }
+.mb20 {
+    margin-bottom: 20px;
+}
+.fixed {
+    position: fixed;
+}
 /* === End of Utility classes === */
 
 
@@ -23,7 +32,7 @@
     display: none;
 }
 
-/* Category */
+/* Category Edit-mode*/
 .sorting-categories .category-sorter {
     display: block;
 }
@@ -37,6 +46,10 @@
 .category {
     padding: 26px 0 40px;
 }
+
+.sorting-categories .category a[data-remove="category"] {
+    display: none;
+}
 .category a[data-remove="category"] {
     opacity: 0;
 }
@@ -44,11 +57,10 @@
     opacity: 1;
     -webkit-animation: fadeIn 0.5s linear;
 }
-.category-name {
-    margin: 0 0 15px;
-    font-size: 39px;
+.category-products {
+    min-height: 25px;
 }
-/* End of Category */
+/* End of Category edit-mode */
 
 
 @-webkit-keyframes fadeIn {
@@ -64,6 +76,9 @@
 
 .form-product.edit-mode .product {
     padding: 6px 0;
+}
+.form-product.edit-mode .glyphicon-resize-vertical {
+    display: none;
 }
 
 .product {
@@ -100,6 +115,15 @@ content: "\e014";
 /* End of product edit-mode*/
 
 
+/* Edit, general */
+#toolbox {
+    z-index: 100;
+}
+#toolbox.fixed {
+    top: 0;
+}
+/* End of Edit, general*/
+
 
 /* === End of Menu === */
 
@@ -125,9 +149,30 @@ content: "\e014";
    -webkit-animation: loading 0.5s linear infinite;
 }
 
+/* === Value-edit === */
+.value-edit {
+    overflow: hidden;
+}
+.value-edit .edit-form,.value-edit.edit-mode .display-value,.value-edit.no-init-value .glyphicon-remove {
+    display: none;
+}
+.value-edit.edit-mode .edit-form {
+    display: block;
+}
+/* === End of Value-edit === */
 
 
-/* ===  === */
+
+
+/* === Bootstrap overrides === */
+.glyphicon-edit,.glyphicon-resize-vertical,.glyphicon-remove,.toggle-edit {
+    cursor: pointer;
+}
+/* === End of Bootstrap overrides === */
+
+
+
+/* === === */
 
 /* === End of  === */
 

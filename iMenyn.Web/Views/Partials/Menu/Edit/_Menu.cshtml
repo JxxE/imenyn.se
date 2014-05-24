@@ -1,7 +1,5 @@
 ﻿@model iMenyn.Data.ViewModels.CompleteEnterpriseViewModel
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js"></script>
 @if (Model.Enterprise != null)
 {
     @Html.Partial("~/Views/Partials/_EnterpriseInfo.cshtml", Model.Enterprise)
@@ -9,11 +7,13 @@
 
 <div class="row">
     <div class="col-sm-9">
-        <div class="row">
+        <div id="toolbox-container">
+            <div id="toolbox" class="row">
             <div class="col-sm-12">
-                <a class="dynamic-add btn btn-info" data-position="before" data-target="#categories" href="@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus"></span></a>
+                <a class="dynamic-add btn btn-info" data-target="#categories > .category:last-of-type" href="@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus"></span></a>
                 <a href="javascript:void(0)" data-action="toggleclass" data-class="sorting-categories" class="btn btn-warning">Sortera kategorier<span class="glyphicon glyphicon-sort"></span></a>
             </div>
+        </div>
         </div>
         <div id="categories" class="edit">
             @foreach (var category in Model.ViewModelCategories)
@@ -37,7 +37,7 @@
     </div>
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1">
-            <a id="save-menu-setup" href="javascript:void(0)" class="btn btn-success hide">Spara & avsluta<span class="glyphicon glyphicon-ok"></span></a>
+            <a id="save-menu-setup" href="javascript:void(0)" class="btn btn-success btn-lg hide pull-right mt50">Spara & avsluta<span class="glyphicon glyphicon-ok"></span></a>
         </div>
     </div>
 </div>
@@ -45,6 +45,18 @@
 <script>
     $(document).ready(function () {
         saveButtonVisibility();
+
+        var toolboxPositionFromTop = $("#toolbox").offset().top;
+        $("#toolbox-container").height($("#toolbox").height());
+
+        $(window).bind('scroll', function () {
+            if ($(window).scrollTop() > toolboxPositionFromTop) {
+                $('#toolbox').addClass('fixed');
+            }
+            else {
+                $('#toolbox').removeClass('fixed');
+            }
+        });
     });
     $(document).on('click', '.product-price-edit .glyphicon', (function () {
         //Remove a product-price
@@ -58,47 +70,176 @@
         var maxType = undefined;
         var maxParent = undefined;
         var target = $this.data('target');
-
+        var doAdd = true;
 
         if ($this.data('max') != undefined) {
             maxOccurs = $this.data('max');
             maxParent = $(this).parent();
             maxType = 'div';
         }
-        iMenyn.Utilities.DynamicAdd({ href: this.href, senderObj: $this, position: position, maxOccurs: maxOccurs, maxParent: maxParent, maxType: maxType, target: target});
+
+        //If "add category"
+        if (target.indexOf("#categories") >= 0) {
+            var categories = $('.category');
+            $.each(categories, function (index, value) {
+                var productForm = $(value).find('.form-product');
+                if (productForm.length === 0 || (productForm.length === 1 && productForm.first().hasClass('edit-mode'))) {
+                    //Do not add another category if category has 0 products or 1 product with edit-mode active.
+                    doAdd = false;
+                }
+            });
+        }
+        if (doAdd)
+            iMenyn.Utilities.DynamicAdd({ href: this.href, senderObj: $this, position: position, maxOccurs: maxOccurs, maxParent: maxParent, maxType: maxType, target: target });
         return false;
     }));
+
+    $(document).on('click', 'a[data-action="add-product"]', function (e) {
+        var $this = $(this);
+        addEmptyProduct($this);
+    });
+
+    function addEmptyProduct(button) {
+        $.ajax({
+            url: button.data('url'),
+            cache: false,
+            success: function (html) {
+                var $form = $($.parseHTML(html)).last();
+
+                iMenyn.Utilities.ToggleEditMode($form, 'all-but-this');
+
+                //Append a new form
+                button.closest('.category').find('.category-products').append(html);
+
+                iMenyn.Utilities.ScrollToAnchor($form[0].id);
+            },
+            error: function () {
+                console.log("error add product");
+            }
+        });
+    }
 
     $(document).on('click', '.toggle-edit', (function () {
         var $this = $(this);
         var editForm = $this.closest('.form-product');
-        var editModeClass = 'edit-mode';
 
-        //Hide all opened edit-forms
-        $('.form-product.edit-mode').not(editForm).removeClass(editModeClass);
+        iMenyn.Utilities.ToggleEditMode(editForm,'product');
+        
+        //, function () {
+        //    if (editForm.hasClass('edit-mode')) {
+        //        //Closing current product. Check if it should be removed or just closed
+        //        closeOrRemoveProductEditForm(editForm);
+        //    }
+        //    else {
+        //        var allEditFormsButThis = $('.edit-mode');
+        //        $.each(allEditFormsButThis, function (index, value) {
+        //            //Close or remove all edit-forms but this
+        //            closeOrRemoveProductEditForm($(value));
+        //        });
+        //    }
+        //}
 
-        //Toggle active classes
-        editForm.toggleClass(editModeClass);
     }));
+
+    $(document).on("click", ".value-edit span.glyphicon-edit", function () {
+        var container = $(this).closest('.value-edit');
+        //iMenyn.Utilities.ToggleEditMode(container, function () {
+        //    var allEditFormsButThis = $('.edit-mode').not(container);
+        //    $.each(allEditFormsButThis, function (index, value) {
+        //        //Close or remove all edit-forms but this
+        //        closeOrRemoveProductEditForm($(value));
+        //    });
+        //});
+        iMenyn.Utilities.ToggleEditMode(container, 'all-but-this');
+    });
+    $(document).on("click", ".value-edit span.glyphicon-remove", function () {
+        var container = $(this).closest('.value-edit');
+        container.removeClass('edit-mode');
+    });
+    $(document).on("submit", "form.value-edit", function (e) {
+        e.preventDefault();
+        var form = $(this);
+
+        var input = form.find('input');
+        var inputValue = input.val();
+
+        //If input is not empty or whitespace
+        if (inputValue.trim()) {
+            var inputFor = input.data('for');
+            form.find('[data-display-value=\"' + inputFor + '\"]').html(inputValue);
+            form.removeClass('edit-mode');
+            form.removeClass('no-init-value');
+        }
+
+
+        var categoryContainer = form.closest('.category');
+        if (categoryContainer.find('.form-product').length === 0) {
+            var addButton = categoryContainer.find('[data-action="add-product"]');
+            addEmptyProduct(addButton);
+        }
+
+        return false;
+    });
+
+    function closeOrRemoveProductEditForm(editForm) {
+        var firstPriceInput = editForm.find('.product-price-edit input[type="number"]');
+
+        //If name-input is empty OR first price is 0 or empty
+        if (!editForm.find('[name="Name"]').first().val().trim() || (firstPriceInput.val() == 0 || firstPriceInput.val() == "")) {
+            //Remove product-form
+            editForm.remove();
+        }
+        else {
+            //Save
+            editForm.submit();
+        }
+    }
+
+    var deletedItems = [];
 
     $(document).on('click', 'a[data-remove]', (function () {
         var itemToDelete = $(this).data('remove');
-        var editForm = $(this).closest('.' + itemToDelete);
-        editForm.remove();
+
+        var classToDelete;
+        var parent;
+        var editForm;
+
+        switch (itemToDelete) {
+            case 'product':
+                classToDelete = 'form-product';
+                editForm = $(this).closest('.' + classToDelete);
+                parent = editForm.closest('.category');
+                break;
+            default:
+                classToDelete = '';
+                break;
+        }
+
+        
+        //console.log(parent)
+        //var previousElId = editForm.prev('form')[0].id;
+        //deletedItems.push({
+        //    index: previousElId,
+        //    content: editForm,
+        //    type: itemToDelete
+        //});
+        
+       // editForm.remove();
     }));
 
-    $(".category").sortable({ items: "form", handle: ".glyphicon-resize-vertical", connectWith: ".category" });
-    $("#main-container").sortable({ items: ".category", handle: ".glyphicon-resize-vertical" });
+    $(".category-products").sortable({ items: "form", handle: ".product .glyphicon-resize-vertical", connectWith: ".category-products" });
+    $("#main-container").sortable({ items: ".category", handle: ".glyphicon-resize-vertical.category-sorter" });
 
     $("#save-menu-setup").click(function () {
+        var $this = $(this);
         var $categories = $(".category");
         var setup = new Object();
         setup.Categories = new Array();
         for (var i = 0; i < $categories.length; i++) {
             var $category = $($categories[i]);
             var category = new Object();
-            category.id = $category.data('category');
-            category.name = $category.find('.category-name').html();
+            category.id = $category[0].id;
+            category.name = $category.find('[data-id="category-name"]').val();
             category.products = new Array();
             var products = $category.children().find('.product');
             for (var j = 0; j < products.length; j++) {
@@ -108,10 +249,8 @@
             }
             setup.Categories.push({ Id: category.id, Name: category.name, Products: category.products });
         }
-        iMenyn.Ajax.SaveMenuSetup(JSON.stringify(setup), '@Model.Enterprise.Id');
+        iMenyn.Ajax.SaveMenuSetup($this, JSON.stringify(setup), '@Model.Enterprise.Id');
     });
-
-
 
     var saveButtonIsVisible = false;
     function saveButtonVisibility() {
@@ -121,73 +260,17 @@
             $("#save-menu-setup").removeClass('hide');
     }
 
-    function scrollToAnchor(aid) {
-        $('html,body').animate({ scrollTop: $("#" + aid).offset().top }, 'slow');
-    }
-
-
 
     $(document).on("submit", '.form-product', function (e) {
         e.preventDefault();
         var $this = $(this);
         iMenyn.Ajax.SaveProduct($this, function () {
-            iMenyn.Utilities.DynamicAdd({ href: '@Url.Action("BlankProduct", "Manage", new { enterpriseId = Model.Enterprise.Id })', position: 'after', senderObj: $this });
-            scrollToAnchor($this.attr('id'));
+            var addButton = $this.closest('.category').find('[data-action="add-product"]');
+            addEmptyProduct(addButton);
+            iMenyn.Utilities.ScrollToAnchor($this.attr('id'));
         });
         return false;
     });
+    
 
-@*    $(".form-productASDASD").validate({
-        rules: {
-            Name: {
-                required: true,
-            }
-        },
-        messages: {
-            Name: {
-                required: "Ange ett namn",
-            }
-        },
-        submitHandler: function (form) {
-            var $this = $(form);
-            console.log("submithandler")
-            updateProductDisplayValues($this);
-
-            if (!saveButtonIsVisible)
-                saveButtonVisibility();
-
-            // var status = iMenyn.Ajax.SaveProduct($this.serialize());
-            var status = "KOMMER INTE FUNGERA! AJAX ÄR ASYNC";
-            /*Satus:
-            10 = updated
-            20 = new added
-            30 = no added
-            */
-            
-            if (status !== 30)
-                $this.removeClass('edit-mode');
-            if (status === 20) {
-                //Add new form after this if it's a new product
-                scrollToAnchor($this.attr('id'));
-                var addedForm  = iMenyn.Utilities.DynamicAdd({ href: '@Url.Action("BlankProduct", "Manage", new { enterpriseId = Model.Enterprise.Id })', position: 'after', senderObj: $this });
-                validationToNewProductForm(addedForm);
-            }
-        }
-    });*@
-
-    //function validationToNewProductForm(addedForm) {
-    //    var form;
-    //    $.each($(addedForm), function (index, value) {
-    //        if($(this).is('form')) {
-    //            form = $(this);
-    //        }
-    //    });
-  
-    //   $(form).validate();
-    //    var nameInput = $(form).find('input[name="Name"]').first();
-    //   /* VALIDERA ELEMENT!!!!!!!!!!!*/
-    //    $('input[name="Name"]').rules("add", {
-    //            required: true
-    //        });
-    //}
 </script>

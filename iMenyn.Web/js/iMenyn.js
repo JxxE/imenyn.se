@@ -7,12 +7,13 @@
 });
 
 $(function () {
-    var path = window.location.href;
-    $('ul a').each(function () {
-        if (this.href === path) {
-            $(this).addClass('active');
-        }
-    });
+    //var path = window.location.href;
+    //$('ul a').each(function () {
+    //    if (this.href === path) {
+    //        $(this).addClass('active');
+    //    }
+    //});
+
     $(document).on("click", "[data-action='toggleclass']", function () {
         var $this = $(this);
         $this.toggleClass('active');
@@ -45,6 +46,7 @@ $(function () {
         $(".navbar ul").toggleClass('nav-open');
     });
 
+    
 });
 
 
@@ -205,7 +207,7 @@ iMenyn.Ajax = function () {
             type: "POST",
             success: function (data) {
                 if (data.success) {
-                    if(data.method === "add") {
+                    if (data.method === "add") {
                         callback();
                     }
                     iMenyn.Utilities.UpdateProductDisplayValues(form);
@@ -221,21 +223,46 @@ iMenyn.Ajax = function () {
         });
     };
 
-    var saveMenuSetup = function (setup, enterpriseId) {
+    var saveMenuSetup = function (button,setup, enterpriseId) {
         var json = '{ "menu": ' + setup + ', "enterpriseId":"' + enterpriseId + '"}';
-        $.ajax({
+
+        var options = {
             data: json,
             url: '/Manage/SaveMenuSetup/',
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             type: "POST",
-            success: function (data) {
-
+            success: function(data) {
+                if (data.success) {
+                    console.log("UPDATERAD")
+                } else {
+                    //TOAST
+                }
             },
-            error: function () {
+            error: function() {
                 console.error("Kunde inte spara setup");
             }
-        });
+        };
+
+        hj.ajax(options,button, options.success);
+        //$.ajax({
+        //    data: json,
+        //    url: '/Manage/SaveMenuSetup/',
+        //    dataType: "json",
+        //    contentType: "application/json; charset=utf-8",
+        //    type: "POST",
+        //    success: function (data) {
+        //        if(data.success) {
+                    
+        //        }
+        //        else {
+        //            //TOAST
+        //        }
+        //    },
+        //    error: function () {
+        //        console.error("Kunde inte spara setup");
+        //    }
+        //});
     };
 
     var createTempEnterprise = function (form) {
@@ -269,24 +296,24 @@ iMenyn.Ajax = function () {
     };
 
     var hj = {};
-    hj.ajax = function(options, button, successCallback,errorCallback) {
+    hj.ajax = function (options, button, successCallback, errorCallback) {
         var defaults = {
-            type:"POST",
-            beforeSend:function () {
+            type: "POST",
+            beforeSend: function () {
                 button.addClass("button-loading");
             },
-            success: function(data) { //hijack the success handler
+            success: function (data) { //hijack the success handler
                 button.removeClass("button-loading");
                 successCallback(data);
             },
-            error:function (data) {
+            error: function (data) {
                 button.removeClass("button-loading");
                 if (errorCallback)
                     errorCallback(data);
             }
         };
-        $.extend(options, defaults); 
-        return $.ajax(options); 
+        $.extend(options, defaults);
+        return $.ajax(options);
     };
 
 
@@ -318,7 +345,7 @@ iMenyn.Ajax = function () {
         SaveMenuSetup: saveMenuSetup,
 
         CreateTempEnterprise: createTempEnterprise,
-        
-        Wait:wait
+
+        Wait: wait
     };
 }();

@@ -1,1 +1,6 @@
 2014-05-05 20:40:00.9331|FATAL|iMenyn.Data.Concrete.Logger|ValidateMenu, duplicate check!
+2014-05-21 21:37:13.8274|FATAL|iMenyn.Data.Concrete.Logger|ValidateMenu, duplicate check!
+2014-05-21 21:37:41.5530|FATAL|iMenyn.Data.Concrete.Logger|ValidateMenu, duplicate check!
+2014-05-21 21:50:55.0188|FATAL|iMenyn.Data.Concrete.Logger|ValidateMenu, duplicate check!
+2014-05-21 22:08:10.6217|FATAL|iMenyn.Data.Concrete.Logger|ValidateMenu, duplicate check!
+2014-05-24 12:59:17.3884|FATAL|iMenyn.Data.Concrete.Logger|ValidateMenu, duplicate check!

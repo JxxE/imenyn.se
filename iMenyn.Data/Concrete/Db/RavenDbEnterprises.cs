@@ -36,12 +36,12 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        public void UpdateEnterprise(string enterpriseId, Menu menu)
+        public bool UpdateEnterprise(string enterpriseId, Menu menu)
         {
             using (var session = _documentStore.OpenSession())
             {
                 var enterprise = session.Load<Enterprise>(enterpriseId);
-
+                var updated = false;
                 if (EnterpriseHelper.ValidEditableEnterprise(enterprise, session))
                 {
                     MenuHelper.ValidateMenu(menu, enterpriseId, session, _logger);
@@ -49,6 +49,7 @@ namespace iMenyn.Data.Concrete.Db
                     {
                         enterprise.Menu = menu;
                         enterprise.LastUpdated = DateTime.Now;
+                        //GET DELETED PRODUCTS AND DELETE THEM!
                     }
                     else
                     {
@@ -69,12 +70,16 @@ namespace iMenyn.Data.Concrete.Db
 
                     }
 
+                    
+                    
                     session.Store(enterprise);
-
                     session.SaveChanges();
+
+                    updated = true;
+
                     _logger.Info("Updated menu settings for enterprise: " + enterprise.Id);
                 }
-
+                return updated;
             }
         }
 

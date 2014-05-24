@@ -82,11 +82,12 @@ namespace iMenyn.Web.Controllers
 
                 if (product.Id != null && Db.Products.GetProductById(product.Id) != null)
                 {
+                    //if product isnot xatly the same!update
                     Db.Products.UpdateProduct(p, product.Enterprise);
                     return Json(new { success = true,method="update" });
                 }
 
-                //Db.Products.AddProduct(p, product.CategoryId, product.Enterprise);
+                Db.Products.AddProduct(p, product.CategoryId, product.Enterprise);
                 return Json(new { success = true, method = "add" });
             }
 
@@ -163,15 +164,20 @@ namespace iMenyn.Web.Controllers
 
         //Sparar ordningen på menyn. Kategori, produkt-placering 
         [HttpPost]
-        public void SaveMenuSetup(Menu menu, string enterpriseId)
+        public ActionResult SaveMenuSetup(Menu menu, string enterpriseId)
         {
-            Db.Enterprises.UpdateEnterprise(enterpriseId, menu);
+            if(menu.Categories.Count == 0)
+            {
+                
+            }
+            var updated = Db.Enterprises.UpdateEnterprise(enterpriseId, menu);
+            return Json(new {success = updated});
         }
 
         public PartialViewResult BlankCategory(string enterpriseId)
         {
             var categoryId = GeneralHelper.GetGuid();
-            return PartialView("~/Views/Partials/Menu/Edit/_Category.cshtml", new ViewModelCategory { Id = categoryId, Name = string.Empty, Products = new List<ProductViewModel> { new ProductViewModel { Id = ProductHelper.GenerateId(), Enterprise = enterpriseId, CategoryId = categoryId } }, EnterpriseId = enterpriseId });
+            return PartialView("~/Views/Partials/Menu/Edit/_Category.cshtml", new ViewModelCategory { Id = categoryId, Name = string.Empty, Products = new List<ProductViewModel>(), EnterpriseId = enterpriseId });
         }
         public PartialViewResult BlankProduct(string enterpriseId, string categoryId)
         {

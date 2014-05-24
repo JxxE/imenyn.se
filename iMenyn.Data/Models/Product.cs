@@ -6,7 +6,7 @@ namespace iMenyn.Data.Models
     public class Product : BasicProduct
     {
         public string Id { get; set; }
-        [Display(Name = "Namn")]
+        [Display(Name = "Produkt")]
         public string Name { get; set; }
         [Display(Name = "Beskrivning")]
         public string Description { get; set; }

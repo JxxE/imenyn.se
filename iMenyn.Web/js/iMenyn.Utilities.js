@@ -75,20 +75,34 @@ iMenyn.Utilities = function () {
                     else
                         obj.senderObj.after(html);
                 }
+                
+                //If is "add-category", scroll to view
+                if (obj.target.indexOf("#categories") >= 0) {
+                    var parsedHtml = $($.parseHTML(html));
+                    $.each(parsedHtml, function(index, value) {
+                        if($(value).hasClass('category')) {
+                            scrollToAnchor($(value)[0].id);
+                        }
+                    });
+                }
             },
             error: function () {
-                 obj.senderObj.after("<p>Något gick fel...</p>");
+                obj.senderObj.after("<p>Något gick fel...</p>");
             }
         });
     }
 
+    var scrollToAnchor = function(aid) {
+        $('html,body').animate({ scrollTop: $("#" + aid).offset().top }, 'slow');
+    };
+
     /* Save product-form, update display-values */
-    var updateProductDisplayValues = function(form) {
+    var updateProductDisplayValues = function (form) {
         var formFields = form.find('input,textarea').not("input[type='hidden']");
 
         var priceContainer = form.find('.product-prices').first();
         priceContainer.html("");
-        var prices = { };
+        var prices = {};
 
         for (var i = 0; i < formFields.length; i++) {
             var inputId = $(formFields[i])[0].id;
@@ -104,27 +118,84 @@ iMenyn.Utilities = function () {
                 //Hide abv if it does not have the class
                 form.find('.abv').addClass("hide");
             }
-   
+
             //If input is Price!
             if (inputName.indexOf("Prices") == 0) {
                 var id = inputName.substring(0, inputName.indexOf('.'));
-                
-                if(prices[id] === undefined) {
+
+                if (prices[id] === undefined) {
                     prices[id] = {};
                 }
 
                 //type == "Price" or "Description"
-                var type = inputName.substring((inputName.indexOf('.') +1), inputName.length);
+                var type = inputName.substring((inputName.indexOf('.') + 1), inputName.length);
                 prices[id][type] = inputValue;
             }
         }
 
         //Set prices to price-container
-        $.each(prices, function(index) {
+        $.each(prices, function (index) {
             priceContainer.append("<span>" + prices[index].Price + "kr" + " " + prices[index].Description + "</span>");
         });
 
     };
+
+    //Only used for edit-mode
+    var focusField = function ($field) {
+        $field.focus();
+        var v = $field.val();
+        $field.get(0).setSelectionRange(v.length, v.length);
+    };
+
+
+    var toggleEditMode = function (container, uniqueCodeVar) {
+        //if (functionToRun)
+        //    functionToRun();
+        var editModeClass = 'edit-mode';
+
+        var forms;
+
+        if (uniqueCodeVar === 'all-but-this') {
+            //All containers but this
+            forms = $('.' + editModeClass).not(container);
+        }
+        else if (uniqueCodeVar === "product" && container.hasClass(editModeClass)) {
+            //Closing current product. Check if it should be removed or just closed
+            forms = container;
+        }
+        else {
+            //Close or remove all edit-forms
+            forms = $('.' + editModeClass);
+        }
+
+        forms = forms.not('.no-init-value');
+        $.each(forms, function (index, value) {
+            //Close or remove all edit-forms but this
+            submitOrRemoveProductEditForm($(value));
+        });
+
+        //Toggle active class on current
+        container.toggleClass(editModeClass);
+
+        //Set focus
+        iMenyn.Utilities.FocusField(container.find('input').first());
+
+
+    };
+
+    function submitOrRemoveProductEditForm(editForm) {
+        var firstPriceInput = editForm.find('.product-price-edit input[type="number"]');
+
+        //If name-input is empty OR first price is 0 or empty
+        if (!editForm.find('[name="Name"]').first().val().trim() || (firstPriceInput.val() == 0 || firstPriceInput.val() == "")) {
+            //Remove product-form
+            editForm.remove();
+        }
+        else {
+            //Save
+            editForm.submit();
+        }
+    }
 
     //var showStep = function (step) {
     //    window.location.hash = step;
@@ -188,7 +259,10 @@ iMenyn.Utilities = function () {
         MyLocation: myLocation,
         Toast: toast,
         DynamicAdd: dynamicAdd,
-        UpdateProductDisplayValues: updateProductDisplayValues
+        UpdateProductDisplayValues: updateProductDisplayValues,
+        FocusField: focusField,
+        ToggleEditMode: toggleEditMode,
+        ScrollToAnchor: scrollToAnchor
     };
 }();
 
