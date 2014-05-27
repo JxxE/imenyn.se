@@ -4,42 +4,40 @@
     Layout = null;
 }
 
-<div class="category row" id="@Model.Id">
-    <div class="col-sm-1">
-        <span class="glyphicon glyphicon-resize-vertical btn btn-info category-sorter"></span>
-    </div>
-    <div class="col-sm-10">
-        <form class="value-edit mb20@(string.IsNullOrEmpty(Model.Name) ? " edit-mode no-init-value" : "")">
-            <div class="display-value">
-                <h1 class="pull-left nom" data-display-value="name">@Model.Name</h1>
-                <span class="glyphicon glyphicon-edit small ml5"></span>
-            </div>
-            <div class="edit-form">
-                <div class="row">
-                    <div class="col-sm-8">
-                        @Html.TextBoxFor(c => c.Name, new { @class = "form-control input-lg", placeholder = "Kategori, ex. pizza, pasta", autocomplete = "off", data_for = "name", data_id = "category-name", autofocus = "" })
-                        @Html.ValidationMessageFor(c=>c.Name)
-                    </div>
-                    <div class="col-sm-4">
-                        <button class="btn btn-primary btn-lg">Spara</button>
-                        <span class="glyphicon glyphicon-remove"></span>
+<div class="category" id="@Model.Id">
+    <div class="row">
+        <div class="col-sm-1">
+            <span class="glyphicon glyphicon-resize-vertical btn btn-info category-sorter"></span>
+        </div>
+        <div class="col-sm-10">
+            <form class="value-edit mb20@(string.IsNullOrEmpty(Model.Name) ? " edit-mode no-init-value" : "")">
+                <div class="display-value">
+                    <h1 class="pull-left nom" data-display-value="name">@Model.Name</h1>
+                    <span class="glyphicon glyphicon-edit small ml5"></span>
+                    <a href="javascript:void(0)" class="btn btn-danger btn-sm ml5" data-remove="category"><span class="glyphicon glyphicon-trash"></span></a>
+                </div>
+                <div class="edit-form">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(c => c.Name, new { @class = "form-control input-lg", placeholder = "Kategori, ex. pizza, pasta", autocomplete = "off", data_for = "name", data_id = "category-name", autofocus = "" })
+                            @Html.ValidationMessageFor(c => c.Name)
+                        </div>
+                        <div class="col-sm-4">
+                            <button class="btn btn-primary btn-lg">Spara</button>
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </div>
                     </div>
                 </div>
+            </form>
+            <div class="category-products">
+                @foreach (var p in Model.Products)
+                {
+                    @Html.Partial("~/Views/Partials/Menu/Edit/_Product.cshtml", p)
+                }
             </div>
-        </form>
-        <div class="category-products">
-            @foreach (var p in Model.Products)
-            {
-                @Html.Partial("~/Views/Partials/Menu/Edit/_Product.cshtml", p)
-            }
+            <a href="javascript:void(0)" class="btn btn-primary btn-xs" data-action="add-product" data-url="@Url.Action("BlankProduct", "Manage", new { enterpriseId = Model.EnterpriseId, categoryId = Model.Id })">Lägg till produkt</a>
         </div>
-        <a href="javascript:void(0)" class="btn btn-primary btn-xs" data-action="add-product" data-url="@Url.Action("BlankProduct", "Manage", new { enterpriseId = Model.EnterpriseId, categoryId = Model.Id })">Lägg till produkt</a>
-
     </div>
-    <div class="col-sm-1">
-        <a href="javascript:void(0)" class="btn btn-danger btn-sm" data-remove="category">Ta bort kategori<span class="glyphicon glyphicon-trash"></span></a>
-    </div>
-
 </div>
 <script>
     $(".category-products").sortable({ items: "form", handle: ".product .glyphicon-resize-vertical", connectWith: ".category-products" });

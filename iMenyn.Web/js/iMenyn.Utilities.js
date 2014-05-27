@@ -93,7 +93,7 @@ iMenyn.Utilities = function () {
     }
 
     var scrollToAnchor = function(aid) {
-        $('html,body').animate({ scrollTop: $("#" + aid).offset().top }, 'slow');
+        $('html,body').animate({ scrollTop: ($("#" + aid).offset().top - 40) }, 'slow');
     };
 
     /* Save product-form, update display-values */

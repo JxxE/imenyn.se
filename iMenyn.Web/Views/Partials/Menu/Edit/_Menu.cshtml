@@ -10,8 +10,9 @@
         <div id="toolbox-container">
             <div id="toolbox" class="row">
             <div class="col-sm-12">
-                <a class="dynamic-add btn btn-info" data-target="#categories > .category:last-of-type" href="@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus"></span></a>
-                <a href="javascript:void(0)" data-action="toggleclass" data-class="sorting-categories" class="btn btn-warning">Sortera kategorier<span class="glyphicon glyphicon-sort"></span></a>
+                <a class="dynamic-add btn btn-info" data-target="#categories > .category:last-of-type" href="@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus ml"></span></a>
+                <a href="javascript:void(0)" data-action="toggleclass" data-class="sorting-categories" class="btn btn-warning">Sortera kategorier<span class="glyphicon glyphicon-sort ml"></span></a>
+                <a id="undo-last-action" class="hide mr5" href="javascript:void(0)">Ångra borttag</a>
             </div>
         </div>
         </div>
@@ -37,7 +38,7 @@
     </div>
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1">
-            <a id="save-menu-setup" href="javascript:void(0)" class="btn btn-success btn-lg hide pull-right mt50">Spara & avsluta<span class="glyphicon glyphicon-ok"></span></a>
+            <a id="save-menu-setup" href="javascript:void(0)" class="btn btn-success btn-lg hide pull-right mt50">Spara & avsluta<span class="glyphicon glyphicon-ok ml"></span></a>
         </div>
     </div>
 </div>
@@ -124,32 +125,10 @@
         var editForm = $this.closest('.form-product');
 
         iMenyn.Utilities.ToggleEditMode(editForm,'product');
-        
-        //, function () {
-        //    if (editForm.hasClass('edit-mode')) {
-        //        //Closing current product. Check if it should be removed or just closed
-        //        closeOrRemoveProductEditForm(editForm);
-        //    }
-        //    else {
-        //        var allEditFormsButThis = $('.edit-mode');
-        //        $.each(allEditFormsButThis, function (index, value) {
-        //            //Close or remove all edit-forms but this
-        //            closeOrRemoveProductEditForm($(value));
-        //        });
-        //    }
-        //}
-
     }));
 
     $(document).on("click", ".value-edit span.glyphicon-edit", function () {
         var container = $(this).closest('.value-edit');
-        //iMenyn.Utilities.ToggleEditMode(container, function () {
-        //    var allEditFormsButThis = $('.edit-mode').not(container);
-        //    $.each(allEditFormsButThis, function (index, value) {
-        //        //Close or remove all edit-forms but this
-        //        closeOrRemoveProductEditForm($(value));
-        //    });
-        //});
         iMenyn.Utilities.ToggleEditMode(container, 'all-but-this');
     });
     $(document).on("click", ".value-edit span.glyphicon-remove", function () {
@@ -195,7 +174,13 @@
         }
     }
 
-    var deletedItems = [];
+    var lastDeletedItem;
+
+    $("#undo-last-action").click(function() {
+        lastDeletedItem.parent.prepend(lastDeletedItem.content.removeClass('edit-mode').removeAttr('style'));
+        $(this).addClass('hide');
+        lastDeletedItem = null;
+    });
 
     $(document).on('click', 'a[data-remove]', (function () {
         var itemToDelete = $(this).data('remove');
@@ -208,24 +193,35 @@
             case 'product':
                 classToDelete = 'form-product';
                 editForm = $(this).closest('.' + classToDelete);
-                parent = editForm.closest('.category');
+                parent = editForm.closest('.category-products');
                 break;
             default:
-                classToDelete = '';
+                classToDelete = 'category';
+                editForm = $(this).closest('.' + classToDelete);
+                parent = $('#categories');
                 break;
         }
+        
+        lastDeletedItem = {
+            content: editForm,
+            parent:parent
+        };
 
-        
-        //console.log(parent)
-        //var previousElId = editForm.prev('form')[0].id;
-        //deletedItems.push({
-        //    index: previousElId,
-        //    content: editForm,
-        //    type: itemToDelete
-        //});
-        
-       // editForm.remove();
+        showUndoButton();
+
+        editForm.animate({height:0,opacity:0}, 500,function () {
+            editForm.remove();
+        });
     }));
+
+    var timeOutId;
+    function showUndoButton() {
+        clearTimeout(timeOutId);
+        $("#undo-last-action").removeClass('hide');
+        timeOutId = setTimeout(function() {
+            $("#undo-last-action").addClass('hide');
+        }, 10000); 
+    }
 
     $(".category-products").sortable({ items: "form", handle: ".product .glyphicon-resize-vertical", connectWith: ".category-products" });
     $("#main-container").sortable({ items: ".category", handle: ".glyphicon-resize-vertical.category-sorter" });

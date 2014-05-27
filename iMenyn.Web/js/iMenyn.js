@@ -234,7 +234,7 @@ iMenyn.Ajax = function () {
             type: "POST",
             success: function(data) {
                 if (data.success) {
-                    console.log("UPDATERAD")
+                    $("#main-container").html("<h1>Tack!</h1>");
                 } else {
                     //TOAST
                 }

@@ -4,3 +4,16 @@
 2014-05-21 21:50:55.0188|FATAL|iMenyn.Data.Concrete.Logger|ValidateMenu, duplicate check!
 2014-05-21 22:08:10.6217|FATAL|iMenyn.Data.Concrete.Logger|ValidateMenu, duplicate check!
 2014-05-24 12:59:17.3884|FATAL|iMenyn.Data.Concrete.Logger|ValidateMenu, duplicate check!
+2014-05-26 21:24:58.6533|FATAL|iMenyn.Data.Concrete.Logger|products-4deab774f17c4b67bb49d4b20e2309de is not associated with the session, cannot delete unknown entity instance
+2014-05-26 21:44:41.8887|FATAL|iMenyn.Data.Concrete.Logger|The maximum number of requests (30) allowed for this session has been reached.
+Raven limits the number of remote calls that a session is allowed to make as an early warning system. Sessions are expected to be short lived, and 
+Raven provides facilities like Load(string[] keys) to load multiple documents at once and batch saves (call SaveChanges() only once).
+You can increase the limit by setting DocumentConvention.MaxNumberOfRequestsPerSession or MaxNumberOfRequestsPerSession, but it is
+advisable that you'll look into reducing the number of remote calls first, since that will speed up your application significantly and result in a 
+more responsive application.
+
+2014-05-26 21:57:25.1228|FATAL|iMenyn.Data.Concrete.Logger|Collection was modified; enumeration operation may not execute.
+2014-05-26 21:57:25.1228|FATAL|iMenyn.Data.Concrete.Logger|Collection was modified; enumeration operation may not execute.
+2014-05-26 22:00:22.4671|FATAL|iMenyn.Data.Concrete.Logger|Collection was modified; enumeration operation may not execute.
+2014-05-26 22:15:05.1211|FATAL|iMenyn.Data.Concrete.Logger|Collection was modified; enumeration operation may not execute.
+2014-05-26 22:15:51.7608|FATAL|iMenyn.Data.Concrete.Logger|Collection was modified; enumeration operation may not execute.

@@ -5,10 +5,8 @@
 </tr>
 {{if Level === 'Fatal'}}
 <tr>
-    <td class="system-log-{{:Level}}">{{:FormatedTimeStamp}}</td>
-    <td colspan="2">
+    <td class="system-log-{{:Level}}" colspan="3">
         {{:Exception}}
-        
         {{if InnerException}}
         <br/><b>InnerException:</b><br/>
         {{:InnerException}}

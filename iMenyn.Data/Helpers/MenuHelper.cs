@@ -14,7 +14,7 @@ namespace iMenyn.Data.Helpers
 
         public static Menu AddProductToMenu(Menu menu, Product product, string categoryId)
         {
-            if(menu.Categories == null)
+            if (menu.Categories == null)
             {
                 menu.Categories = new List<Category> { new Category { Id = categoryId, Products = new List<string>() } };
             }
@@ -32,41 +32,45 @@ namespace iMenyn.Data.Helpers
 
         public static void ValidateMenu(Menu menu, string enterpriseId, Raven.Client.IDocumentSession session, Abstract.ILogger _logger)
         {
-            //TODO future: product Load can fail if categories.Count is greater than 30
-            foreach (var category in menu.Categories)
+            var allProductIds = menu.Categories.SelectMany(c => c.Products);
+            var productIds = allProductIds as string[] ?? allProductIds.ToArray();
+
+            var allProducts = session.Load<Product>(productIds);
+
+            //Check if all products belongs to this enterprise
+            foreach (var product in allProducts.Where(product => product.Enterprise != enterpriseId).ToList())
             {
-                foreach (var product in session.Load<Product>(category.Products))
+                foreach (var category in from category in menu.Categories from c in category.Products.Where(c => c == product.Id).ToList() select category)
                 {
-                    if (product.Enterprise != enterpriseId)
-                    {
-                        category.Products.Remove(product.Id);
-                        _logger.Warn(string.Format("Product '{0}' belongs to enterprise: '{1}' was about to be added to '{2}' Code:[hTrsvv563]", product.Id, product.Enterprise, enterpriseId));
-                    }
+                    category.Products.Remove(product.Id);
                 }
+                _logger.Warn("Product '{0}' belongs to enterprise: '{1}' was about to be added to '{2}' Code:[hTrsvv563]", product.Id, product.Enterprise, enterpriseId);
             }
 
-           try
-           {
-               var productIds = menu.Categories.SelectMany(category => category.Products);
-               var productDuplicates = productIds.GroupBy(p => p.ToUpper()).SelectMany(grp => grp.Skip(1));
-               foreach (var productDuplicate in productDuplicates)
-               {
-                   _logger.Info(string.Format("Duplicate in products found: {0}, Enterprise: {1}", productDuplicate, enterpriseId));
-                   //var dp = menu.Categories.SelectMany(p => p.Products.Where(product => product == productDuplicate));
-                   //if(dp != null)
-                   //    dp = GeneralHelper.GetGuid();
-               }
-
-               var categoryDuplicates = menu.Categories.GroupBy(c => c.Id.ToUpper()).SelectMany(grp => grp.Skip(1));
-               foreach (var categoryDuplicate in categoryDuplicates)
-               {
-                   _logger.Info(string.Format("Duplicate in categories found: Name: {0}, Id: {1}, Enterprise: {2}", categoryDuplicate.Name,categoryDuplicate.Id,enterpriseId));
-                   categoryDuplicate.Id = GeneralHelper.GetGuid();
-               }
-           }
-            catch(Exception ex)
+            //Remove category if it does not have any products
+            foreach (var category in menu.Categories.Where(category => category.Products.Count == 0).ToList())
             {
-                _logger.Fatal("ValidateMenu, duplicate check!",ex);
+                menu.Categories.Remove(category);
+            }
+
+            try
+            {
+                var productDuplicates = productIds.GroupBy(p => p.ToUpper()).SelectMany(grp => grp.Skip(1));
+                foreach (var productDuplicate in productDuplicates)
+                {
+                    _logger.Warn("Duplicate in products found: {0}, Enterprise: {1}", productDuplicate, enterpriseId);
+                }
+
+                var categoryDuplicates = menu.Categories.GroupBy(c => c.Id.ToUpper()).SelectMany(grp => grp.Skip(1));
+                foreach (var categoryDuplicate in categoryDuplicates)
+                {
+                    _logger.Info("Duplicate in categories found: Name: {0}, Id: {1}, Enterprise: {2}", categoryDuplicate.Name, categoryDuplicate.Id, enterpriseId);
+                    categoryDuplicate.Id = GeneralHelper.GetGuid();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Fatal("ValidateMenu, duplicate check!", ex);
             }
         }
     }

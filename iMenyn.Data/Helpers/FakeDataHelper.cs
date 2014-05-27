@@ -27,7 +27,7 @@ namespace iMenyn.Data.Helpers
 
             var products = new List<Product>();
 
-            for (var i = 0; i < _random.Next(6, 20); i++)
+            for (var i = 0; i < _random.Next(35, 40); i++)
             {
                 var category = new Category
                                       {
@@ -35,7 +35,7 @@ namespace iMenyn.Data.Helpers
                                           Name = RandomString(),
                                           Products = new List<string>()
                                       };
-                for (var j = 0; j < _random.Next(6, 40); j++)
+                for (var j = 0; j < _random.Next(1, 2); j++)
                 {
                     var product = NewProduct(enterprise.Id,modified);
 

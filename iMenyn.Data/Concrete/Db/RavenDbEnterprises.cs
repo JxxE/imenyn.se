@@ -38,49 +38,74 @@ namespace iMenyn.Data.Concrete.Db
 
         public bool UpdateEnterprise(string enterpriseId, Menu menu)
         {
+            var updated = false;
             using (var session = _documentStore.OpenSession())
             {
                 var enterprise = session.Load<Enterprise>(enterpriseId);
-                var updated = false;
-                if (EnterpriseHelper.ValidEditableEnterprise(enterprise, session))
+
+                try
                 {
-                    MenuHelper.ValidateMenu(menu, enterpriseId, session, _logger);
-                    if (enterprise.IsNew || enterprise.OwnedByAccount)
+                    if (EnterpriseHelper.ValidEditableEnterprise(enterprise, session))
                     {
-                        enterprise.Menu = menu;
-                        enterprise.LastUpdated = DateTime.Now;
-                        //GET DELETED PRODUCTS AND DELETE THEM!
-                    }
-                    else
-                    {
-                        var modifiedMenuInDb = session.Load<ModifiedMenu>(MenuHelper.GetModifiedMenuId(enterpriseId));
-
-                        if (modifiedMenuInDb == null)
+                        MenuHelper.ValidateMenu(menu, enterpriseId, session, _logger);
+                        if (enterprise.IsNew || enterprise.OwnedByAccount)
                         {
-                            var modifiedMenu = new ModifiedMenu
-                                         {
-                                             Id = MenuHelper.GetModifiedMenuId(enterpriseId),
-                                             Menu = menu
-                                         };
-                            session.Store(modifiedMenu);
+                            var deletedProductsIds = GeneralHelper.CompareLists(enterprise.Menu.Categories.SelectMany(c => c.Products).ToList(), menu.Categories.SelectMany(c => c.Products).ToList());
 
-                            enterprise.LockedFromEdit = true;
-                            enterprise.ModifiedMenu = modifiedMenu.Id;
+                            if (deletedProductsIds.Count > 0)
+                            {
+                                var deletedProducts = session.Load<Product>(deletedProductsIds);
+                                //Delete products that belongs to this enterprise
+                                foreach (var deletedProduct in deletedProducts.Where(deletedProduct => deletedProduct.Enterprise == enterpriseId))
+                                {
+                                    session.Delete(deletedProduct);
+                                }
+                            }
+
+                            enterprise.Menu = menu;
+                            enterprise.LastUpdated = DateTime.Now;
+                        }
+                        else
+                        {
+                            var modifiedMenuInDb = session.Load<ModifiedMenu>(MenuHelper.GetModifiedMenuId(enterpriseId));
+
+                            if (modifiedMenuInDb == null)
+                            {
+                                var modifiedMenu = new ModifiedMenu
+                                {
+                                    Id = MenuHelper.GetModifiedMenuId(enterpriseId),
+                                    Menu = menu
+                                };
+                                session.Store(modifiedMenu);
+
+                                enterprise.LockedFromEdit = true;
+                                enterprise.ModifiedMenu = modifiedMenu.Id;
+                            }
+
                         }
 
+                        session.Store(enterprise);
+                        session.SaveChanges();
+
+                        updated = true;
+
+                        _logger.Info("Updated menu settings for enterprise: " + enterprise.Id);
                     }
-
-                    
-                    
-                    session.Store(enterprise);
-                    session.SaveChanges();
-
-                    updated = true;
-
-                    _logger.Info("Updated menu settings for enterprise: " + enterprise.Id);
                 }
-                return updated;
+                catch (Exception ex)
+                {
+                    _logger.Fatal(ex.Message, ex);
+                    var failedEnterprise = new FailedEnterprise
+                                               {
+                                                   Enterprise = enterprise,
+                                                   Menu = menu,
+                                                   ErrorMessage = ex.Message
+                                               };
+                    session.Store(failedEnterprise);
+                    session.SaveChanges();
+                }
             }
+            return updated;
         }
 
         public string CreateEnterprise(Enterprise enterprise)
@@ -459,7 +484,7 @@ namespace iMenyn.Data.Concrete.Db
                     product.UpdatedVersion = null;
                 }
                 if (products.Any())
-                    _logger.Info(string.Format("Updated {0} products for approved modified menu. Enterprise: {1}", products.Count(),enterpriseId));
+                    _logger.Info(string.Format("Updated {0} products for approved modified menu. Enterprise: {1}", products.Count(), enterpriseId));
 
                 enterprise.Menu = modifiedMenu.Menu;
                 enterprise.ModifiedMenu = null;

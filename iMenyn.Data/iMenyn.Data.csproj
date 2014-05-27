@@ -275,6 +275,7 @@
     <Compile Include="Infrastructure\Index\LogEvents.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Enterprise.cs" />
+    <Compile Include="Models\FailedEnterprise.cs" />
     <Compile Include="Models\LogEvent.cs" />
     <Compile Include="Models\Menu.cs" />
     <Compile Include="Models\Product.cs" />

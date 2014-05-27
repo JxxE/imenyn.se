@@ -68,7 +68,7 @@ namespace iMenyn.Web.Controllers
         public ActionResult AddOrEditNewProduct(ProductViewModel product)
         {
             if (string.IsNullOrEmpty(product.Name))
-                ModelState.AddModelError("Name","Ange produktens namn");
+                ModelState.AddModelError("Name", "Ange produktens namn");
 
             if ((product.Prices == null || product.Prices.Count < 1) || product.Prices.First().Price == 0)
                 ModelState.AddModelError("Prices", "Ange ett pris");
@@ -84,14 +84,14 @@ namespace iMenyn.Web.Controllers
                 {
                     //if product isnot xatly the same!update
                     Db.Products.UpdateProduct(p, product.Enterprise);
-                    return Json(new { success = true,method="update" });
+                    return Json(new { success = true, method = "update" });
                 }
 
                 Db.Products.AddProduct(p, product.CategoryId, product.Enterprise);
                 return Json(new { success = true, method = "add" });
             }
 
-            return PartialView("~/Views/Partials/Menu/Edit/_Product.cshtml",product);
+            return PartialView("~/Views/Partials/Menu/Edit/_Product.cshtml", product);
         }
 
         [HttpPost]
@@ -166,12 +166,8 @@ namespace iMenyn.Web.Controllers
         [HttpPost]
         public ActionResult SaveMenuSetup(Menu menu, string enterpriseId)
         {
-            if(menu.Categories.Count == 0)
-            {
-                
-            }
             var updated = Db.Enterprises.UpdateEnterprise(enterpriseId, menu);
-            return Json(new {success = updated});
+            return Json(new { success = updated });
         }
 
         public PartialViewResult BlankCategory(string enterpriseId)

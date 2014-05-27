@@ -55,7 +55,7 @@ namespace iMenyn.Data.Helpers
             var enterpriseNames = cleanEnterpriseName.Split(' ');
             tags.AddRange(enterpriseNames);
 
-            return tags;
+            return FilterUnwantedTags(tags);
         }
 
         private static string RemoveSpecialCharacters(string str)
@@ -82,6 +82,17 @@ namespace iMenyn.Data.Helpers
         public static List<ValueAndText> GetDisplayCategories(List<ValueAndText> list)
         {
             return GetDisplayCategories(list.Select(p => p.Value).ToList());
+        }
+
+
+        private static List<string> FilterUnwantedTags(IEnumerable<string> tags)
+        {
+            var blackList = new List<string>
+                                {
+                                    "restaurang","grill","gatukök","pizzeria"
+                                };
+
+            return tags.Where(tag => !blackList.Contains(tag.ToLower())).ToList();
         }
     }
 }
