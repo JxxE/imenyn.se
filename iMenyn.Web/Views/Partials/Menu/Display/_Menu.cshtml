@@ -1,0 +1,13 @@
+﻿@model iMenyn.Data.ViewModels.CompleteEnterpriseViewModel
+
+@if (Model.Enterprise != null)
+{
+    @Html.Partial("~/Views/Partials/_EnterpriseInfo.cshtml", Model.Enterprise)
+}
+
+<div id="menu-container">
+    @foreach (var category in Model.ViewModelCategories)
+    {
+        @Html.Partial("~/Views/Partials/Menu/Display/_Category.cshtml", category)
+    }
+</div>

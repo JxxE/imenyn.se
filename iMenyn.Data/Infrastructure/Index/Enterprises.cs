@@ -22,7 +22,8 @@ namespace iMenyn.Data.Infrastructure.Index
                                                 enterprise.LockedFromEdit,
                                                 enterprise.LastUpdated,
                                                 enterprise.Menu,
-                                                enterprise.Phone
+                                                enterprise.Phone,
+                                                _ = SpatialGenerate("Coordinates", enterprise.Coordinates.Lat, enterprise.Coordinates.Lng)
                                             };
 
             //Reduce = results => from result in results

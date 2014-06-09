@@ -30,6 +30,9 @@ namespace iMenyn.Web.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            ViewBag.IsEdit = false;
+            ViewBag.BodyId = string.Empty;
+
             if (User.Identity.IsAuthenticated)
             {
                 var currentAccount = AccountViewHelper.GetCurrentAccount();

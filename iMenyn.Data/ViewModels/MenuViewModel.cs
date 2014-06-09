@@ -13,19 +13,24 @@ namespace iMenyn.Data.ViewModels
         public List<ProductViewModel> DeletedProducts { get; set; }
     }
 
+    public class EnterprisesViewModel
+    {
+        public List<EnterpriseViewModel> Enterprises { get; set; }
+    }
+
     public class EnterpriseViewModel : Enterprise
     {
-        public string Address { get; set; }
-        public double DistanceFromMyLocation { get; set; }
+        public string DisplayStreet { get; set; }
+        public string Key { get; set; }
 
         public List<ValueAndText> DisplayCategories { get; set; }
 
-        //Used when editing
-        //public string EditKey { get; set; }
+        public bool ShowForm { get; set; }
 
         //Spam-check property
         public string Nope { get; set; }
     }
+
 
     public class ViewModelCategory
     {

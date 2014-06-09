@@ -51,8 +51,8 @@ namespace iMenyn.Data.Models
 
     public class Coordinates
     {
-        public string Lng { get; set; }
-        public string Lat { get; set; }
+        public double Lng { get; set; }
+        public double Lat { get; set; }
     }
 
     //public interface IEnterprise

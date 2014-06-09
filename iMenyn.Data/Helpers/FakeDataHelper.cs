@@ -20,7 +20,10 @@ namespace iMenyn.Data.Helpers
                                      Id = EnterpriseHelper.GetId(GeneralHelper.GetGuid()),
                                      Name = RandomString(),
                                      Categories = RandomListString(),
-                                     LastUpdated = DateTime.Now
+                                     LastUpdated = DateTime.Now,
+                                     Coordinates = RandomCoordinates(),
+                                     StreetRoute = RandomString(),
+                                     County = "Stockholm"
                                  };
             var menu = new Menu();
             var categories = new List<Category>();
@@ -149,6 +152,14 @@ namespace iMenyn.Data.Helpers
         private static int RandomNumber()
         {
             return _random.Next(10,200);
+        }
+        private static Coordinates RandomCoordinates()
+        {
+            return new Coordinates
+                       {
+                           Lat = 59 + (RandomNumber() / 100.0), 
+                           Lng = 17 + (RandomNumber() / 100.0)
+                       };
         }
         private static bool RandomBool()
         {

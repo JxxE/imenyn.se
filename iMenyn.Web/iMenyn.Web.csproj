@@ -293,17 +293,18 @@
     <Compile Include="ViewModels\EnterpriseViewModel.cs" />
     <Compile Include="ViewModels\LocationViewModel.cs" />
     <Compile Include="ViewModels\MainSearchViewModel.cs" />
-    <Compile Include="ViewModels\SearchYelpViewModel.cs" />
     <Compile Include="YelpConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\admin.css" />
+    <Content Include="Content\base.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\edit\edit-module.css" />
+    <Content Include="Content\img\test-bg.png" />
+    <Content Include="Content\jquery.growl.css" />
     <Content Include="Content\views.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Content\img\ajax-load.gif" />
-    <Content Include="Content\img\bg.jpg" />
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\media-queries.css" />
     <Content Include="favicon.png" />
@@ -312,14 +313,19 @@
     <Content Include="Areas\AdminOLD\Views\Web.config" />
     <Content Include="App_Code\Combiner.cshtml" />
     <Content Include="Handlers\CombinerHandler.ashx" />
-    <Content Include="js\iMenyn.Utilities.js" />
+    <Content Include="js\handlebars-v1.3.0.js" />
+    <Content Include="js\iMenyn.Public.Utilities.js" />
+    <Content Include="js\edit\iMenyn.Edit.Utilities.js" />
     <Content Include="js\iMenyn.js" />
-    <Content Include="js\iMenyn.Admin.js" />
+    <Content Include="js\admin\iMenyn.Admin.js" />
     <Content Include="Areas\AdminOLD\Views\Admin\Index.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\Accounts.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\Settings.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\ModifiedMenu.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\ModifiedMenus.cshtml" />
+    <Content Include="js\button.js" />
+    <Content Include="js\jquery.growl.js" />
+    <Content Include="Templates\_EnterpriseSearchResult.tmpl.html" />
     <Content Include="Templates\_adminLogList.tmpl.html" />
     <Content Include="Views\Admin\MenuApproval.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\NewEnterprises.cshtml" />
@@ -337,14 +343,12 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\json2.js" />
-    <Content Include="js\jsrender.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
     <Content Include="js\modernizr-2.5.3.js" />
     <Content Include="Templates\_EditableProduct.tmpl.html" />
     <Content Include="Templates\_GeneralLocationInfo.tmpl.html" />
     <Content Include="Templates\_BrowsedCities.tmpl.html" />
     <Content Include="Templates\_BrowsedEnterprises.tmpl.html" />
-    <Content Include="Templates\_ListEnterprises.tmpl.html" />
     <Content Include="Templates\_YelpResults.tmpl.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -365,14 +369,11 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Cabaret\Index.cshtml" />
-    <Content Include="Views\Manage\AddEnterprise.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Shared\_LayoutAdmin.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Home\Info.cshtml" />
     <Content Include="Views\Home\Browse.cshtml" />
-    <Content Include="Views\Manage\OLD copy of Products.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Manage\DemoMenu.cshtml" />
     <Content Include="Views\Partials\Menu\Edit\_Menu.cshtml" />
     <Content Include="Views\Partials\Menu\Edit\_Category.cshtml" />
     <Content Include="Views\Partials\Menu\Edit\_Product.cshtml" />
@@ -380,10 +381,16 @@
     <Content Include="Views\Partials\_EnterpriseInfo.cshtml" />
     <Content Include="Views\Manage\Edit.cshtml" />
     <Content Include="Views\Admin\Log.cshtml" />
+    <Content Include="Views\Manage\_AddEnterpriseForm.cshtml" />
+    <Content Include="Views\Partials\Menu\Display\_Category.cshtml" />
+    <Content Include="Views\Partials\Menu\Display\_Menu.cshtml" />
+    <Content Include="Views\Partials\Menu\Display\_Product.cshtml" />
+    <Content Include="Views\Partials\Menu\Display\_ProductPrice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\AdminOLD\Models\" />
+    <Folder Include="Content\admin\" />
     <Folder Include="Views\Partials\MenuContent\" />
   </ItemGroup>
   <ItemGroup>

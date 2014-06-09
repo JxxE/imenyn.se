@@ -1,5 +1,4 @@
-﻿/* === Utility classes === */
-.error,#category-error,.field-validation-error {
+﻿.error,#category-error,.field-validation-error {
     color: #DB3333;
     font-weight: bold;
 }
@@ -8,6 +7,9 @@
 }
 .nom {
     margin: 0;
+}
+.glyphicon.ml {
+    margin-left: 5px;
 }
 .mr5 {
     margin-right: 5px;
@@ -24,228 +26,6 @@
 .fixed {
     position: fixed;
 }
-/* === End of Utility classes === */
-
-
-/* === Menu === */
-.form-product .edit-form, .form-product.edit-mode .info, .category-sorter,.category a[data-remove="category"]  {
-    display: none;
-}
-
-/* Category Edit-mode*/
-.sorting-categories .category-sorter {
-    display: block;
-}
-.sorting-categories .category a[data-remove="category"] {
-    display: inline-block;
-}
-
-.sorting-categories .category {
-    height: 79px;
-    overflow: hidden;
-    padding-bottom: 0;
-}
-
-.category >.row{
-    padding: 26px 0 40px;
-}
-
-.category-products {
-    min-height: 25px;
-}
-/* End of Category edit-mode */
-
-
-/*.short-visible {  
-	-webkit-animation-duration: 2s;  
-	-webkit-animation-name: fadeOut;
-	-webkit-animation-fill-mode:forwards;
-  }  
- 
-  @-webkit-keyframes fadeOut {  
-	from {opacity:1.0;}
-	50%{opacity:1.0; }
-	to { opacity:0;display:none;}  
-  }*/
-
-@-webkit-keyframes fadeIn {
-   from {opacity: 0;}
-   to {opacity: 1;}
-}
-
-
-/* Product Edit-mode */
-.form-product.edit-mode .edit-form {
-    display: block;
-}
-
-.form-product.edit-mode .product {
-    padding: 6px 0;
-}
-.form-product.edit-mode .glyphicon-resize-vertical {
-    display: none;
-}
-
-.product {
-    border-bottom: 1px solid #d5d5d5;
-    overflow: hidden;
-}
-
-    .product .product-name {
-        float: left;
-        font-size: 19px;
-    }
-
-    .product .product-prices {
-        float: right;
-        font-size: 19px;
-    }
-
-.form-product .glyphicon.toggle-edit:before {
-content: "\270f";
-}
-.form-product.edit-mode .glyphicon.toggle-edit:before {
-content: "\e014";
-}
-
-/* Hide first trashcan in priduct-prices*/
-.product-price-edit:first-of-type .glyphicon-trash {
-    display: none;
-}
-.product-prices-edit .field-validation-error {
-    display: block;
-    margin: -10px 0 10px;
-}
-
-/* End of product edit-mode*/
-
-
-/* Edit, general */
-#toolbox {
-    z-index: 100;
-}
-#toolbox.fixed {
-    top: 0;
-}
-/* End of Edit, general*/
-
-
-/* === End of Menu === */
-
-
-
-/* == Loading == */
-@-webkit-keyframes loading {
-  0% { background-position: 0 0; }
-  100% { background-position: 50px 0; }
-}
-
-.button-loading {
-    opacity: .8;
-    cursor: default;
-    background-image: linear-gradient(to left top,
-    rgba(255, 255,255,0.2) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(255, 255,255,0.2) 50%,
-    rgba(255, 255,255,0.2) 75%,
-    transparent 75%,transparent);
-    background-size: 50px 50px;
-   -webkit-animation: loading 0.5s linear infinite;
-}
-
-/* === Value-edit === */
-.value-edit {
-    overflow: hidden;
-}
-.value-edit .edit-form,.value-edit.edit-mode .display-value,.value-edit.no-init-value .glyphicon-remove {
-    display: none;
-}
-.value-edit.edit-mode .edit-form {
-    display: block;
-}
-/* === End of Value-edit === */
-
-
-
-
-/* === Bootstrap overrides === */
-.glyphicon-edit,.glyphicon-resize-vertical,.glyphicon-remove,.toggle-edit {
-    cursor: pointer;
-}
-/* === End of Bootstrap overrides === */
-
-
-
-/* === === */
-
-/* === End of  === */
-
-/*.error {
-    color: rgb(240, 67, 67);
-    display: inline-block;
-    *display: inline;
-    zoom: 1;
-    padding-left: 5px;
-}
-.row-result {
-    background-color: white;
-    width: 94%;
-    border-bottom: 1px solid rgb(233, 233, 233);
-    display: block;
-    margin: auto;
-    padding: 20px 3%;
-    text-align: left;
-}
-
-    .row-result .content {
-        width: 95%;
-        display: inline-block;
-        color: rgb(121, 121, 121);
-    }
-
-        .row-result .content .head {
-            font-size: 25px;
-            margin: 0 0 6px 0;
-            display: block;
-        }
-
-        .row-result .content p {
-            margin: 0;
-        }
-
-    .row-result .tag {
-        margin: 5px 3px 0 0;
-    }
-
-    .row-result:hover {
-        background-color: rgb(241, 241, 241);
-    }*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-body {
-    background-color: grey;
-    color: #494949;
-}
-
-#main-container {
-    background-color: white;
-}
-
-select#category-chooser {
-    margin-bottom: 10px;
-}
 
 .tag {
     background-color: #007491;
@@ -258,32 +38,40 @@ select#category-chooser {
     border-radius: 3px;
 }
 
-    .tag > span {
-        cursor: pointer;
-        margin: 0 0 0 5px;
-    }
 
-.glyphicon.ml {
-    margin-left: 5px;
+.btn.off {
+      cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 
 
-/*
-    Not used or tested
-    #toastr {
-  padding: 15px 15px 15px 50px;
-  width: 300px;
-  background-color: #030303;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-  -moz-box-shadow: 0 0 12px #999;
-  -webkit-box-shadow: 0 0 12px #999;
-  box-shadow: 0 0 12px #999;
-  color: #fff;
-  opacity: 0.8;
-  filter: alpha(opacity=80);
+
+/* == Loading == */
+@-webkit-keyframes loading {
+  0% { background-position: 0 0; }
+  100% { background-position: 50px 0; }
 }
-.toast-error {
-  background-color: #bd362f;
-}*/
+
+.btn-loading {
+    opacity: .8;
+    cursor: default;
+    background-image: linear-gradient(to left top,
+    rgba(255, 255,255,0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255,255,0.2) 50%,
+    rgba(255, 255,255,0.2) 75%,
+    transparent 75%,transparent);
+    background-size: 50px 50px;
+   -webkit-animation: loading 0.5s linear infinite;
+}
+/* === End of Loading === */
+
+
+/* === === */
+
+/* === End of  === */

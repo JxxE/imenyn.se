@@ -1,9 +1,18 @@
-﻿@model iMenyn.Data.ViewModels.EnterpriseViewModel
+﻿@using iMenyn.Data.Helpers
+@model iMenyn.Data.ViewModels.EnterpriseViewModel
 <div id="enterprise-info">
-    <h1>@Model.Name</h1>
+    <h1>@Model.Name
+        @if ((ViewBag.IsAdmin || Model.IsNew) && ViewBag.IsEdit)
+        {
+            <a class="small" href="@Url.Action("Index", "Manage", new { key = EnterpriseHelper.GetKey(Model.Id) })"><span class="glyphicon glyphicon-edit ml"></span></a>
+        }
+        <span class="glyphicon glyphicon-info-sign pull-right small"></span>
+    </h1>
+
     <address>
-    @Model.Address<br/>
-    @Model.PostalCode, @Model.PostalTown<br/>
-    Tel: @Model.Phone
+        @Model.DisplayStreet<br />
+        @Model.PostalCode, @Model.PostalTown<br />
+        Tel: @Model.Phone
     </address>
+
 </div>

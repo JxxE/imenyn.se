@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using iMenyn.Data.Abstract;
 using iMenyn.Data.Abstract.Db;
+using iMenyn.Data.Helpers;
 
 namespace iMenyn.Web.Controllers
 {
@@ -13,9 +14,8 @@ namespace iMenyn.Web.Controllers
         {
             if (!string.IsNullOrEmpty(q))
             {
-                var enterprise = Db.Enterprises.GetCompleteEnterprise(q);
-                if(enterprise != null)
-                    return View(enterprise);
+                var enterprise = Db.Enterprises.GetCompleteEnterprise(EnterpriseHelper.GetId(q));
+                return View(enterprise);
             }
             return RedirectToAction("Index","Home");
         }

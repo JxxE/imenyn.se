@@ -1,5 +1,5 @@
 ﻿@model iMenyn.Data.ViewModels.CompleteEnterpriseViewModel
-<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+
 @if (Model.Enterprise != null)
 {
     @Html.Partial("~/Views/Partials/_EnterpriseInfo.cshtml", Model.Enterprise)
@@ -9,12 +9,12 @@
     <div class="col-sm-9">
         <div id="toolbox-container">
             <div id="toolbox" class="row">
-            <div class="col-sm-12">
-                <a class="dynamic-add btn btn-info" data-target="#categories > .category:last-of-type" href="@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus ml"></span></a>
-                <a href="javascript:void(0)" data-action="toggleclass" data-class="sorting-categories" class="btn btn-warning">Sortera kategorier<span class="glyphicon glyphicon-sort ml"></span></a>
-                <a id="undo-last-action" class="hide mr5" href="javascript:void(0)">Ångra borttag</a>
+                <div class="col-sm-12">
+                    <a class="dynamic-add btn btn-info" data-target="#categories > .category:last-of-type" href="@Url.Action("BlankCategory", "Manage", new { enterpriseId = Model.Enterprise.Id })">Lägg till kategori<span class="glyphicon glyphicon glyphicon-plus ml"></span></a>
+                    <a href="javascript:void(0)" data-action="toggleclass" data-class="sorting-categories" class="btn btn-warning">Sortera kategorier<span class="glyphicon glyphicon-sort ml"></span></a>
+                    <a id="undo-last-action" class="hide mr5" href="javascript:void(0)">Ångra borttag</a>
+                </div>
             </div>
-        </div>
         </div>
         <div id="categories" class="edit">
             @foreach (var category in Model.ViewModelCategories)
@@ -124,7 +124,7 @@
         var $this = $(this);
         var editForm = $this.closest('.form-product');
 
-        iMenyn.Utilities.ToggleEditMode(editForm,'product');
+        iMenyn.Utilities.ToggleEditMode(editForm, 'product');
     }));
 
     $(document).on("click", ".value-edit span.glyphicon-edit", function () {
@@ -176,7 +176,7 @@
 
     var lastDeletedItem;
 
-    $("#undo-last-action").click(function() {
+    $("#undo-last-action").click(function () {
         lastDeletedItem.parent.prepend(lastDeletedItem.content.removeClass('edit-mode').removeAttr('style'));
         $(this).addClass('hide');
         lastDeletedItem = null;
@@ -201,15 +201,15 @@
                 parent = $('#categories');
                 break;
         }
-        
+
         lastDeletedItem = {
             content: editForm,
-            parent:parent
+            parent: parent
         };
 
         showUndoButton();
 
-        editForm.animate({height:0,opacity:0}, 500,function () {
+        editForm.animate({ height: 0, opacity: 0 }, 500, function () {
             editForm.remove();
         });
     }));
@@ -218,9 +218,9 @@
     function showUndoButton() {
         clearTimeout(timeOutId);
         $("#undo-last-action").removeClass('hide');
-        timeOutId = setTimeout(function() {
+        timeOutId = setTimeout(function () {
             $("#undo-last-action").addClass('hide');
-        }, 10000); 
+        }, 10000);
     }
 
     $(".category-products").sortable({ items: "form", handle: ".product .glyphicon-resize-vertical", connectWith: ".category-products" });
@@ -228,6 +228,7 @@
 
     $("#save-menu-setup").click(function () {
         var $this = $(this);
+        $this.button('loading');
         var $categories = $(".category");
         var setup = new Object();
         setup.Categories = new Array();
@@ -248,12 +249,13 @@
         iMenyn.Ajax.SaveMenuSetup($this, JSON.stringify(setup), '@Model.Enterprise.Id');
     });
 
-    var saveButtonIsVisible = false;
     function saveButtonVisibility() {
-        saveButtonIsVisible = $(".form-product").length > 3;
-
+        var saveButtonIsVisible = $(".form-product").length > 3;
+        
         if (saveButtonIsVisible)
             $("#save-menu-setup").removeClass('hide');
+        else
+            $("#save-menu-setup").addClass('hide');
     }
 
 
@@ -264,9 +266,11 @@
             var addButton = $this.closest('.category').find('[data-action="add-product"]');
             addEmptyProduct(addButton);
             iMenyn.Utilities.ScrollToAnchor($this.attr('id'));
+
+            saveButtonVisibility();
         });
         return false;
     });
-    
+
 
 </script>

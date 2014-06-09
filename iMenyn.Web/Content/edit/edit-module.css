@@ -1,0 +1,96 @@
+﻿/* Edit, general */
+#toolbox {
+    z-index: 100;
+}
+#toolbox.fixed {
+    top: 0;
+}
+/* End of Edit, general*/
+
+
+select#category-chooser {
+    margin-bottom: 10px;
+}
+
+/* === Menu === */
+.form-product .edit-form, .form-product.edit-mode .info, .category-sorter,.category a[data-remove="category"]  {
+    display: none;
+}
+
+/* Category Edit-mode*/
+.sorting-categories .category-sorter {
+    display: block;
+}
+.sorting-categories .category a[data-remove="category"] {
+    display: inline-block;
+}
+
+.sorting-categories .category {
+    height: 79px;
+    overflow: hidden;
+    padding-bottom: 0;
+}
+
+.category >.row{
+    padding: 26px 0 40px;
+}
+
+.category-products {
+    min-height: 25px;
+}
+/* End of Category edit-mode */
+
+
+
+/* Product Edit-mode */
+.form-product.edit-mode .edit-form {
+    display: block;
+}
+
+.form-product.edit-mode .product {
+    padding: 6px 0;
+}
+.form-product.edit-mode .glyphicon-resize-vertical {
+    display: none;
+}
+
+.form-product .glyphicon.toggle-edit:before {
+content: "\270f";
+}
+.form-product.edit-mode .glyphicon.toggle-edit:before {
+content: "\e014";
+}
+
+/* Hide first trashcan in product-prices*/
+.product-price-edit:first-of-type .glyphicon-trash {
+    display: none;
+}
+.product-prices-edit .field-validation-error {
+    display: block;
+    margin: -10px 0 10px;
+}
+
+/* End of product edit-mode*/
+
+
+
+
+/* === Value-edit === */
+.value-edit {
+    overflow: hidden;
+}
+.value-edit .edit-form,.value-edit.edit-mode .display-value,.value-edit.no-init-value .glyphicon-remove {
+    display: none;
+}
+.value-edit.edit-mode .edit-form {
+    display: block;
+}
+/* === End of Value-edit === */
+
+
+
+/* === Bootstrap overrides === */
+.glyphicon-edit,.glyphicon-resize-vertical,.glyphicon-remove,.toggle-edit {
+    cursor: pointer;
+}
+/* === End of Bootstrap overrides === */

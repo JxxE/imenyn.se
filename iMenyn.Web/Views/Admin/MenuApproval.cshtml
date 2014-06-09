@@ -2,10 +2,17 @@
 
 @{
     ViewBag.Title = "Ny meny";
+    ViewBag.IsEdit = true;
 }
 <div class="well">
     <strong>IsNew</strong>: @Model.Enterprise.IsNew<br/>
-    <strong>ModifiedMenu</strong>: @Model.Enterprise.ModifiedMenu
+    <strong>ModifiedMenu</strong>: @Model.Enterprise.ModifiedMenu<br/>
+    <strong>Sökord</strong>:
+        @foreach (var searchTag in Model.Enterprise.SearchTags)
+        {
+            <span>@searchTag, </span>
+        }
+    
 </div>
 @Html.Partial("~/Views/Partials/Menu/Edit/_Menu.cshtml", Model)
 

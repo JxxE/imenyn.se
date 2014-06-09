@@ -1,4 +1,5 @@
-﻿@model iMenyn.Web.ViewModels.DashboardViewModel
+﻿@using iMenyn.Data.Helpers
+@model iMenyn.Web.ViewModels.DashboardViewModel
 
 @{
     ViewBag.Title = "Hantera";
@@ -12,6 +13,7 @@
         <div class="col-sm-12">
             <a href="@Url.Action("CreateFakeEnterprise", new { modified = false })" class="btn btn-primary">Skapa fake-enterprise (ny)</a>
             <a href="@Url.Action("CreateFakeEnterprise", new { modified = true })" class="btn btn-primary">Skapa fake-enterprise (modifierad)</a>
+            <a href="@Url.Action("CreateAllIndexes")" class="btn btn-primary">Återskapa index</a>
         </div>
     </div>
     <div class="col-sm-6 well">
@@ -79,30 +81,44 @@
             @foreach (var e in Model.AllEnterprises)
             {
                 <li class="list-group-item row">
-                    <a href="@Url.Action("Index", "Cabaret", new { q = e.Id })" target="_blank"><strong>@e.Name</strong></a>
-                    <span class="label label-info">
-                        @if (e.Menu != null && e.Menu.Categories != null)
-                        {
-                            @e.Menu.Categories.SelectMany(c => c.Products).Count()
-                        }
-                        else
-                        {
-                            <span>0</span>
-                        }
-                    </span>
-                    @if (e.IsNew)
-                    {
-                        <span class="label label-warning ml5">Ny!</span>
-                    }
-                    @if (e.LockedFromEdit)
-                    {
-                        <span class="label label-danger ml5">Låst</span>
-                    }
-                    @if (e.OwnedByAccount)
-                    {
-                        <span class="label label-primary ml5">Ägd</span>
-                    }
-                    <a class="btn btn-danger pull-right" href="@Url.Action("DeleteEnterprise", "Admin", new { enterpriseId = e.Id })" onclick="return confirm('Really?');" >Radera<span class="glyphicon glyphicon-trash"></span></a>
+                    <div class="row">
+                        <div class="col-sm-11">
+                            <div class="row nom">
+                                <a href="@Url.Action("Index", "Cabaret", new { q = EnterpriseHelper.GetKey(e.Id) })" target="_blank"><strong>@e.Name</strong></a>
+                                <span class="label label-info">
+                                    @if (e.Menu != null && e.Menu.Categories != null)
+                                    {
+                                        @e.Menu.Categories.SelectMany(c => c.Products).Count()
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span>
+                                @if (e.IsNew)
+                                {
+                                    <span class="label label-warning ml5">Ny!</span>
+                                }
+                                @if (e.LockedFromEdit)
+                                {
+                                    <span class="label label-danger ml5">Låst</span>
+                                }
+                                @if (e.OwnedByAccount)
+                                {
+                                    <span class="label label-primary ml5">Ägd</span>
+                                }
+                            </div>
+                            <div class="row nom">
+                                @if(e.Coordinates != null)
+                                {
+                                    <small>Lat:@e.Coordinates.Lat, Lng:@e.Coordinates.Lng</small>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-sm-1">
+                            <a class="btn btn-danger pull-right" href="@Url.Action("DeleteEnterprise", "Admin", new { enterpriseId = e.Id })" onclick="return confirm('Really?');" >Radera<span class="glyphicon glyphicon-trash"></span></a>
+                        </div>
+                    </div>
                 </li>   
             }
         </ul>

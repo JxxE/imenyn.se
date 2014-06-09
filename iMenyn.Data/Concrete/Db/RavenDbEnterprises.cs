@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using AutoMapper;
 using Microsoft.Security.Application;
+using Raven.Abstractions.Indexing;
 using Raven.Abstractions.Util;
 using Raven.Client;
 using iMenyn.Data.Abstract;
@@ -158,7 +160,6 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        //TODO
         public IEnumerable<Enterprise> SearchEnterprises(string searchTerm, string location, string categorySearch)
         {
             using (var session = _documentStore.OpenSession())
@@ -200,14 +201,14 @@ namespace iMenyn.Data.Concrete.Db
                             {
                                 query = query.OpenSubclause();
                                 query = query.WhereStartsWith(x => x.Name, searchQuery).OrElse();
-                                query = query.Search(x => x.Name, searchQuery).OrElse();
+                                query = query.Search(x => x.Name, searchQuery);
 
-                                var stateCode = GeneralHelper.GetCountyNameAndCodes().FirstOrDefault(c => c.Text.ToLower().Contains(searchQuery));
-                                if (stateCode != null)
-                                {
-                                    //County search
-                                    //query = query.WhereEquals(x => x.StateCode, stateCode.Value).OrElse();
-                                }
+                                //var stateCode = GeneralHelper.GetCountyNameAndCodes().FirstOrDefault(c => c.Text.ToLower().Contains(searchQuery));
+                                //if (stateCode != null)
+                                //{
+                                //    //County search
+                                //    //query = query.WhereEquals(x => x.StateCode, stateCode.Value).OrElse();
+                                //}
 
                                 #region PostalCode search
                                 int postalCode;
@@ -241,13 +242,26 @@ namespace iMenyn.Data.Concrete.Db
 
                         query = query.OrderBy(x => x.Name);
 
-                        return query.Take(30);
+                        return query.Take(30).ToList();
                     }
                 }
 
                 return null;
             }
         }
+
+        public IEnumerable<Enterprise> GetNearbyEnterprises(string lat,string lng)
+        {
+            using(var session = _documentStore.OpenSession())
+            {
+                _logger.Info("Searched nearby enterprises for lat: {0} and lng: {1}", lat, lng);
+
+                return session.Advanced.LuceneQuery<Enterprise, Enterprises>()
+                    .WhereEquals(x => x.IsNew, false)
+                    .WithinRadiusOf("Coordinates", 30, double.Parse(lat, CultureInfo.InvariantCulture), double.Parse(lng, CultureInfo.InvariantCulture))
+                    .SortByDistance();
+            }
+        } 
 
         //TODO
         public IEnumerable<Enterprise> CheckIfEnterpriseExists(string key, int postalCode)
@@ -311,6 +325,10 @@ namespace iMenyn.Data.Concrete.Db
 
                 // Load enterprise, include products
                 var enterprise = session.Include<Enterprise>(e => e.Menu.Categories.Select(c => c.Products)).Load(enterpriseId);
+
+                if (enterprise == null)
+                    return viewModel;
+
                 var menu = enterprise.Menu;
 
                 var newProducts = new List<string>();
@@ -401,7 +419,7 @@ namespace iMenyn.Data.Concrete.Db
 
                 viewModel.Enterprise = EnterpriseHelper.ModelToViewModel(enterprise);
                 viewModel.Enterprise.DisplayCategories = EnterpriseHelper.GetDisplayCategories(enterprise.Categories);
-                viewModel.Enterprise.Address = string.Format("{0} {1}", enterprise.StreetRoute, enterprise.StreetNumber);
+                viewModel.Enterprise.DisplayStreet = string.Format("{0} {1}", enterprise.StreetRoute, enterprise.StreetNumber);
 
                 if (!edit)
                 {

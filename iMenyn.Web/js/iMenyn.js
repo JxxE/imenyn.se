@@ -1,19 +1,4 @@
-﻿$(document).ajaxStart(function () {
-    $("#loading").removeClass('hide');
-    $("#loading").addClass('visible-inline');
-}).ajaxStop(function () {
-    $("#loading").addClass('hide');
-    $("#loading").removeClass('visible-inline');
-});
-
-$(function () {
-    //var path = window.location.href;
-    //$('ul a').each(function () {
-    //    if (this.href === path) {
-    //        $(this).addClass('active');
-    //    }
-    //});
-
+﻿$(function () {
     $(document).on("click", "[data-action='toggleclass']", function () {
         var $this = $(this);
         $this.toggleClass('active');
@@ -46,7 +31,7 @@ $(function () {
         $(".navbar ul").toggleClass('nav-open');
     });
 
-    
+
 });
 
 
@@ -54,82 +39,56 @@ var iMenyn = iMenyn || {};
 
 iMenyn.Ajax = function () {
 
-    //var searchYelp = function (searchTerm, location) {
-    //    $.when(
-    //        $.get("/Templates/_YelpResults.tmpl.html")
-    //    ).done(function (yelpResults) {
+    var searchEnterprises = function (searchTerm, btn) {
+        if (searchTerm === "" || searchTerm.length < 2) {
+            btn.button('reset');
+            $('#search-result').html("");
+        }
+        else {
+            $.ajax({
+                dataType: "json",
+                data: { searchTerm: searchTerm },
+                url: '/Json/SearchEnterprises/',
+                type: "POST",
+                success: function (data) {
+                    $.get('/Templates/_EnterpriseSearchResult.tmpl.html', function (template) {
+                        var tmpl = Handlebars.compile(template);
+                        $('#search-result').html(tmpl(data));
+                    });
+
+                    btn.button('reset');
+                },
+                error: function () {
+                    console.error("Kunde inte söka");
+                }
+            });
+        }
+    };
+
+    //var browseEnterprises = function (el, stateCode, city) {
+    //    var templateName = city == "" ? "BrowsedCities" : "BrowsedEnterprises";
+    //    $.when($.get("/Templates/_" + templateName + ".tmpl.html")).done(function (districts) {
     //        $.templates({
-    //            yelpResults: yelpResults
+    //            districts: districts
     //        });
-    //        loadYelp(searchTerm, location);
+    //        loadBrowsedEnterprises(el, stateCode, city);
     //    });
     //};
-    //var loadYelp = function (searchTerm, location) {
+
+    //var loadBrowsedEnterprises = function (el, stateCode, city) {
     //    $.ajax({
     //        dataType: "json",
-    //        data: { searchTerm: searchTerm, location: location },
-    //        url: '/Json/SearchYelp/',
+    //        data: { stateCode: stateCode, city: city },
+    //        url: "/Json/BrowseEnterprises",
     //        type: "POST",
     //        success: function (data) {
-    //            $("#yelp-results").html($.render.yelpResults(data));
+    //            $(el).html($.render.districts(data));
     //        },
     //        error: function () {
-    //            console.error("Kunde inte söka Yelp");
+    //            console.error("Could not load districts...");
     //        }
     //    });
     //};
-
-    var searchEnterprises = function (searchTerm) {
-        $("#search-button-content").hide();
-        $.when(
-            $.get("/Templates/_ListEnterprises.tmpl.html")
-        ).done(function (searchResults) {
-            $.templates({
-                searchResults: searchResults
-            });
-            loadEnterprises(searchTerm);
-        });
-    };
-    var loadEnterprises = function (searchTerm) {
-        $.ajax({
-            dataType: "json",
-            data: { searchTerm: searchTerm },
-            url: '/Json/SearchEnterprises/',
-            type: "POST",
-            success: function (data) {
-                $("#search-result").html($.render.searchResults(data));
-                $("#search-button-content").show();
-            },
-            error: function () {
-                console.error("Kunde inte söka");
-            }
-        });
-    };
-
-    var browseEnterprises = function (el, stateCode, city) {
-        var templateName = city == "" ? "BrowsedCities" : "BrowsedEnterprises";
-        $.when($.get("/Templates/_" + templateName + ".tmpl.html")).done(function (districts) {
-            $.templates({
-                districts: districts
-            });
-            loadBrowsedEnterprises(el, stateCode, city);
-        });
-    };
-
-    var loadBrowsedEnterprises = function (el, stateCode, city) {
-        $.ajax({
-            dataType: "json",
-            data: { stateCode: stateCode, city: city },
-            url: "/Json/BrowseEnterprises",
-            type: "POST",
-            success: function (data) {
-                $(el).html($.render.districts(data));
-            },
-            error: function () {
-                console.error("Could not load districts...");
-            }
-        });
-    };
 
     var renderGeneralInfoByAddress = function (el, address) {
         if (address == "")
@@ -161,43 +120,60 @@ iMenyn.Ajax = function () {
         });
     };
 
-    function searchEnterprisesCloseToMyLocation() {
-        //if (navigator.geolocation) {
-        //    navigator.geolocation.getCurrentPosition(renderEnterprisesCloseToMyLocation, showGeoError);
-        //}
-        //else {
-        //    var el = document.getElementById("error");
-        //    el.innerHTML = "Platsdata stöds inte av denna webbläsare.";
-        //}
+    var searchEnterprisesCloseToMyLocation = function () {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(renderEnterprisesCloseToMyLocation, showGeoError);
+        }
+    };
+
+    function showGeoError(error) {
+        var message = "";
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                message = "Sökningen avbröts";
+                break;
+            case error.POSITION_UNAVAILABLE:
+                message = "Positionsdata ej tillgänglig";
+                break;
+            case error.TIMEOUT:
+                message = "Timeout-fel";
+                break;
+            case error.UNKNOWN_ERROR:
+                message = "Okänt fel inträffade";
+                break;
+        }
+
+        var btn = $("#search-nearby");
+      
+        btn.button('reset');
+        btn.addClass('off');
+
+        $.growl.error({
+            message: message
+        });
     }
 
     var renderEnterprisesCloseToMyLocation = function (position) {
-        $("#search-button-content").hide();
-        $.when(
-            $.get("/Templates/_ListEnterprises.tmpl.html")
-        ).done(function (searchResults) {
-            $.templates({
-                searchResults: searchResults
-            });
-            loadEnterprisesCloseToMyLocation(position);
-        });
-    };
-    var loadEnterprisesCloseToMyLocation = function (position) {
         $.ajax({
             dataType: "json",
-            data: { latitude: position.coords.latitude, longitude: position.coords.longitude },
+            data: { latitude: position.coords.latitude, longitude: position.coords.latitude },
             url: '/Json/GetEnterprisesCloseToMyLocation/',
             type: "POST",
             success: function (data) {
-                $("#search-result").html($.render.searchResults(data));
+                $.get('/Templates/_EnterpriseSearchResult.tmpl.html', function (template) {
+                    var tmpl = Handlebars.compile(template);
+                    $('#search-result').html(tmpl(data));
+                });
+
+                $("#search-nearby").button('reset');
             },
             error: function () {
-                console.error("Kunde inte söka med koordinater");
+                $.growl.error({
+                    message: "Sökningen misslyckades"
+                });
+                $("#search-nearby").button('reset');
             }
         });
-        $("#loading2").hide();
-        $("#search-button-content-location").show();
-        $("#search-button-content").show();
     };
 
     var saveProduct = function (form, callback) {
@@ -223,66 +199,60 @@ iMenyn.Ajax = function () {
         });
     };
 
-    var saveMenuSetup = function (button,setup, enterpriseId) {
+    var saveMenuSetup = function (btn, setup, enterpriseId) {
         var json = '{ "menu": ' + setup + ', "enterpriseId":"' + enterpriseId + '"}';
-
-        var options = {
+        $.ajax({
             data: json,
             url: '/Manage/SaveMenuSetup/',
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             type: "POST",
-            success: function(data) {
+            success: function (data) {
                 if (data.success) {
                     $("#main-container").html("<h1>Tack!</h1>");
                 } else {
                     //TOAST
                 }
             },
-            error: function() {
+            error: function () {
                 console.error("Kunde inte spara setup");
             }
-        };
-
-        hj.ajax(options,button, options.success);
-        //$.ajax({
-        //    data: json,
-        //    url: '/Manage/SaveMenuSetup/',
-        //    dataType: "json",
-        //    contentType: "application/json; charset=utf-8",
-        //    type: "POST",
-        //    success: function (data) {
-        //        if(data.success) {
-                    
-        //        }
-        //        else {
-        //            //TOAST
-        //        }
-        //    },
-        //    error: function () {
-        //        console.error("Kunde inte spara setup");
-        //    }
-        //});
+        }).always(function () {
+            btn.button('reset');
+        });
     };
 
-    var createTempEnterprise = function (form) {
+    var createTempEnterprise = function (form, btn) {
+        btn.button('loading');
         $.ajax({
             type: 'POST',
-            data: form,
+            data: form.serialize(),
             url: '/Manage/CreateTempEnterprise',
-            success: function (key) {
-                return key;
+            success: function (data) {
+                if (data.url) {
+                    window.location = data.url;
+                }
+                else {
+                    form.replaceWith(data);
+                }
             },
-            error: function () {
-                console.log("ERROR, createTempEnterprise");
+            error: function (data) {
+                console.log(data);
             }
+        }).always(function () {
+            btn.button('reset');
         });
     };
 
 
     //TO TEST AJAX-LOADER
-    var wait = function (button) {
-        hj.ajax({
+    var wait = function (btn) {
+
+        btn.button('loading')
+
+
+        $.ajax({
+            type: "POST",
             url: '/Json/Wait',
             success: function (data) {
                 console.log(data)
@@ -290,30 +260,10 @@ iMenyn.Ajax = function () {
             error: function () {
                 console.log("ERROR")
             }
+        }).always(function () {
+            btn.button('reset');
+        });
 
-        }, button, options.success, options.error);
-
-    };
-
-    var hj = {};
-    hj.ajax = function (options, button, successCallback, errorCallback) {
-        var defaults = {
-            type: "POST",
-            beforeSend: function () {
-                button.addClass("button-loading");
-            },
-            success: function (data) { //hijack the success handler
-                button.removeClass("button-loading");
-                successCallback(data);
-            },
-            error: function (data) {
-                button.removeClass("button-loading");
-                if (errorCallback)
-                    errorCallback(data);
-            }
-        };
-        $.extend(options, defaults);
-        return $.ajax(options);
     };
 
 
@@ -338,8 +288,6 @@ iMenyn.Ajax = function () {
 
     return {
         SearchEnterprises: searchEnterprises,
-        BrowseEnterprises: browseEnterprises,
-        RenderGeneralInfoByAddress: renderGeneralInfoByAddress,
         SearchEnterprisesCloseToMyLocation: searchEnterprisesCloseToMyLocation,
         SaveProduct: saveProduct,
         SaveMenuSetup: saveMenuSetup,

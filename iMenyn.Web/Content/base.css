@@ -1,0 +1,146 @@
+﻿body {
+    color: #505050;
+    font-size: 18px;
+}
+
+header {
+    background: url(img/test-bg.png) no-repeat;
+    /*height: 540px;*/
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    position: fixed;
+    top: 0;
+}
+
+#intro header {
+    /*height: 100%;*/
+}
+
+#main-container {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    z-index: 1;
+    position: relative;
+}
+
+#intro #main-container {
+    background: none;
+}
+
+#splash-container {
+    display: table;
+    margin-top: 13%;
+    width: 100%;
+}
+
+#splash-content {
+    text-align: center;
+}
+
+    #splash-content form {
+        position: relative;
+    }
+
+#search-query, #search-result {
+    width: 80%;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+#search-query {
+    border: none;
+    padding: 12px 14px;
+    font-size: 20px;
+    outline: 0;
+}
+
+#search-result {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: left;
+    margin: auto;
+    z-index: 1;
+}
+
+    #search-result #enterprises {
+        border-right: 1px solid #DADADA;
+    }
+
+/* == Navigation ==*/
+nav {
+    z-index: 2;
+    position: relative;
+}
+
+    nav ul {
+        margin: 18px 0 0 0;
+    }
+
+    nav li {
+        display: inline-block;
+        margin: 0 12px;
+    }
+
+        nav li a {
+            color: #fff;
+        }
+
+            nav li a:hover {
+                text-decoration: none;
+                color: #a4e4f2;
+            }
+/* == End of Navigation ==*/
+
+
+/* === Menu === */
+#menu #main-container {
+    width: 53%;
+}
+.product {
+    border-bottom: 1px solid #d5d5d5;
+    overflow: hidden;
+}
+
+    .product .product-name {
+        float: left;
+        font-size: 19px;
+    }
+
+    .product .product-prices {
+        float: right;
+        font-size: 19px;
+    }
+
+    #enterprise-info {
+        margin-bottom: 40px;
+    }
+    #enterprise-info h1 {
+        font-size: 48px;
+        text-align: center;
+    }
+/* === End of Menu === */
+
+
+/* == Footer == */
+footer {
+    height: 150px;
+}
+/* == End of Footer == */
+
+/* === Search results === */
+#search-result > a {
+    display: block;
+    overflow: hidden;
+    margin: 16px 0;
+}
+
+#search-result .tag {
+    font-size: 12px;
+}
+
+#search-result .row {
+    margin: 10px 0;
+}
+/* === End of Search results === */

@@ -13,6 +13,8 @@ namespace iMenyn.Data.Abstract.Db
 
         IEnumerable<Enterprise> SearchEnterprises(string searchTerm, string location, string categorySearch);
 
+        IEnumerable<Enterprise> GetNearbyEnterprises(string lat, string lng);
+        
         IEnumerable<Enterprise> CheckIfEnterpriseExists(string key, int postalCode);
 
         IEnumerable<Enterprise> GetAllEnterprises();

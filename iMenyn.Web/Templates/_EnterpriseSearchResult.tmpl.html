@@ -1,0 +1,39 @@
+﻿<div class="row">
+    <div id="enterprises" class="col-sm-8">
+        {{#unless Enterprises}}
+        <i>inga resultat</i>
+        {{/unless}}
+        {{#each Enterprises}}
+        <a href="/cabaret?q={{Key}}" class="row">
+            <div class="row">
+                <b>{{Name}}</b>
+            </div>
+
+            {{#if LocationInfo}}
+            <div class="row">
+                <small>{{LocationInfo}}</small>
+            </div>
+            {{/if}}
+        
+            {{#each Categories}}
+            <div class="tag">{{.}}</div>
+            {{/each}}
+
+            {{#if DistanceFromMyLocation}}
+            {{DistanceFromMyLocation}}
+            {{/if}}
+           
+        </a>
+        {{/each}}
+    </div>
+    <div class="col-sm-4">
+        {{#each Locations}}
+        <a href="#" class="row">
+       
+                <span class="glyphicon glyphicon-map-marker"></span>
+            {{this}}
+           
+        </a>
+        {{/each}}
+    </div>
+</div>

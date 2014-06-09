@@ -1,0 +1,20 @@
+﻿@using iMenyn.Web.Helpers
+@model iMenyn.Data.Models.ProductPrice
+@{
+    Layout = null;
+}
+@using (Html.BeginCollectionItem("Prices"))
+{
+    <div class="form-group product-price-edit">
+        <div class="col-sm-4">
+            <div class="input-group">
+                @Html.TextBoxFor(p => p.Price, new { @class = "form-control", tabindex = "2", type = "number" })
+                <span class="input-group-addon">kr</span>
+            </div>
+        </div>
+        <div class="col-sm-7">
+            @Html.TextBoxFor(p => p.Description, new { @class = "form-control", placeholder = "Ex. 4cl, glas, medium..." })
+        </div>
+        <span class="glyphicon glyphicon-trash vertical-bottom"></span>
+    </div>
+}

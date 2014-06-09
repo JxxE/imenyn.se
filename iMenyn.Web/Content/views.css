@@ -1,9 +1,9 @@
 ﻿/* === Create enterprise === */
-#create-enterprise-container #form-content,#create-enterprise-container #form-content #location-details{
+#create-enterprise-container #form-content,#create-enterprise-container #location-details,#create-enterprise-container.show-form #confirm-content{
     display: none;
 }
-#create-enterprise-container.model-from-db #confirm-content{
-    display: none;
+#create-enterprise-container .show-form #location-details,#create-enterprise-container.show-form #form-content{
+    display: block;
 }
 /* === End of Create enterprise === */
 

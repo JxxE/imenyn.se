@@ -1,6 +1,14 @@
 ﻿@model iMenyn.Data.ViewModels.CompleteEnterpriseViewModel
 @{
-    ViewBag.Title = Model.Enterprise.Name;
+    ViewBag.Title = Model.Enterprise != null ? Model.Enterprise.Name : "";
+    ViewBag.BodyId = "menu";
 }
 
-@Html.Partial("~/Views/Partials/Menu/Edit/_Menu.cshtml", Model)
+@if (Model.Enterprise != null)
+{
+    @Html.Partial("~/Views/Partials/Menu/Display/_Menu.cshtml", Model)
+}
+else
+{
+    <h1>Ooops denna fanns inte...</h1>
+}

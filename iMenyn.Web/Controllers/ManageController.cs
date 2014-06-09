@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web.Mvc;
 using iMenyn.Data.Abstract;
 using iMenyn.Data.Abstract.Db;
@@ -23,8 +24,11 @@ namespace iMenyn.Web.Controllers
             if (!string.IsNullOrEmpty(key))
             {
                 var enterprise = Db.Enterprises.GetCompleteEnterprise(EnterpriseHelper.GetId(key)).Enterprise;
-                if (enterprise.IsNew && !enterprise.LockedFromEdit)
+                if ((enterprise.IsNew && !enterprise.LockedFromEdit) || (HttpContext.User.Identity.IsAuthenticated && CurrentAccount.IsAdmin))
+                {
                     viewModel = enterprise;
+                    viewModel.ShowForm = true;
+                }
             }
             return View(viewModel);
         }
@@ -54,14 +58,6 @@ namespace iMenyn.Web.Controllers
             }
             return RedirectToAction("Index");
         }
-
-        [AllowAnonymous]
-        public ActionResult DemoMenu(bool edit = false)
-        {
-            var viewModel = Db.Enterprises.GetCompleteEnterprise("enterprises-jessetinell", edit);
-            return View(viewModel);
-        }
-
 
         // Detta gäller en NY enterprise. När man redigerar en nuvarande enterprise måste det sparas en TEMP-meny!
         [HttpPost]
@@ -94,8 +90,7 @@ namespace iMenyn.Web.Controllers
             return PartialView("~/Views/Partials/Menu/Edit/_Product.cshtml", product);
         }
 
-        [HttpPost]
-        public ActionResult Index(EnterpriseViewModel viewModel)
+        public ActionResult CreateTempEnterprise(EnterpriseViewModel viewModel)
         {
             if (!string.IsNullOrEmpty(viewModel.Nope))
                 return RedirectToAction("Index", "Home");
@@ -105,6 +100,10 @@ namespace iMenyn.Web.Controllers
 
             if (viewModel.DisplayCategories == null || viewModel.DisplayCategories.Count < 1)
                 ModelState.AddModelError("DisplayCategories", "Välj minst en kategori");
+            else
+            {
+                viewModel.DisplayCategories = EnterpriseHelper.GetDisplayCategories(viewModel.DisplayCategories);
+            }
 
             if (viewModel.Coordinates.Lat == null || viewModel.Coordinates.Lng == null)
                 ModelState.AddModelError("Coordinates", "Du måste ange någon platsinfo");
@@ -154,12 +153,12 @@ namespace iMenyn.Web.Controllers
                         Db.Enterprises.UpdateEnterprise(enterprise);
                     }
                 }
-                return RedirectToAction("Edit", new { key = EnterpriseHelper.GetKey(enterprise.Id) });
+                return Json(new { url =  Url.Action("Edit", new { key = EnterpriseHelper.GetKey(enterprise.Id) }) });
             }
 
-            viewModel.DisplayCategories = EnterpriseHelper.GetDisplayCategories(viewModel.DisplayCategories);
+            viewModel.ShowForm = true;
 
-            return View(viewModel);
+            return PartialView("~/Views/Manage/_AddEnterpriseForm.cshtml", viewModel);
         }
 
         //Sparar ordningen på menyn. Kategori, produkt-placering 
