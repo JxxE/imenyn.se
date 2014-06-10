@@ -32,10 +32,6 @@
 
 </div>
 <script>
-
-
-
-
     function putMyLocationOnMap() {
         iMenyn.Utilities.MyLocation(function (data) {
             var lat, lng;
@@ -166,16 +162,5 @@
             document.getElementById(componentForm[input]).value = "";
         }
     }
-
     google.maps.event.addDomListener(window, 'load', initialize);
-
 </script>
-
-<noscript>
-    <style>
-        form {
-            display: none;
-        }
-    </style>
-    <h1>Aktivera JavaScript för att se sidan</h1>
-</noscript>

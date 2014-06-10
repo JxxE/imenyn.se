@@ -9,3 +9,15 @@
         width: 96%;
     }
 }
+
+@media screen and (max-width: 590px) {
+    nav ul {
+        display: none;
+    }
+    #splash-container {
+        margin-top: 0;
+    }
+    #search-query {
+        width: 100%;
+    }
+}

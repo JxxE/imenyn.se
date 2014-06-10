@@ -3,7 +3,9 @@
 @{
     Layout = null;
     var formClass = Model.ShowForm ? "show-form " : string.Empty;
-    var hasCoordinates = Model != null && Model.Coordinates != null && Model.Coordinates.Lat != null;
+    var hasCoordinates = Model != null && Model.Coordinates != null && Model.Coordinates.Lat > 0;
+    var lat = (Model.Coordinates != null && Model.Coordinates.Lat > 0) ? Model.Coordinates.Lat : 0;
+    var lng = (Model.Coordinates != null && Model.Coordinates.Lng > 0) ? Model.Coordinates.Lng : 0;
 }
 
 
@@ -112,29 +114,27 @@
                     <label class="col-sm-4"></label>
                     <div class="col-sm-4">
                         <a id="save-enterprise" href="javascript:void(0)" class="btn btn-success btn-lg">Till menyn <span class="glyphicon glyphicon-chevron-right"></span></a>
-                       
                     </div>
                 </div>
             </div>
             @Html.TextBoxFor(m => m.Nope, new { @class = "hide" })
             @Html.HiddenFor(m => m.CountryCode)
             @Html.HiddenFor(m => m.SubLocality)
-            @Html.HiddenFor(m => m.Coordinates.Lat)
-            @Html.HiddenFor(m => m.Coordinates.Lng)
+            @Html.TextBoxFor(m => m.Coordinates.Lat)
+            @Html.TextBoxFor(m => m.Coordinates.Lng)
             @Html.HiddenFor(m => m.Id)
 
             <div class="col-sm-8">
                 <div id="map"></div>
             </div>
         </div>
-
     </div>  
 }
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function () {        
         if ('@hasCoordinates' === 'True') {
-            setMap('@(Model.Coordinates != null ? Model.Coordinates.Lat : null)', '@(Model.Coordinates != null ? Model.Coordinates.Lng : null)');
+            setMap('@lat', '@lng');
         }
     });
     

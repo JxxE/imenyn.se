@@ -5,7 +5,6 @@
 
 header {
     background: url(img/test-bg.png) no-repeat;
-    /*height: 540px;*/
     height: 100%;
     width: 100%;
     background-size: cover;
@@ -13,8 +12,8 @@ header {
     top: 0;
 }
 
-#intro header {
-    /*height: 100%;*/
+#intro .navbar-header {
+    display: none;
 }
 
 #main-container {

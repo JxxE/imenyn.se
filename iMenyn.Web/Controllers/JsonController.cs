@@ -14,7 +14,6 @@ using iMenyn.Data.Helpers;
 using iMenyn.Data.Models;
 using iMenyn.Data.ViewModels;
 using iMenyn.Web.ViewModels;
-using iMenyn.Yelp.Data;
 
 namespace iMenyn.Web.Controllers
 {
@@ -154,7 +153,6 @@ namespace iMenyn.Web.Controllers
             {
                 var viewModel = new LocationViewModel
                                     {
-                                        Location = new Location(),
                                         Coordinates = new Coordinates()
                                     };
 

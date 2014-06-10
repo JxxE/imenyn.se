@@ -30,13 +30,9 @@ namespace iMenyn.Data.Concrete
 
         private void InitDocumentStore()
         {
-            //_documentStore = new DocumentStore
-            //{
-            //    Url = "https://ibis.ravenhq.com/databases/Jesse-imenyn",
-            //    ApiKey = "5dce1a3a-9a16-4163-bc8d-74afb1135f40"
-            //};
             _documentStore = new DocumentStore
             {
+                //ConnectionStringName = "RavenHQ",
                 ConnectionStringName = "imenyn",
             };
             _documentStore.Conventions.IdentityPartsSeparator = "-";

@@ -23,7 +23,7 @@ iMenyn.Utilities = function () {
                         tagId = index;
                     }
                     divChosenCategories.append("<div id='tag-" + tagId + "' class='tag'>" + text + "<input type='hidden' name='DisplayCategories[" + tagId + "].Value' value='" + value + "' />" +
-                        "<span class='glyphicon glyphicon-remove'></span></div>");
+                        "<span class='glyphicon glyphicon-remove ml'></span></div>");
                     if (count == 4) {
                         $("#category-chooser").addClass("hide");
                     }

@@ -293,7 +293,6 @@
     <Compile Include="ViewModels\EnterpriseViewModel.cs" />
     <Compile Include="ViewModels\LocationViewModel.cs" />
     <Compile Include="ViewModels\MainSearchViewModel.cs" />
-    <Compile Include="YelpConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\admin.css" />
@@ -391,7 +390,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\AdminOLD\Models\" />
     <Folder Include="Content\admin\" />
-    <Folder Include="Views\Partials\MenuContent\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -400,10 +398,6 @@
     <ProjectReference Include="..\iMenyn.Data\iMenyn.Data.csproj">
       <Project>{2c593e80-7dda-4126-b951-acd419755a8e}</Project>
       <Name>iMenyn.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\iMenyn.Yelp\iMenyn.Yelp.csproj">
-      <Project>{e5f09250-4139-4338-a9f9-2964fe393879}</Project>
-      <Name>iMenyn.Yelp</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

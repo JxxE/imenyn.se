@@ -245,47 +245,6 @@ iMenyn.Ajax = function () {
     };
 
 
-    //TO TEST AJAX-LOADER
-    var wait = function (btn) {
-
-        btn.button('loading')
-
-
-        $.ajax({
-            type: "POST",
-            url: '/Json/Wait',
-            success: function (data) {
-                console.log(data)
-            },
-            error: function () {
-                console.log("ERROR")
-            }
-        }).always(function () {
-            btn.button('reset');
-        });
-
-    };
-
-
-
-    //function showGeoError(error) {
-    //    var el = document.getElementById("error");
-    //    switch (error.code) {
-    //        case error.PERMISSION_DENIED:
-    //            el.innerHTML = "Användare avslog begäran om platsdata.";
-    //            break;
-    //        case error.POSITION_UNAVAILABLE:
-    //            el.innerHTML = "Din platsinformation är otillgänglig.";
-    //            break;
-    //        case error.TIMEOUT:
-    //            el.innerHTML = "Begäran om att få användarens platsdata tog för lång tid.";
-    //            break;
-    //        case error.UNKNOWN_ERROR:
-    //            el.innerHTML = "Okänt fel uppstod.";
-    //            break;
-    //    }
-    //}
-
     return {
         SearchEnterprises: searchEnterprises,
         SearchEnterprisesCloseToMyLocation: searchEnterprisesCloseToMyLocation,
@@ -293,7 +252,5 @@ iMenyn.Ajax = function () {
         SaveMenuSetup: saveMenuSetup,
 
         CreateTempEnterprise: createTempEnterprise,
-
-        Wait: wait
     };
 }();

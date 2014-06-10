@@ -105,7 +105,7 @@ namespace iMenyn.Web.Controllers
                 viewModel.DisplayCategories = EnterpriseHelper.GetDisplayCategories(viewModel.DisplayCategories);
             }
 
-            if (viewModel.Coordinates.Lat == null || viewModel.Coordinates.Lng == null)
+            if (viewModel.Coordinates.Lat < 1 || viewModel.Coordinates.Lng < 1)
                 ModelState.AddModelError("Coordinates", "Du måste ange någon platsinfo");
 
             if (ModelState.IsValid)
