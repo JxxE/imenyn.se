@@ -115,7 +115,7 @@ namespace iMenyn.Data.Helpers
         {
             var blackList = new List<string>
                                 {
-                                    "restaurang","grill","gatukök","pizzeria"
+                                    "restaurang","grill","gatukök","pizzeria","pizza"
                                 };
 
             return tags.Where(tag => !blackList.Contains(tag.ToLower())).ToList();

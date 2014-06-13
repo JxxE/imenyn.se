@@ -1,0 +1,42 @@
+﻿<div id="enterprises" class="col-sm-8">
+    {{#unless Enterprises}}
+        <i>inga restauranger</i>
+    {{/unless}}
+        {{#each Enterprises}}
+        <a href="/cabaret?q={{Key}}">
+            <h2>{{Name}}</h2>
+            {{#if LocationInfo}}
+            <address>
+                <small>{{LocationInfo}}</small>
+            </address>
+            {{/if}}
+        
+            {{#each Categories}}
+            <div class="tag">{{.}}</div>
+            {{/each}}
+
+            {{#if DistanceFromMyLocation}}
+            {{DistanceFromMyLocation}}
+            {{/if}}
+           
+        </a>
+    {{/each}}
+</div>
+<div class="col-sm-4">
+    <div id="locations">
+        {{#each Locations}}
+        <a href="#" class="row">
+            <span class="glyphicon glyphicon-map-marker"></span>
+            {{this}}
+        </a>
+        {{/each}}
+    </div>
+
+    <div id="tags">
+        {{#each Categories}}
+            <a href="#" class="tag">{{this}}</a>
+        {{/each}}
+    </div>
+</div>
+
+<a href="/Search?q={{SearchQuery}}" id="all">Alla sökresultat för "{{SearchQuery}}"</a>

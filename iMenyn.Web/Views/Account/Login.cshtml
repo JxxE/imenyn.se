@@ -3,51 +3,44 @@
 @{
     ViewBag.Title = "Logga in";
 }
-
-@if (Request.IsAuthenticated)
+@using (Html.BeginForm("Login", "Account", FormMethod.Post, new {@class = "form-horizontal" }))
 {
-    <p>asd</p>
-    @HttpContext.Current.User.Identity.Name
-}
+    if (IsPost)
+    {
+    @Html.ValidationSummary(false, "")
+    }
 
-@using (Html.BeginForm()) {
-    <div class="form-horizontal">
-            <h4>Logga in</h4>
-            
-            @if (IsPost)
-            {
-                <div class="alert alert-error">
-                    @Html.ValidationSummary(false, "")
-                </div>
-            }
+    <div class="form-group">
+        @Html.LabelFor(m => m.UserName, "Epost", new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-4">
+            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.UserName)
+        </div>
+    </div>
 
-            <div class="margin-top">
-                @Html.LabelFor(m => m.UserName, "Epost")
-            </div>
-            <div class="editor-field">
-                @Html.TextBoxFor(m => m.UserName)
-                @Html.ValidationMessageFor(m => m.UserName)
-            </div>
-
-            <div class="margin-top">
-                @Html.LabelFor(m => m.Password, "Lösenord")
-            </div>
-            <div class="">
-                @Html.PasswordFor(m => m.Password)
-                @Html.ValidationMessageFor(m => m.Password)
-            </div>
-
-            <div class="checkbox margin-top">
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password, "Lösenord", new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-4">
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-4">
+            <div class="checkbox">
                 @Html.CheckBoxFor(m => m.RememberMe)
                 @Html.LabelFor(m => m.RememberMe, "Kom ihåg mig")
             </div>
-
-            <p class="margin-top">
-                <input class="btn btn-primary" type="submit" value="Logga in" />
-            </p>
-            <p class="reset-password">
-               @* @Html.ActionLink("Återställ lösenord", "ResetPassword", "Account")*@
-            </p>
+        </div>
     </div>
-}
     
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-4">
+            <input class="btn btn-primary btn-lg" type="submit" value="Logga in" />
+        </div>
+    </div>
+
+@* @Html.ActionLink("Återställ lösenord", "ResetPassword", "Account")*@
+}
+

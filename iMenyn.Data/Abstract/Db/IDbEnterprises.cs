@@ -11,7 +11,7 @@ namespace iMenyn.Data.Abstract.Db
 
         string CreateEnterprise(Enterprise enterprise);
 
-        IEnumerable<Enterprise> SearchEnterprises(string searchTerm, string location, string categorySearch);
+        IEnumerable<Enterprise> MainSearch(string searchTerm);
 
         IEnumerable<Enterprise> GetNearbyEnterprises(string lat, string lng);
         

@@ -11,7 +11,7 @@
         <form>
             <div class="row mb20">
                 <div class="col-sm-12">
-                    <input id="search-query" type="text" autofocus="autofocus" placeholder="Sök restaurang" />
+                    <input id="search-query" type="text" autofocus="autofocus" autocomplete="off" placeholder="Sök restaurang" />
                 </div>
             </div>
 
@@ -38,11 +38,11 @@
     searchButton.click(function () {
         var btn = $(this);
         btn.button('loading');
-        iMenyn.Ajax.SearchEnterprises($("#search-query").val(), btn);
+        iMenyn.Ajax.MainSearch($("#search-query").val(), btn);
     });
 
     $("#search-query").on('input', function () {
-        iMenyn.Ajax.SearchEnterprises($("#search-query").val(), searchButton);
+        iMenyn.Ajax.MainSearch($("#search-query").val(), searchButton);
     });
 
     $("#search-nearby").click(function () {

@@ -324,7 +324,7 @@
     <Content Include="Areas\AdminOLD\Views\Admin\ModifiedMenus.cshtml" />
     <Content Include="js\button.js" />
     <Content Include="js\jquery.growl.js" />
-    <Content Include="Templates\_EnterpriseSearchResult.tmpl.html" />
+    <Content Include="Templates\_MainSearchResult.tmpl.html" />
     <Content Include="Templates\_adminLogList.tmpl.html" />
     <Content Include="Views\Admin\MenuApproval.cshtml" />
     <Content Include="Areas\AdminOLD\Views\Admin\NewEnterprises.cshtml" />

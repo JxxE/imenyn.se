@@ -120,8 +120,8 @@
             @Html.TextBoxFor(m => m.Nope, new { @class = "hide" })
             @Html.HiddenFor(m => m.CountryCode)
             @Html.HiddenFor(m => m.SubLocality)
-            @Html.TextBoxFor(m => m.Coordinates.Lat)
-            @Html.TextBoxFor(m => m.Coordinates.Lng)
+            @Html.HiddenFor(m => m.Coordinates.Lat)
+            @Html.HiddenFor(m => m.Coordinates.Lng)
             @Html.HiddenFor(m => m.Id)
 
             <div class="col-sm-8">

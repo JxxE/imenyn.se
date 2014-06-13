@@ -7,52 +7,9 @@ namespace iMenyn.Data.Helpers
 {
     public class GeneralHelper
     {
-        static readonly Random _random = new Random();
-
         public static string GetGuid()
         {
             return Guid.NewGuid().ToString("N");
-        }
-
-        public static string RandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var result = new string(
-                Enumerable.Repeat(chars, length)
-                          .Select(s => s[_random.Next(s.Length)])
-                          .ToArray());
-            return result;
-        }
-
-        [Obsolete]//Kanske inte behöver användads längre. Om jag tar bort Yelp och bara använder  google maps. I databasen sparar nog inte StateCode utan LÄN direkt som den är. 
-        public static List<ValueAndText> GetCountyNameAndCodes()
-        {
-            var countyNameAndCodes = new List<ValueAndText>
-                                         {
-                                             new ValueAndText{Value = "AB",Text = "Stockholm"},
-                                             new ValueAndText{Value = "AC",Text = "Västerbotten"},
-                                             new ValueAndText{Value = "BD",Text = "Norrbotten"},
-                                             new ValueAndText{Value = "C",Text = "Uppsala"},
-                                             new ValueAndText{Value = "D",Text = "Södermanland"},
-                                             new ValueAndText{Value = "E",Text = "Östergötland"},
-                                             new ValueAndText{Value = "F",Text = "Jönköping"},
-                                             new ValueAndText{Value = "G",Text = "Kronoberg"},
-                                             new ValueAndText{Value = "H",Text = "Kalmar"},
-                                             new ValueAndText{Value = "I",Text = "Gotland"},
-                                             new ValueAndText{Value = "K",Text = "Blekinge"},
-                                             new ValueAndText{ Value = "M",Text = "Skåne"},
-                                             new ValueAndText{ Value = "N",Text = "Halland"},
-                                             new ValueAndText{ Value = "O",Text = "Västra Götaland"},
-                                             new ValueAndText{ Value = "S",Text = "Värmland"},
-                                             new ValueAndText{ Value = "T",Text = "Örebro"},
-                                             new ValueAndText{ Value = "U",Text = "Västmanland"},
-                                             new ValueAndText{ Value = "W",Text = "Dalarna"},
-                                             new ValueAndText{ Value = "X",Text = "Gävleborg"},
-                                             new ValueAndText{ Value = "Y",Text = "Västernorrland"},
-                                             new ValueAndText{ Value = "Z",Text = "Jämtland"}
-                                         };
-
-            return countyNameAndCodes.OrderBy(c => c.Text).ToList();
         }
 
         public static List<ValueAndText> GetCategories()

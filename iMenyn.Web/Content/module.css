@@ -27,15 +27,14 @@
     position: fixed;
 }
 
+.tag:before {
+    content: "#";
+    margin-right: 2px;
+}
 .tag {
-    background-color: #007491;
-    padding: 2px 8px;
     float: left;
-    color: white;
-    margin: 0 5px 5px 0;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
+    color: #999;
+    margin: 5px 10px 0 0;
 }
 
 

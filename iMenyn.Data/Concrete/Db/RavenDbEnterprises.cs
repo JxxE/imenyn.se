@@ -160,99 +160,60 @@ namespace iMenyn.Data.Concrete.Db
             }
         }
 
-        public IEnumerable<Enterprise> SearchEnterprises(string searchTerm, string location, string categorySearch)
+        public IEnumerable<Enterprise> MainSearch(string searchTerm)
         {
             using (var session = _documentStore.OpenSession())
             {
-                var isTbSearch = !String.IsNullOrEmpty(searchTerm) && String.IsNullOrEmpty(categorySearch);
-                var isCategorySearch = String.IsNullOrEmpty(searchTerm) && !String.IsNullOrEmpty(categorySearch);
-
                 var query = session.Advanced.LuceneQuery<Enterprise, Enterprises>();
 
+                var searchTerms = searchTerm.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-                if (isTbSearch || isCategorySearch)
+                //searchTerms = searchTerms.Where(s => !string.IsNullOrEmpty(s.Trim())).ToArray();
+
+                if (searchTerms.Length > 0)
                 {
-                    var searchTerms = new string[] { };
+                    query = query.OpenSubclause();
 
-                    //Search made from textbox
-                    if (isTbSearch)
-                        searchTerms = searchTerm.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                    //Category search from button-group
-                    if (isCategorySearch)
-                        searchTerms = categorySearch.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-                    searchTerms = searchTerms.Where(s => !string.IsNullOrEmpty(s.Trim())).ToArray();
-
-                    if (searchTerms.Length > 0)
+                    for (var i = 0; i < searchTerms.Length; i++)
                     {
+                        var searchQuery = RavenQuery.Escape(searchTerms[i], true, false);
+
+                        if (i > 0)
+                            query = query.OrElse();
+
+                        query = query.WhereEquals(x => x.IsNew, false).AndAlso();
+
                         query = query.OpenSubclause();
+                        query = query.WhereStartsWith(x => x.Name, searchQuery).OrElse();
+                        query = query.Search(x => x.Name, searchQuery);
 
-                        for (var i = 0; i < searchTerms.Length; i++)
+                        #region PostalCode search
+                        int postalCode;
+                        int.TryParse(searchTerm, out postalCode);
+                        if (postalCode > 0)
                         {
-                            var searchQuery = RavenQuery.Escape(searchTerms[i], true, false);
-
-                            if (i > 0)
-                                query = query.OrElse();
-
-                            query = query.WhereEquals(x => x.IsNew, false).AndAlso();
-
-                            if (isTbSearch)
-                            {
-                                query = query.OpenSubclause();
-                                query = query.WhereStartsWith(x => x.Name, searchQuery).OrElse();
-                                query = query.Search(x => x.Name, searchQuery);
-
-                                //var stateCode = GeneralHelper.GetCountyNameAndCodes().FirstOrDefault(c => c.Text.ToLower().Contains(searchQuery));
-                                //if (stateCode != null)
-                                //{
-                                //    //County search
-                                //    //query = query.WhereEquals(x => x.StateCode, stateCode.Value).OrElse();
-                                //}
-
-                                #region PostalCode search
-                                int postalCode;
-                                int.TryParse(searchTerm, out postalCode);
-                                if (postalCode > 0)
-                                {
-                                    query = query.WhereBetweenOrEqual(x => x.PostalCode, postalCode - 500, postalCode + 500).OrElse();
-                                }
-                                #endregion
-
-                                //Commune, sublocality, county m.m.
-                                //query = query.WhereStartsWith(x => x.City, searchQuery);
-                                query = query.CloseSubclause();
-
-                            }
-                            if (isCategorySearch)
-                            {
-                                if (categorySearch == "All")
-                                {
-                                    //query = query.WhereEquals(x => x.StateCode, location);
-                                }
-                                else
-                                {
-                                    //query = query.WhereEquals(x => x.StateCode, location).AndAlso();
-                                    query = query.WhereIn("Categories", new[] { searchQuery });
-                                }
-
-                            }
+                            query = query.WhereBetweenOrEqual(x => x.PostalCode, postalCode - 500, postalCode + 500).OrElse();
                         }
+                        #endregion
+
+                        //Commune, sublocality, county m.m.
+                        //query = query.WhereStartsWith(x => x.City, searchQuery);
                         query = query.CloseSubclause();
-
-                        query = query.OrderBy(x => x.Name);
-
-                        return query.Take(30).ToList();
                     }
+                    query = query.CloseSubclause();
+
+                    query = query.OrderBy(x => x.Name);
+
+                    return query.Take(30).ToList();
                 }
 
                 return null;
             }
         }
 
-        public IEnumerable<Enterprise> GetNearbyEnterprises(string lat,string lng)
+        public IEnumerable<Enterprise> GetNearbyEnterprises(string lat, string lng)
         {
-            using(var session = _documentStore.OpenSession())
+            using (var session = _documentStore.OpenSession())
             {
                 _logger.Info("Searched nearby enterprises for lat: {0} and lng: {1}", lat, lng);
 
@@ -261,7 +222,7 @@ namespace iMenyn.Data.Concrete.Db
                     .WithinRadiusOf("Coordinates", 30, double.Parse(lat, CultureInfo.InvariantCulture), double.Parse(lng, CultureInfo.InvariantCulture))
                     .SortByDistance();
             }
-        } 
+        }
 
         //TODO
         public IEnumerable<Enterprise> CheckIfEnterpriseExists(string key, int postalCode)

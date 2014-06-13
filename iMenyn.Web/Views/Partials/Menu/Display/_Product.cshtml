@@ -3,18 +3,18 @@
     Layout = null;
 }
 <div class="product">
-            <h2 class="name">@Model.Name</h2>
-            <div class="product-prices">
-                @if (Model.Prices != null)
-                {
-                    foreach (var price in Model.Prices)
-                    {
-                    <span>@string.Format("{0}kr", price.Price) @price.Description</span>
-                    }
-                }
-            </div>
-            <div class="row">
-                <p class="product-description col-sm-12" data-id="Description">@Model.Description</p>
-            </div>
-            <p class="abv@(Model.Abv < 1 ? " hide" : string.Empty)">Alkoholhalt:<span data-id="Abv">@Model.Abv</span>%</p>
+    <h2 class="name">@Model.Name</h2>
+    <div class="product-prices">
+        @if (Model.Prices != null)
+        {
+            foreach (var price in Model.Prices)
+            {
+            <span>@string.Format("{0}kr", price.Price) @price.Description</span>
+            }
+        }
+    </div>
+    <div class="row">
+        <p class="product-description col-sm-12" data-id="Description">@Model.Description</p>
+    </div>
+    <p class="abv@(Model.Abv < 1 ? " hide" : string.Empty)">Alkoholhalt:<span data-id="Abv">@Model.Abv</span>%</p>
 </div>

@@ -24,19 +24,24 @@ namespace iMenyn.Web.Controllers
         {
         }
 
-        public JsonResult SearchEnterprises(string searchTerm)
+        public JsonResult MainSearch(string searchTerm)
         {
             if (string.IsNullOrEmpty(searchTerm))
                 return Json(null);
 
-            var enterprises = Db.Enterprises.SearchEnterprises(searchTerm, "", "");
+            var enterprises = Db.Enterprises.MainSearch(searchTerm);
 
             var searchViewModel = new MainSearchViewModel
                                            {
                                                SearchQuery = searchTerm,
                                                Enterprises = new List<LightEnterprise>(),
-                                               Locations = new List<string> { "Tumba", "Tullinge" }
+                                               Locations = new List<string> { "Tumba", "Tullinge" },
+                                               Categories = new List<string>()
                                            };
+
+            var categories = GeneralHelper.GetCategories().Where(c => c.Text.ToLower().StartsWith(searchTerm.ToLower()));
+            if (categories.Any())
+                searchViewModel.Categories = categories.Select(c => c.Text).ToList();
 
             foreach (var enterpriseViewModel in enterprises.Select(enterprise => new LightEnterprise
                                                                                      {
@@ -211,11 +216,11 @@ namespace iMenyn.Web.Controllers
                 //Sätt kommun
                 viewModel.Location.county = administrative_area_level_2 != "" ? administrative_area_level_2 : locality;
 
-                var stateCode = GeneralHelper.GetCountyNameAndCodes().FirstOrDefault(p => p.Text.ToLower().Contains(lan));
-                if (stateCode != null && stateCode.Value.Length < 3)
-                    viewModel.Location.state_code = stateCode.Value;
+                //var stateCode = GeneralHelper.GetCountyNameAndCodes().FirstOrDefault(p => p.Text.ToLower().Contains(lan));
+                //if (stateCode != null && stateCode.Value.Length < 3)
+                //    viewModel.Location.state_code = stateCode.Value;
 
-                viewModel.Counties = GeneralHelper.GetCountyNameAndCodes();
+                //viewModel.Counties = GeneralHelper.GetCountyNameAndCodes();
 
                 return Json(viewModel);
             }

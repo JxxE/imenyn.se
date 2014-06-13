@@ -39,7 +39,7 @@ var iMenyn = iMenyn || {};
 
 iMenyn.Ajax = function () {
 
-    var searchEnterprises = function (searchTerm, btn) {
+    var mainSearch = function (searchTerm, btn) {
         if (searchTerm === "" || searchTerm.length < 2) {
             btn.button('reset');
             $('#search-result').html("");
@@ -48,10 +48,10 @@ iMenyn.Ajax = function () {
             $.ajax({
                 dataType: "json",
                 data: { searchTerm: searchTerm },
-                url: '/Json/SearchEnterprises/',
+                url: '/Json/MainSearch/',
                 type: "POST",
                 success: function (data) {
-                    $.get('/Templates/_EnterpriseSearchResult.tmpl.html', function (template) {
+                    $.get('/Templates/_MainSearchResult.tmpl.html', function (template) {
                         var tmpl = Handlebars.compile(template);
                         $('#search-result').html(tmpl(data));
                     });
@@ -160,7 +160,7 @@ iMenyn.Ajax = function () {
             url: '/Json/GetEnterprisesCloseToMyLocation/',
             type: "POST",
             success: function (data) {
-                $.get('/Templates/_EnterpriseSearchResult.tmpl.html', function (template) {
+                $.get('/Templates/_MainSearchResult.tmpl.html', function (template) {
                     var tmpl = Handlebars.compile(template);
                     $('#search-result').html(tmpl(data));
                 });
@@ -246,7 +246,7 @@ iMenyn.Ajax = function () {
 
 
     return {
-        SearchEnterprises: searchEnterprises,
+        MainSearch: mainSearch,
         SearchEnterprisesCloseToMyLocation: searchEnterprisesCloseToMyLocation,
         SaveProduct: saveProduct,
         SaveMenuSetup: saveMenuSetup,

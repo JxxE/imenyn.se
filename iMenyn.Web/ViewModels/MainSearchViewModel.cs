@@ -9,6 +9,7 @@ namespace iMenyn.Web.ViewModels
 
         public List<LightEnterprise> Enterprises { get; set; }
         public List<string> Locations { get; set; }
+        public List<string> Categories { get; set; }
     }
 
     public class LightEnterprise
