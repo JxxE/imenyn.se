@@ -57,8 +57,9 @@ namespace iMenyn.Data.Concrete.Db
                             if (deletedProductsIds.Count > 0)
                             {
                                 var deletedProducts = session.Load<Product>(deletedProductsIds);
+
                                 //Delete products that belongs to this enterprise
-                                foreach (var deletedProduct in deletedProducts.Where(deletedProduct => deletedProduct.Enterprise == enterpriseId))
+                                foreach (var deletedProduct in deletedProducts.Where(deletedProduct => deletedProduct != null && deletedProduct.Enterprise == enterpriseId))
                                 {
                                     session.Delete(deletedProduct);
                                 }
@@ -334,9 +335,13 @@ namespace iMenyn.Data.Concrete.Db
                                 Products = new List<ProductViewModel>()
                             };
 
-                            foreach (var product in category.Products.Select(productForCategory => products.FirstOrDefault(p => p.Id == productForCategory)))
+                            foreach (var product in category.Products.Select(productForCategory => products.FirstOrDefault(p => p != null && p.Id == productForCategory)))
                             {
-
+                                if (product == null)
+                                {
+                                    _logger.Warn("Product is null for enterprise {0} ({1})", enterprise.Name, enterprise.Id);
+                                    continue;
+                                }
                                 var p = ProductHelper.ModelToViewModel(product);
                                 if (edit && p.UpdatedVersion != null)
                                 {

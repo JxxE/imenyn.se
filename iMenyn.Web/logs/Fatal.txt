@@ -17,3 +17,15 @@ more responsive application.
 2014-05-26 22:00:22.4671|FATAL|iMenyn.Data.Concrete.Logger|Collection was modified; enumeration operation may not execute.
 2014-05-26 22:15:05.1211|FATAL|iMenyn.Data.Concrete.Logger|Collection was modified; enumeration operation may not execute.
 2014-05-26 22:15:51.7608|FATAL|iMenyn.Data.Concrete.Logger|Collection was modified; enumeration operation may not execute.
+2014-06-14 12:19:45.6938|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.
+2014-06-14 12:24:47.9013|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.
+2014-06-14 12:24:54.8297|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.
+2014-06-14 12:25:45.2626|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.
+2014-06-14 12:26:08.4399|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.
+2014-06-14 12:26:57.7078|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.
+2014-06-14 12:27:50.5488|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.
+2014-06-14 12:28:20.1656|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.
+2014-06-14 12:35:53.0967|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.
+2014-06-14 12:36:11.2468|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.
+2014-06-14 12:36:17.9852|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.
+2014-06-14 12:37:32.9005|FATAL|iMenyn.Data.Concrete.Logger|Object reference not set to an instance of an object.

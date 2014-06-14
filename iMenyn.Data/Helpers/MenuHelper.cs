@@ -38,7 +38,7 @@ namespace iMenyn.Data.Helpers
             var allProducts = session.Load<Product>(productIds);
 
             //Check if all products belongs to this enterprise
-            foreach (var product in allProducts.Where(product => product.Enterprise != enterpriseId).ToList())
+            foreach (var product in allProducts.Where(product => product != null && product.Enterprise != enterpriseId).ToList())
             {
                 foreach (var category in from category in menu.Categories from c in category.Products.Where(c => c == product.Id).ToList() select category)
                 {

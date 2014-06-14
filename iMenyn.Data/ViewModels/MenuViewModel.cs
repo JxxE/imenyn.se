@@ -22,10 +22,12 @@ namespace iMenyn.Data.ViewModels
     {
         public string DisplayStreet { get; set; }
         public string Key { get; set; }
-
+        
         public List<ValueAndText> DisplayCategories { get; set; }
 
         public bool ShowForm { get; set; }
+
+        public string CoordinatesString { get; set; }
 
         //Spam-check property
         public string Nope { get; set; }

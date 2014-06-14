@@ -16,5 +16,8 @@
             @Html.TextBoxFor(p => p.Description, new { @class = "form-control", placeholder = "Ex. 4cl, glas, medium..." })
         </div>
         <span class="glyphicon glyphicon-trash vertical-bottom"></span>
+        <div class="col-sm-12">
+            @Html.ActionLink("Ett till pris", "BlankProductPrice", "Manage", null, new { @class = "dynamic-add small", data_maxOccurs = 5, data_position="before"})
+        </div>
     </div>
 }

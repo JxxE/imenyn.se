@@ -201,6 +201,7 @@ iMenyn.Ajax = function () {
 
     var saveMenuSetup = function (btn, setup, enterpriseId) {
         var json = '{ "menu": ' + setup + ', "enterpriseId":"' + enterpriseId + '"}';
+        console.log(json)
         $.ajax({
             data: json,
             url: '/Manage/SaveMenuSetup/',
@@ -212,10 +213,16 @@ iMenyn.Ajax = function () {
                     $("#main-container").html("<h1>Tack!</h1>");
                 } else {
                     //TOAST
+                    $.growl.error({
+                        message: "Något gick fel... prova igen"
+                    });
+                    console.log(data)
                 }
             },
             error: function () {
-                console.error("Kunde inte spara setup");
+                $.growl.error({
+                    message: "Okänt fel"
+                });
             }
         }).always(function () {
             btn.button('reset');

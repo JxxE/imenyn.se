@@ -32,8 +32,8 @@ namespace iMenyn.Data.Concrete
         {
             _documentStore = new DocumentStore
             {
-                //ConnectionStringName = "RavenHQ",
-                ConnectionStringName = "imenyn",
+                ConnectionStringName = "RavenHQ",
+                //ConnectionStringName = "imenyn",
             };
             _documentStore.Conventions.IdentityPartsSeparator = "-";
             _documentStore.Initialize();
